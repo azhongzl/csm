@@ -1,15 +1,3 @@
-@font-face {
-	font-family: Droid Sans;
-	src: url('../fonts/DroidSans-webfont.eot');
-	src: local("Droid Sans"), url('../fonts/DroidSans-webfont.woff');
-}
-
-@font-face {
-	font-family: News Cycle;
-	src: url('../fonts/NewsCycle-Regular.eot');
-	src: local("News Cycle"), url('../fonts/NewsCycle-Regular.ttf');
-}
-
 html {
 	height: 100%;
 }
@@ -132,18 +120,24 @@ ol li {
 	margin: 20px auto;
 }
 
-#main, #container, #logo, #site_content, footer {
+#main, #container, #site_content, footer {
+	margin-left: 150px;
+	margin-right: 150px;
+}
+
+#main {
+	width: 1300px;
+	background: #EEEEEE url(../images/light.png);
+}
+
+#main, #container, #site_content, footer {
 	margin-left: auto;
 	margin-right: auto;
 }
 
-#main {
-	background: #EEEEEE url(../images/light.png);
-}
-
 header {
 	background: #444 url(../images/logo.jpg) no-repeat;
-	height: 240px;
+	height: 200px;
 }
 
 #logo {
@@ -152,6 +146,8 @@ header {
 	background: transparent;
 	color: #888;
 	padding: 40px 0 0 0;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #logo #logo_text {
@@ -221,6 +217,7 @@ nav {
 #sidebar_container {
 	float: left;
 	width: 234px;
+	height:510px;
 	margin-top: 20px;
 	background: transparent url(../images/menubar.png);
 	border-radius: 7px 7px 7px 7px;
@@ -237,13 +234,69 @@ nav {
 	padding: 0 15px 5px 13px;
 }
 
-.sidebar h3, {
-	padding: 0 15px 20px 0;
-	font: 200% 'News Cycle', arial, sans-serif;
-	text-shadow: #FFF 0 1px;
-	margin: 0 1px;
-}
+.sidebar
+ 
+h3
+,
+{
+padding
+:
+0
+ 
+15
+px
+ 
+20
+px
+ 
+0;
+font
+:
+200%
+ 
+'
+News
+ 
+Cycle
+'
+,
+arial
+,
+sans-serif
 
+
+;
+text-shadow
+
+
+:
+
+ 
+
+#FFF
+
+ 
+
+0
+1
+px
+
+
+;
+margin
+
+
+:
+
+ 
+
+0
+1
+px
+
+
+;
+}
 .sidebar h3 {
 	padding: 4px 15px 9px 0;
 	font: 200% 'News Cycle', arial, sans-serif;
@@ -275,9 +328,7 @@ nav {
 	padding: 14px 0 0 0;
 }
 
-
-
- .sidebar ul li {
+.sidebar ul li {
 	list-style-type: none;
 	background: url(../images/bullet.png) no-repeat;
 	margin: 0 0 0 0;
