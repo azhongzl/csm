@@ -16,19 +16,25 @@ import com.itdoes.common.business.entity.BaseEntity;
  * @author Jalen Zhong
  */
 @Entity
-@Table(name = "category")
+@Table(name = "faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Category extends BaseEntity {
-	private static final long serialVersionUID = 115155230L;
+public class Faq extends BaseEntity {
+	private static final long serialVersionUID = 70390L;
 
 	@Id
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
-	@Column(name = "name")
-	private String name;
-	@Column(name = "description")
-	private String description;
+	@Column(name = "category_id")
+	private java.util.UUID categoryId;
+	@Column(name = "question")
+	private String question;
+	@Column(name = "answer")
+	private String answer;
+	@Column(name = "keywords")
+	private String keywords;
+	@Column(name = "attachments")
+	private String attachments;
 	@Column(name = "active")
 	private Boolean active;
 	@Column(name = "create_account_id")
@@ -48,20 +54,44 @@ public class Category extends BaseEntity {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public java.util.UUID getCategoryId() {
+		return categoryId;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCategoryId(java.util.UUID categoryId) {
+		this.categoryId = categoryId;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getQuestion() {
+		return question;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
+	public String getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(String attachments) {
+		this.attachments = attachments;
 	}
 
 	public Boolean getActive() {
