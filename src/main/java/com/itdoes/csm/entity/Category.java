@@ -1,10 +1,7 @@
 package com.itdoes.csm.entity;
 
-import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -25,9 +22,9 @@ public class Category extends BaseEntity {
 	private static final long serialVersionUID = 115155230L;
 
 	@Id
+	@javax.persistence.GeneratedValue
 	@Column(name = "id")
-	@GeneratedValue
-	private UUID id;
+	private java.util.UUID id;
 	@Column(name = "name")
 	private String name;
 	@Column(name = "description")
@@ -37,11 +34,11 @@ public class Category extends BaseEntity {
 	@Column(name = "modify_date")
 	private java.time.LocalDateTime modifyDate;
 
-	public UUID getId() {
+	public java.util.UUID getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(java.util.UUID id) {
 		this.id = id;
 	}
 

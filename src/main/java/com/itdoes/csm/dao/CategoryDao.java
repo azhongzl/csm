@@ -1,7 +1,5 @@
 package com.itdoes.csm.dao;
 
-import java.util.UUID;
-
 import com.itdoes.csm.entity.Category;
 
 /**
@@ -9,5 +7,5 @@ import com.itdoes.csm.entity.Category;
  * 
  * @author Jalen Zhong
  */
-public interface CategoryDao extends com.itdoes.common.business.dao.BaseQueryCacheDao<Category, UUID> {
+public interface CategoryDao extends com.itdoes.common.business.dao.BaseQueryCacheDao<Category, java.util.UUID> {
 }
