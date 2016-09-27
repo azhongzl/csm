@@ -1,6 +1,6 @@
 package com.itdoes.csm;
 
-import com.itdoes.common.core.test.jetty.JettyServer;
+import com.itdoes.common.core.test.jetty.JettyServerHelper;
 import com.itdoes.common.core.test.spring.Profiles;
 
 /**
@@ -12,22 +12,8 @@ public class JettyServerMain {
 	private static final String[] TLD_JAR_NAMES = new String[] { "shiro-web" };
 
 	public static void main(String[] args) {
-		try {
-			Profiles.activeProfile(Profiles.DEVELOPMENT);
-
-			final JettyServer jettyServer = JettyServer.createAndStart(PORT, CONTEXT_PATH, TLD_JAR_NAMES);
-
-			System.out.println("[HINT] Hit Enter to reload server");
-			while (true) {
-				final char c = (char) System.in.read();
-				if (c == '\n') {
-					jettyServer.reload();
-				}
-			}
-		} catch (Throwable t) {
-			t.printStackTrace();
-			System.exit(-1);
-		}
+		Profiles.activeProfile(Profiles.DEVELOPMENT);
+		JettyServerHelper.createAndStart(PORT, CONTEXT_PATH, TLD_JAR_NAMES);
 	}
 
 	private JettyServerMain() {
