@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+	default-lazy-init="true">
+
+	<description>Shiro Configuration</description>
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="shiroSecurityManager" />
+		<property name="loginUrl" value="/login" />
+		<property name="successUrl" value="/" />
+		<property name="filterChainDefinitionMap" ref="shiroFilterChainDefinitionMap" />
+	</bean>
+
+	<bean id="shiroFilterChainDefinitionMap" class="com.itdoes.common.business.web.ShiroFilterChainDefinitionMap">
+		<property name="beforeStaticDefinitions">
+			<value>
+				/login = authc
+				/logout = logout
+				/upload/dir1/dir2/dir3 = perms["upload:reasonablePermissionName"]
+			</value>
+		</property>
+		<property name="afterStaticDefinitions">
+			<value>
+				/** = user
+			</value>
+		</property>
+	</bean>
+
+	<bean id="shiroSecurityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="shiroDbRealm" />
+		<property name="rememberMeManager" ref="shiroRememberMeManager" />
+		<property name="cacheManager" ref="shiroEhcacheManager" />
+	</bean>
+
+	<bean id="shiroDbRealm" class="com.itdoes.csm.service.ShiroDbRealm" />
+
+	<bean id="shiroRememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+		<property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('IduElDUpDDXE677ZkhhKnQ==')}" />
+		<property name="cookie" ref="shiroRememberMeCookie" />
+	</bean>
+
+	<bean id="shiroRememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="rememberMe" />
+		<property name="httpOnly" value="true" />
+		<property name="maxAge" value="31536000" />
+	</bean>
+
+	<bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:security/ehcache-shiro.xml" />
+	</bean>
+
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<!-- AOP式方法级权限检查 -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="shiroSecurityManager" />
+	</bean>
+</beans>

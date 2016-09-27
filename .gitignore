@@ -1,0 +1,11 @@
+# Eclipse
+.settings/
+.classpath
+.project
+.tern-project
+
+# Maven 
+target/
+
+# Local
+application.local.properties
