@@ -39,7 +39,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	private EntityPair<Account, UUID> pair;
 
 	@PostConstruct
-	public void postConstruct() {
+	public void myInit() {
 		pair = env.getEntityPair(Account.class.getSimpleName());
 	}
 
