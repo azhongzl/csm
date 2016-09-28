@@ -5,8 +5,8 @@ drop table if exists account;
 create table account (
 	id binary(16) not null,
 	username varchar(100) not null,
-	password varchar(100) not null,
-	salt varchar(100) not null,
+	password char(64) not null,
+	salt char(16) not null,
 	active bit not null,
     primary key (id)
 ) engine=InnoDB;
