@@ -1,5 +1,9 @@
 package com.itdoes.csm.service;
 
+import java.util.UUID;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -7,31 +11,51 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.collect.Lists;
+import com.itdoes.common.business.EntityPair;
+import com.itdoes.common.business.Env;
 import com.itdoes.common.business.Permissions;
-import com.itdoes.common.core.security.Digests;
+import com.itdoes.common.business.service.FacadeTransactionalService;
+import com.itdoes.common.core.jpa.SearchFilter;
+import com.itdoes.common.core.jpa.SearchFilter.Operator;
+import com.itdoes.common.core.jpa.Specifications;
 import com.itdoes.common.core.shiro.AbstractShiroRealm;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.util.Codecs;
+import com.itdoes.csm.entity.Account;
 
 /**
  * @author Jalen Zhong
  */
 public class ShiroDbRealm extends AbstractShiroRealm {
+	@Autowired
+	private Env env;
+
+	@Autowired
+	private FacadeTransactionalService facadeService;
+
+	private EntityPair<Account, UUID> pair;
+
+	@PostConstruct
+	public void postConstruct() {
+		pair = env.getEntityPair(Account.class.getSimpleName());
+	}
+
 	@Override
 	protected AuthenticationInfo doAuthentication(UsernamePasswordToken token) throws AuthenticationException {
-		String username = token.getUsername();
-		User user = new User();
-		user.setPlainPassword(username);
-		encryptUser(user);
-		final byte[] salt = Codecs.hexDecode(user.getSalt());
-		return new SimpleAuthenticationInfo(new ShiroUser(username), user.getPassword(), ByteSource.Util.bytes(salt),
+		final String username = token.getUsername();
+		final Account account = getAccount(username);
+		final byte[] salt = Codecs.hexDecode(account.getSalt());
+		return new SimpleAuthenticationInfo(new ShiroUser(username), account.getPassword(), ByteSource.Util.bytes(salt),
 				getName());
 	}
 
 	@Override
 	protected AuthorizationInfo doAuthorization(Object principal) {
 		final ShiroUser shiroUser = (ShiroUser) principal;
+		final Account account = getAccount(shiroUser.getUsername());
 		final SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		info.addStringPermissions(Permissions.getAllPermissions());
 		return info;
@@ -42,40 +66,9 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 		return "SHA-256";
 	}
 
-	private static void encryptUser(User user) {
-		final byte[] salt = Digests.generateSalt();
-		user.setSalt(Codecs.hexEncode(salt));
-		final byte[] hashedPassword = Digests.sha256(user.getPlainPassword().getBytes(), salt);
-		user.setPassword(Codecs.hexEncode(hashedPassword));
-	}
-
-	private static class User {
-		public String salt;
-		public String plainPassword;
-		public String password;
-
-		public String getSalt() {
-			return salt;
-		}
-
-		public void setSalt(String salt) {
-			this.salt = salt;
-		}
-
-		public String getPlainPassword() {
-			return plainPassword;
-		}
-
-		public void setPlainPassword(String plainPassword) {
-			this.plainPassword = plainPassword;
-		}
-
-		public String getPassword() {
-			return password;
-		}
-
-		public void setPassword(String password) {
-			this.password = password;
-		}
+	private Account getAccount(String username) {
+		final Account account = facadeService.searchOne(pair, Specifications.build(Account.class,
+				Lists.newArrayList(new SearchFilter("username", Operator.EQ, username))));
+		return account;
 	}
 }
