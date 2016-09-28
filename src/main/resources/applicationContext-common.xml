@@ -137,7 +137,7 @@
 
 		<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
 			<jdbc:script location="classpath:sql/h2/schema.sql" />
-			<jdbc:script location="classpath:data/h2/import-data.sql" encoding="UTF-8" />
+			<jdbc:script location="classpath:data/h2/data-test.sql" encoding="UTF-8" />
 		</jdbc:initialize-database>
 	</beans>
 </beans>
