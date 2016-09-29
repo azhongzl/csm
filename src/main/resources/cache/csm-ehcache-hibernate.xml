@@ -5,29 +5,17 @@
 	<diskStore path="java.io.tmpdir/csm/ehcache/hibernate" />
 
 	<!-- Default cache setting -->
-	<defaultCache maxEntriesLocalHeap="10000" maxEntriesLocalDisk="100000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600">
-		<persistence strategy="localTempSwap"/>
-	</defaultCache>
+	<defaultCache maxEntriesLocalHeap="10000" maxEntriesLocalDisk="100000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></defaultCache>
 
 	<!-- Query cache setting -->
-	<cache name="org.hibernate.cache.internal.StandardQueryCache"  maxEntriesLocalHeap="10000" maxEntriesLocalDisk="100000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600">
-		<persistence strategy="localTempSwap"/>
-	</cache>
-	<cache name="org.hibernate.cache.spi.UpdateTimestampsCache"  maxEntriesLocalHeap="10000" maxEntriesLocalDisk="100000" eternal="true">
-		<persistence strategy="localTempSwap"/>
-	</cache>
+	<cache name="org.hibernate.cache.internal.StandardQueryCache"  maxEntriesLocalHeap="10000" maxEntriesLocalDisk="100000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>
+	<cache name="org.hibernate.cache.spi.UpdateTimestampsCache"  maxEntriesLocalHeap="10000" maxEntriesLocalDisk="100000" eternal="true"><persistence strategy="localTempSwap"/></cache>
 
 	<!-- Entity cache setting -->
 
-	<cache name="com.itdoes.csm.entity.Account" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600">
-		<persistence strategy="localTempSwap"/>
-	</cache>
+	<cache name="com.itdoes.csm.entity.Account" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>
 
-	<cache name="com.itdoes.csm.entity.Category" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600">
-		<persistence strategy="localTempSwap"/>
-	</cache>
+	<cache name="com.itdoes.csm.entity.Category" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>
 
-	<cache name="com.itdoes.csm.entity.Faq" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600">
-		<persistence strategy="localTempSwap"/>
-	</cache>
+	<cache name="com.itdoes.csm.entity.Faq" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>
 </ehcache>
