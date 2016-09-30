@@ -41,6 +41,8 @@
 
 			</div>
 			<div id="content">
+
+		
 			</div>
 			<div id="pagecount"></div>
 		</div>
@@ -67,6 +69,8 @@
 
 	<script type="text/javascript" src="${ctx}/js/jquery.js"></script>
 	<script type="text/javascript" src="${ctx}/js/function.js"></script>
+	<script type="text/javascript" src="${ctx}/js/common.js"></script>
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 			showCategory();

@@ -1,0 +1,28 @@
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript">
+function getlink(id)
+{ 
+  document.getElementById(id).innerHTML="click show constent";
+}
+function t(id){
+	if(document.getElementById(id+"_act").innerHTML=="close"){
+		document.getElementById(id+"_act").innerHTML = 'open';
+		$('#'+id).slideUp();
+	}else{
+		document.getElementById(id+"_act").innerHTML = 'close';
+		$('#'+id).hide();
+		getlink(id);
+		$('#'+id).slideDown();
+	}
+}
+</script>
+
+<div class="a">
+<a href="javascript:t('1')" id="1_act">close</a>
+<div class="b" id="1"></div>
+</div>
+
+<div class="a">
+<a href="javascript:t('2')" id="2_act">open</a>
+<div class="b" id="2"></div>
+</div>
