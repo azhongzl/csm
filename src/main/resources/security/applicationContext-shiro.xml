@@ -17,6 +17,7 @@
 			<value>
 				/login = authc
 				/logout = logout
+				/static/** = anon
 				/upload/dir1/dir2/dir3 = perms["upload:reasonablePermissionName"]
 			</value>
 		</property>
