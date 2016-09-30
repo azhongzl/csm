@@ -7,6 +7,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 
 import com.itdoes.common.business.entity.BaseEntity;
 
@@ -18,6 +20,7 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Indexed
 public class Faq extends BaseEntity {
 	private static final long serialVersionUID = 70390L;
 
@@ -28,8 +31,10 @@ public class Faq extends BaseEntity {
 	@Column(name = "category_id")
 	private java.util.UUID categoryId;
 	@Column(name = "question")
+	@Field
 	private String question;
 	@Column(name = "answer")
+	@Field
 	private String answer;
 	@Column(name = "keywords")
 	private String keywords;

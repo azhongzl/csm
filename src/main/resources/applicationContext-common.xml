@@ -33,7 +33,7 @@
 				<prop key="net.sf.ehcache.configurationResourceName">cache/csm-ehcache-hibernate.xml</prop>
 				<prop key="hibernate.cache.use_query_cache">true</prop>
 				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
-				<!-- <prop key="hibernate.hbm2ddl.auto">update</prop> -->
+				<prop key="hibernate.search.default.directory_provider">ram</prop>
 			</props>
 		</property>
 	</bean>
