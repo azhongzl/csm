@@ -18,8 +18,8 @@ import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.Env;
 import com.itdoes.common.business.Permissions;
 import com.itdoes.common.business.service.FacadeTransactionalService;
-import com.itdoes.common.core.jpa.SearchFilter;
-import com.itdoes.common.core.jpa.SearchFilter.Operator;
+import com.itdoes.common.core.jpa.FindFilter;
+import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
 import com.itdoes.common.core.shiro.AbstractShiroRealm;
 import com.itdoes.common.core.shiro.ShiroUser;
@@ -46,7 +46,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	@Override
 	protected AuthenticationInfo doAuthentication(UsernamePasswordToken token) throws AuthenticationException {
 		final String username = token.getUsername();
-		final Account account = searchAccount(username);
+		final Account account = findAccount(username);
 		final byte[] salt = Codecs.hexDecode(account.getSalt());
 		return new SimpleAuthenticationInfo(new ShiroUser(account.getId().toString(), username), account.getPassword(),
 				ByteSource.Util.bytes(salt), getName());
@@ -66,9 +66,9 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 		return "SHA-256";
 	}
 
-	private Account searchAccount(String username) {
-		final Account account = facadeService.searchOne(pair, Specifications.build(Account.class,
-				Lists.newArrayList(new SearchFilter("username", Operator.EQ, username))));
+	private Account findAccount(String username) {
+		final Account account = facadeService.findOne(pair, Specifications.build(Account.class,
+				Lists.newArrayList(new FindFilter("username", Operator.EQ, username))));
 		return account;
 	}
 
