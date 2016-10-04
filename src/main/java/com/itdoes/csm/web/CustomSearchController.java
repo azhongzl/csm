@@ -68,7 +68,7 @@ public class CustomSearchController extends BaseController {
 		return HttpResults.success(page);
 	}
 
-	public Result search(@RequestParam(value = "searchString") String searchString,
+	public Result search(@RequestParam(value = "ss") String searchString,
 			@RequestParam(value = "page_no", defaultValue = "1") int pageNo,
 			@RequestParam(value = "page_size", defaultValue = "-1") int pageSize,
 			@RequestParam(value = "page_sort", required = false) String pageSort, ServletRequest request) {
