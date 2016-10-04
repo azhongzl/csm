@@ -10,7 +10,7 @@
 <body>
 	<a href="${ctx}/">Go Back</a>
 	<br />
-	<a href="${ctx}/facade/Category/search">View Type</a>
+	<a href="${ctx}/facade/Category/find">View Type</a>
 	<form action="${ctx}/facade/Category/post" method="post">
 		<fieldset>
 			<table>
