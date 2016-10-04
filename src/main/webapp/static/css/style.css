@@ -244,6 +244,15 @@ nav {
 	
 }
 
+
+}
+#admin_sidebar input {
+
+	margin: 0 0 0 0;
+	padding: 0 0 4px 28px;
+	line-height: 2.5em;
+	font-size: 140%;
+}
 .sidebar ul li {
 	list-style-type: none;
 	background: url(../images/bullet.png) no-repeat;
@@ -318,8 +327,8 @@ footer a:hover {
 
 
 
-html body ul.sf-menu ul, html body ul.sf-menu ul li {
-	width: 220px;
+html body ul.sf-menu ul {
+	width: 180px;
 }
 
 html body ul.sf-menu ul ul {
@@ -419,7 +428,7 @@ ul#nav {
 
 ul#nav ul {
 	background: #58B5D6;
-	margin-top: 5px;
+	margin-top: 0;
 	padding-bottom: 15px;
 }
 

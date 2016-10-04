@@ -9,7 +9,7 @@
 <meta name="description" content="website description" />
 <meta name="keywords" content="website keywords, website keywords" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" type="text/css" href="${ctx}/css/style.css" />
+<link rel="stylesheet" type="text/css" href="${ctx}/static/css/style.css" />
 
 </head>
 
@@ -46,13 +46,13 @@
 		</div>
 		<div id="scroll">
 			<a title="Scroll to the top" class="top" href="#"><img
-				src="${ctx}/images/top.png" alt="top" /></a>
+				src="${ctx}/static/images/top.png" alt="top" /></a>
 		</div>
 		<footer>
 			<p>
-				<img src="${ctx}/images/twitter.png" alt="twitter" />&nbsp;<img
-					src="${ctx}/images/facebook.png" alt="facebook" />&nbsp;<img
-					src="${ctx}/images/rss.png" alt="rss" />
+				<img src="${ctx}/static/images/twitter.png" alt="twitter" />&nbsp;<img
+					src="${ctx}/static/images/facebook.png" alt="facebook" />&nbsp;<img
+					src="${ctx}/static/images/rss.png" alt="rss" />
 			</p>
 			<p>
 				<a href="index.html">Home</a> | <a href="javascript:void(0)">Contact
@@ -65,8 +65,8 @@
 		</footer>
 	</div>
 
-	<script type="text/javascript" src="${ctx}/js/jquery.js"></script>
-	<script type="text/javascript" src="${ctx}/js/function.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/jquery.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/function.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			showCategory();
