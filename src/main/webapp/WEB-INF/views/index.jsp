@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE HTML>
 <html>
@@ -9,7 +10,8 @@
 <meta name="description" content="website description" />
 <meta name="keywords" content="website keywords, website keywords" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" type="text/css" href="${ctx}/static/css/style.css" />
+<link rel="stylesheet" type="text/css"
+	href="${ctx}/static/css/style.css" />
 
 </head>
 
@@ -21,6 +23,8 @@
 					<ul class="sf-menu" id="nav">
 						<li><a href="${ctx}/">Home</a></li>
 						<li><a href="#">Contact Us</a></li>
+						<li><shiro:principal property="id" /> <shiro:principal
+								property="username" /></li>
 					</ul>
 				</div>
 			</nav>
@@ -40,8 +44,7 @@
 				</div>
 
 			</div>
-			<div id="content">
-			</div>
+			<div id="content"></div>
 			<div id="pagecount"></div>
 		</div>
 		<div id="scroll">

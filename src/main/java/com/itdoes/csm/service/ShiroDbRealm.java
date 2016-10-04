@@ -46,16 +46,16 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	@Override
 	protected AuthenticationInfo doAuthentication(UsernamePasswordToken token) throws AuthenticationException {
 		final String username = token.getUsername();
-		final Account account = getAccount(username);
+		final Account account = searchAccount(username);
 		final byte[] salt = Codecs.hexDecode(account.getSalt());
-		return new SimpleAuthenticationInfo(new ShiroUser(username), account.getPassword(), ByteSource.Util.bytes(salt),
-				getName());
+		return new SimpleAuthenticationInfo(new ShiroUser(account.getId().toString(), username), account.getPassword(),
+				ByteSource.Util.bytes(salt), getName());
 	}
 
 	@Override
 	protected AuthorizationInfo doAuthorization(Object principal) {
 		final ShiroUser shiroUser = (ShiroUser) principal;
-		final Account account = getAccount(shiroUser.getUsername());
+		final Account account = getAccount(shiroUser.getId());
 		final SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		info.addStringPermissions(Permissions.getAllPermissions());
 		return info;
@@ -66,9 +66,14 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 		return "SHA-256";
 	}
 
-	private Account getAccount(String username) {
+	private Account searchAccount(String username) {
 		final Account account = facadeService.searchOne(pair, Specifications.build(Account.class,
 				Lists.newArrayList(new SearchFilter("username", Operator.EQ, username))));
+		return account;
+	}
+
+	private Account getAccount(String id) {
+		final Account account = facadeService.get(pair, UUID.fromString(id));
 		return account;
 	}
 }
