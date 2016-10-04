@@ -63,7 +63,8 @@ public class CustomSearchController extends BaseController {
 		final Page<Faq> page = facadeService.find(pair,
 				Specifications.build(pair.getEntityClass(),
 						Lists.newArrayList(new FindFilter("question", Operator.LIKE, searchString),
-								new FindFilter("answer", Operator.LIKE, searchString))),
+								new FindFilter("answer", Operator.LIKE, searchString)),
+						false),
 				buildPageRequest(pageNo, pageSize, pageSort));
 		return HttpResults.success(page);
 	}
