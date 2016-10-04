@@ -56,7 +56,7 @@ public class CustomSearchController extends BaseController {
 
 	// TODO should be switched to search() which is full text search
 	@RequestMapping(method = RequestMethod.GET)
-	public <T, ID extends Serializable> Result find(@RequestParam(value = "searchString") String searchString,
+	public <T, ID extends Serializable> Result find(@RequestParam(value = "ss") String searchString,
 			@RequestParam(value = "page_no", defaultValue = "1") int pageNo,
 			@RequestParam(value = "page_size", defaultValue = "-1") int pageSize,
 			@RequestParam(value = "page_sort", required = false) String pageSort, ServletRequest request) {
