@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
@@ -10,8 +11,11 @@
 <body>
 	<a href="${ctx}/">Go Back</a>
 	<br />
-	<a href="${ctx}/facade/Category/find">View Type</a>
+	<a href="${ctx}/facade/Category/find">View Category</a>
 	<form action="${ctx}/facade/Category/post" method="post">
+		<input type="hidden" name="createAccountId"
+			value="<shiro:principal property="id" />" /> <input type="hidden"
+			name="modifyAccountId" value="<shiro:principal property="id" />" />
 		<fieldset>
 			<table>
 				<tr>
@@ -23,8 +27,18 @@
 					<td><input type="text" name="description" value="" /></td>
 				</tr>
 				<tr>
-					<td>createTime:</td>
-					<td><input type="text" name="createTime"
+					<td>Active:</td>
+					<td><input type="radio" name="active" value="1" checked />Active
+						<input type="radio" name="active" value="0" />Inactive</td>
+				</tr>
+				<tr>
+					<td>createDateTime:</td>
+					<td><input type="text" name="createDate"
+						value="<%=java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME)%>" /></td>
+				</tr>
+				<tr>
+					<td>modifyDateTime:</td>
+					<td><input type="text" name="modifyDate"
 						value="<%=java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME)%>" /></td>
 				</tr>
 				<tr>
@@ -35,6 +49,8 @@
 	</form>
 	<br />
 	<form action="#" method="post">
+		<input type="hidden" name="modifyAccountId"
+			value="<shiro:principal property="id" />" />
 		<fieldset>
 			<table>
 				<tr>
@@ -50,13 +66,111 @@
 					<td><input type="text" name="description" value="" /></td>
 				</tr>
 				<tr>
-					<td>modifyTime:</td>
-					<td><input type="text" name="modifyTime"
+					<td>Active:</td>
+					<td><input type="radio" name="active" value="1" checked />Active
+						<input type="radio" name="active" value="0" />Inactive</td>
+				</tr>
+				<tr>
+					<td>modifyDateTime:</td>
+					<td><input type="text" name="modifyDate"
 						value="<%=java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME)%>" /></td>
 				</tr>
 				<tr>
 					<td><input type="submit" value="Update"
 						onclick="this.form.action='${ctx}/facade/Category/put' + '/' + document.getElementById('id').value" /></td>
+				</tr>
+			</table>
+		</fieldset>
+	</form>
+
+	<br />
+	<hr />
+	<br />
+	<a href="${ctx}/facade/Faq/find">View Faq</a>
+	<form action="${ctx}/facade/Faq/post" method="post">
+		<input type="hidden" name="createAccountId"
+			value="<shiro:principal property="id" />" /> <input type="hidden"
+			name="modifyAccountId" value="<shiro:principal property="id" />" />
+		<input type="hidden" name="keywords" value="111" />
+		<fieldset>
+			<table>
+				<tr>
+					<td>CategoryId:</td>
+					<td><input type="text" name="categoryId" value="" /></td>
+				</tr>
+				<tr>
+					<td>Question:</td>
+					<td><input type="text" name="question" value="question" /></td>
+				</tr>
+				<tr>
+					<td>Answer:</td>
+					<td><input type="text" name="answer" value="answer" /></td>
+				</tr>
+				<tr>
+					<td>Attachments:</td>
+					<td><input type="file" name="uploadFile" multiple="multiple" /></td>
+				</tr>
+				<tr>
+					<td>Active:</td>
+					<td><input type="radio" name="active" value="1" checked />Active
+						<input type="radio" name="active" value="0" />Inactive</td>
+				</tr>
+				<tr>
+					<td>createDateTime:</td>
+					<td><input type="text" name="createDate"
+						value="<%=java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME)%>" /></td>
+				</tr>
+				<tr>
+					<td>modifyDateTime:</td>
+					<td><input type="text" name="modifyDate"
+						value="<%=java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME)%>" /></td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="Create" /></td>
+				</tr>
+			</table>
+		</fieldset>
+	</form>
+	<br />
+	<form action="#" method="post">
+		<input type="hidden" name="modifyAccountId"
+			value="<shiro:principal property="id" />" /> <input type="hidden"
+			name="keywords" value="111" />
+		<fieldset>
+			<table>
+				<tr>
+					<td>Id:</td>
+					<td><input type="text" id="id" name="id" value="" /></td>
+				</tr>
+				<tr>
+					<td>CategoryId:</td>
+					<td><input type="text" name="categoryId" value="" /></td>
+				</tr>
+				<tr>
+					<td>Question:</td>
+					<td><input type="text" name="question" value="question" /></td>
+				</tr>
+				<tr>
+					<td>Answer:</td>
+					<td><input type="text" name="answer" value="answer" /></td>
+				</tr>
+				<tr>
+					<td>Attachments:</td>
+					<td><input type="file" name="uploadFile" multiple="multiple" /></td>
+				</tr>
+				<tr>
+					<td>Active:</td>
+					<td><input type="radio" name="active" value="1" checked />Active
+						<input type="radio" name="active" value="0" />Inactive</td>
+				</tr>
+				<tr>
+					<td>modifyDateTime:</td>
+					<td><input type="text" name="modifyDate"
+						value="<%=java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME)%>" /></td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="Update"
+						onclick="this.form.action='${ctx}/facade/Faq/put' + '/' + document.getElementById('id').value" /></td>
 				</tr>
 			</table>
 		</fieldset>
