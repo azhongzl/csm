@@ -33,6 +33,7 @@ public class Faq extends BaseEntity {
 	private String answer;
 	@Column(name = "keywords")
 	private String keywords;
+	@com.itdoes.common.business.entity.UploadField
 	@Column(name = "attachments")
 	private String attachments;
 	@Column(name = "active")
