@@ -86,8 +86,10 @@
 	<br />
 	<hr />
 	<br />
+
 	<a href="${ctx}/e/Faq/find">View Faq</a>
-	<form action="${ctx}/e/Faq/post" method="post">
+	<form action="${ctx}/e/Faq/postUpload" method="post"
+		enctype="multipart/form-data">
 		<input type="hidden" name="createAccountId"
 			value="<shiro:principal property="id" />" /> <input type="hidden"
 			name="modifyAccountId" value="<shiro:principal property="id" />" />
@@ -132,7 +134,7 @@
 		</fieldset>
 	</form>
 	<br />
-	<form action="#" method="post">
+	<form action="#" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="modifyAccountId"
 			value="<shiro:principal property="id" />" /> <input type="hidden"
 			name="keywords" value="111" />
@@ -170,7 +172,7 @@
 				</tr>
 				<tr>
 					<td><input type="submit" value="Update"
-						onclick="this.form.action='${ctx}/e/Faq/put' + '/' + document.getElementById('id').value" /></td>
+						onclick="this.form.action='${ctx}/e/Faq/putUpload' + '/' + document.getElementById('id').value" /></td>
 				</tr>
 			</table>
 		</fieldset>
