@@ -31,8 +31,6 @@ public class Faq extends BaseEntity {
 	private String question;
 	@Column(name = "answer")
 	private String answer;
-	@Column(name = "keywords")
-	private String keywords;
 	@com.itdoes.common.business.entity.UploadField
 	@Column(name = "attachments")
 	private String attachments;
@@ -77,14 +75,6 @@ public class Faq extends BaseEntity {
 
 	public void setAnswer(String answer) {
 		this.answer = answer;
-	}
-
-	public String getKeywords() {
-		return keywords;
-	}
-
-	public void setKeywords(String keywords) {
-		this.keywords = keywords;
 	}
 
 	public String getAttachments() {
