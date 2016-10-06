@@ -7,5 +7,6 @@
 # Maven 
 target/
 
-# Local
+# Project
 application.local.properties
+upload/
