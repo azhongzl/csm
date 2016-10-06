@@ -11,8 +11,8 @@
 <body>
 	<a href="${ctx}/">Go Back</a>
 	<br />
-	<a href="${ctx}/facade/Category/find">View Category</a>
-	<form action="${ctx}/facade/Category/post" method="post">
+	<a href="${ctx}/e/Category/find">View Category</a>
+	<form action="${ctx}/e/Category/post" method="post">
 		<input type="hidden" name="createAccountId"
 			value="<shiro:principal property="id" />" /> <input type="hidden"
 			name="modifyAccountId" value="<shiro:principal property="id" />" />
@@ -77,7 +77,7 @@
 				</tr>
 				<tr>
 					<td><input type="submit" value="Update"
-						onclick="this.form.action='${ctx}/facade/Category/put' + '/' + document.getElementById('id').value" /></td>
+						onclick="this.form.action='${ctx}/e/Category/put' + '/' + document.getElementById('id').value" /></td>
 				</tr>
 			</table>
 		</fieldset>
@@ -86,8 +86,8 @@
 	<br />
 	<hr />
 	<br />
-	<a href="${ctx}/facade/Faq/find">View Faq</a>
-	<form action="${ctx}/facade/Faq/post" method="post">
+	<a href="${ctx}/e/Faq/find">View Faq</a>
+	<form action="${ctx}/e/Faq/post" method="post">
 		<input type="hidden" name="createAccountId"
 			value="<shiro:principal property="id" />" /> <input type="hidden"
 			name="modifyAccountId" value="<shiro:principal property="id" />" />
@@ -170,7 +170,7 @@
 				</tr>
 				<tr>
 					<td><input type="submit" value="Update"
-						onclick="this.form.action='${ctx}/facade/Faq/put' + '/' + document.getElementById('id').value" /></td>
+						onclick="this.form.action='${ctx}/e/Faq/put' + '/' + document.getElementById('id').value" /></td>
 				</tr>
 			</table>
 		</fieldset>
