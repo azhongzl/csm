@@ -109,7 +109,7 @@
 					<td><input type="text" name="answer" value="answer" /></td>
 				</tr>
 				<tr>
-					<td>Attachments:</td>
+					<td>UploadFile:</td>
 					<td><input type="file" name="uploadFile" multiple="multiple" /></td>
 				</tr>
 				<tr>
@@ -158,6 +158,10 @@
 				</tr>
 				<tr>
 					<td>Attachments:</td>
+					<td><input type="text" name="attachments" value="" /></td>
+				</tr>
+				<tr>
+					<td>UploadFile:</td>
 					<td><input type="file" name="uploadFile" multiple="multiple" /></td>
 				</tr>
 				<tr>
