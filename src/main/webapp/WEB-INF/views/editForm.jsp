@@ -55,7 +55,7 @@
 			<table>
 				<tr>
 					<td>Id:</td>
-					<td><input type="text" id="id" name="id" value="" /></td>
+					<td><input type="text" id="categoryId" name="id" value="" /></td>
 				</tr>
 				<tr>
 					<td>Name:</td>
@@ -77,7 +77,7 @@
 				</tr>
 				<tr>
 					<td><input type="submit" value="Update"
-						onclick="this.form.action='${ctx}/e/Category/put' + '/' + document.getElementById('id').value" /></td>
+						onclick="this.form.action='${ctx}/e/Category/put/' document.getElementById('categoryId').value" /></td>
 				</tr>
 			</table>
 		</fieldset>
@@ -142,7 +142,7 @@
 			<table>
 				<tr>
 					<td>Id:</td>
-					<td><input type="text" id="id" name="id" value="" /></td>
+					<td><input type="text" id="faqId" name="id" value="" /></td>
 				</tr>
 				<tr>
 					<td>CategoryId:</td>
@@ -176,7 +176,7 @@
 				</tr>
 				<tr>
 					<td><input type="submit" value="Update"
-						onclick="this.form.action='${ctx}/e/Faq/putUpload' + '/' + document.getElementById('id').value" /></td>
+						onclick="this.form.action='${ctx}/e/Faq/putUpload/' + document.getElementById('faqId').value" /></td>
 				</tr>
 			</table>
 		</fieldset>
