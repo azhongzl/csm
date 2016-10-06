@@ -50,21 +50,6 @@ h3 {
 	padding: 5px 0 0 0;
 }
 
-h4, h6 {
-	color: #555;
-	padding: 0 0 5px 0;
-	font: normal 120% 'Droid Sans', arial, sans-serif;
-}
-
-h5, h6 {
-	color: #999;
-	font: italic 100% 'Droid Sans', arial;
-	padding: 0 0 15px 0;
-}
-
-h6 {
-	font: normal 100% 'Droid Sans', arial;
-}
 
 a, a:hover {
 	outline: none;
@@ -87,12 +72,6 @@ ul {
 	margin: 2px 0 22px 17px;
 }
 
-ul li {
-	list-style-type: circle;
-	margin: 0 0 6px 0;
-	padding: 0 0 4px 5px;
-	line-height: 1.5em;
-}
 
 
 
@@ -234,7 +213,7 @@ nav {
 	padding: 15px 0;
 }
 
-#adminCategory li{
+#adminCategory li a {
 	color : #808080;
 }
 
@@ -253,13 +232,14 @@ nav {
 #admin_sidebar input {
 
 	margin: 0 0 0 0;
-	padding: 0 0 4px 28px;
+	margin-top: 10px;
+	padding: 0 10px 4px 28px;
+	
 	line-height: 2.5em;
 	font-size: 140%;
 }
 .sidebar ul li {
 	list-style-type: none;
-	background: url(../images/bullet.png) no-repeat;
 	margin: 0 0 0 0;
 	padding: 0 0 4px 28px;
 	line-height: 1.5em;
@@ -484,4 +464,10 @@ ul#nav li a:hover, ul#nav li a:focus {
 
 span.current{
 	background-color: #53a9ff;
+}
+
+input[type="button"]{
+	margin-top:10px;
+	margin-right:5px;
+	width: 100px;
 }

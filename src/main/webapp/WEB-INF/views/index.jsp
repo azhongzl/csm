@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE HTML>
 <html>
@@ -23,8 +22,7 @@
 					<ul class="sf-menu" id="nav">
 						<li><a href="${ctx}/">Home</a></li>
 						<li><a href="#">Contact Us</a></li>
-						<li><shiro:principal property="id" /> <shiro:principal
-								property="username" /></li>
+
 					</ul>
 				</div>
 			</nav>
