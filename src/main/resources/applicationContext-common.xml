@@ -18,7 +18,7 @@
 		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
 
-	<bean class="com.itdoes.common.business.Env">
+	<bean class="com.itdoes.common.business.EntityEnv">
 		<property name="entityPackage" value="com.itdoes.csm.entity" />
 		<property name="daoLazyInit" value="${dao.lazyInit}" />
 	</bean>

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
+import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
-import com.itdoes.common.business.Env;
-import com.itdoes.common.business.service.FacadeTransactionalService;
+import com.itdoes.common.business.service.EntityTransactionalService;
 import com.itdoes.common.business.service.SearchService;
 import com.itdoes.common.business.service.SearchService.SearchEntity;
 import com.itdoes.common.business.web.BaseController;
@@ -44,14 +44,14 @@ public class CustomSearchController extends BaseController {
 
 	// TODO following should be removed if switching to search()
 	@Autowired
-	private FacadeTransactionalService facadeService;
+	private EntityTransactionalService entityService;
 	@Autowired
-	private Env env;
+	private EntityEnv env;
 	private EntityPair<Faq, UUID> pair;
 
 	@PostConstruct
 	public void myInit() {
-		pair = env.getEntityPair(Faq.class.getSimpleName());
+		pair = env.getPair(Faq.class.getSimpleName());
 	}
 
 	// TODO should be switched to search() which is full text search
@@ -60,7 +60,7 @@ public class CustomSearchController extends BaseController {
 			@RequestParam(value = "page_no", defaultValue = "1") int pageNo,
 			@RequestParam(value = "page_size", defaultValue = "-1") int pageSize,
 			@RequestParam(value = "page_sort", required = false) String pageSort, ServletRequest request) {
-		final Page<Faq> page = facadeService.find(pair,
+		final Page<Faq> page = entityService.find(pair,
 				Specifications.build(pair.getEntityClass(),
 						Lists.newArrayList(new FindFilter("question", Operator.LIKE, searchString),
 								new FindFilter("answer", Operator.LIKE, searchString)),

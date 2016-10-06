@@ -1,4 +1,4 @@
-var url = "http://localhost:8080/csm/facade/"
+var url = "http://localhost:8080/csm/e/"
 var curPage = 1;
 var pageSize = 2;
 var total, totalPage;

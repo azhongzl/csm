@@ -18,7 +18,6 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-// @Indexed
 public class Faq extends BaseEntity {
 	private static final long serialVersionUID = 70390L;
 
@@ -29,13 +28,12 @@ public class Faq extends BaseEntity {
 	@Column(name = "category_id")
 	private java.util.UUID categoryId;
 	@Column(name = "question")
-	// @Field
 	private String question;
 	@Column(name = "answer")
-	// @Field
 	private String answer;
 	@Column(name = "keywords")
 	private String keywords;
+	@com.itdoes.common.business.entity.UploadField
 	@Column(name = "attachments")
 	private String attachments;
 	@Column(name = "active")

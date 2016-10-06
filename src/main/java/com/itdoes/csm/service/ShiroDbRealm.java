@@ -14,10 +14,10 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.Lists;
+import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
-import com.itdoes.common.business.Env;
 import com.itdoes.common.business.Permissions;
-import com.itdoes.common.business.service.FacadeTransactionalService;
+import com.itdoes.common.business.service.EntityTransactionalService;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
@@ -31,16 +31,16 @@ import com.itdoes.csm.entity.Account;
  */
 public class ShiroDbRealm extends AbstractShiroRealm {
 	@Autowired
-	private Env env;
+	private EntityEnv env;
 
 	@Autowired
-	private FacadeTransactionalService facadeService;
+	private EntityTransactionalService entityService;
 
 	private EntityPair<Account, UUID> pair;
 
 	@PostConstruct
 	public void myInit() {
-		pair = env.getEntityPair(Account.class.getSimpleName());
+		pair = env.getPair(Account.class.getSimpleName());
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 		final ShiroUser shiroUser = (ShiroUser) principal;
 		final Account account = getAccount(shiroUser.getId());
 		final SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		info.addStringPermissions(Permissions.getAllPermissions());
+		info.addStringPermission(Permissions.getAllPermission());
 		return info;
 	}
 
@@ -67,13 +67,13 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	}
 
 	private Account findAccount(String username) {
-		final Account account = facadeService.findOne(pair, Specifications.build(Account.class,
+		final Account account = entityService.findOne(pair, Specifications.build(Account.class,
 				Lists.newArrayList(new FindFilter("username", Operator.EQ, username))));
 		return account;
 	}
 
 	private Account getAccount(String id) {
-		final Account account = facadeService.get(pair, UUID.fromString(id));
+		final Account account = entityService.get(pair, UUID.fromString(id));
 		return account;
 	}
 }
