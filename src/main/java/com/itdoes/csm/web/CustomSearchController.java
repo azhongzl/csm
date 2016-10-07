@@ -1,10 +1,9 @@
 package com.itdoes.csm.web;
 
-import java.util.List;
-
 import javax.servlet.ServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +37,8 @@ public class CustomSearchController extends BaseController {
 			@RequestParam(value = "page_no", defaultValue = "1") int pageNo,
 			@RequestParam(value = "page_size", defaultValue = "-1") int pageSize,
 			@RequestParam(value = "page_sort", required = false) String pageSort, ServletRequest request) {
-		final List<?> resultList = searchService.search(searchString, FAQ_SEARCH_ENTITY, 0, 10);
-		return HttpResults.success(resultList);
+		final Page<?> page = searchService.search(searchString, FAQ_SEARCH_ENTITY,
+				buildPageRequest(pageNo, pageSize, pageSort));
+		return HttpResults.success(page);
 	}
 }
