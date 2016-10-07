@@ -17,6 +17,7 @@
 			<value>
 				/login = authc
 				/logout = logout
+				/admin = user
 				/static/** = anon
 				/upload/** = anon
 				/search/createIndex = perms["itdoes:search:createIndex"]
@@ -26,7 +27,7 @@
 		</property>
 		<property name="afterStaticDefinitions">
 			<value>
-				/** = user
+				/** = anon
 			</value>
 		</property>
 	</bean>
