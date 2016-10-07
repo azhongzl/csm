@@ -23,16 +23,18 @@ import com.itdoes.csm.entity.Faq;
  * @author Jalen Zhong
  */
 @RestController
-@RequestMapping(value = SearchController.URL_PREFIX, produces = MediaTypes.APPLICATION_JSON_UTF_8)
+@RequestMapping(value = SearchController.SEARCH_URL_PREFIX, produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class CustomSearchController extends BaseController {
+	public static final String SEARCH_COMMAND_FAQ = "faq";
+
 	private static final SearchEntity FAQ_SEARCH_ENTITY = new SearchEntity(Faq.class,
 			new String[] { "question", "answer" });
 
 	@Autowired
 	private SearchService searchService;
 
-	@RequestMapping(method = RequestMethod.GET)
-	public Result search(@RequestParam(value = "ss") String searchString,
+	@RequestMapping(value = "/" + CustomSearchController.SEARCH_COMMAND_FAQ, method = RequestMethod.GET)
+	public Result searchFaq(@RequestParam(value = "ss") String searchString,
 			@RequestParam(value = "page_no", defaultValue = "1") int pageNo,
 			@RequestParam(value = "page_size", defaultValue = "-1") int pageSize,
 			@RequestParam(value = "page_sort", required = false) String pageSort, ServletRequest request) {
