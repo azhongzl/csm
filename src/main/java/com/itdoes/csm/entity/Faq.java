@@ -18,6 +18,7 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@org.hibernate.search.annotations.Indexed
 public class Faq extends BaseEntity {
 	private static final long serialVersionUID = 70390L;
 
@@ -27,8 +28,10 @@ public class Faq extends BaseEntity {
 	private java.util.UUID id;
 	@Column(name = "category_id")
 	private java.util.UUID categoryId;
+	@org.hibernate.search.annotations.Field
 	@Column(name = "question")
 	private String question;
+	@org.hibernate.search.annotations.Field
 	@Column(name = "answer")
 	private String answer;
 	@com.itdoes.common.business.entity.UploadField

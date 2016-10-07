@@ -18,6 +18,7 @@
 				/login = authc
 				/logout = logout
 				/static/** = anon
+				/search/createIndex = perms["itdoes:search:createIndex"]
 				/upload/dir1/dir2/dir3 = perms["itdoes:upload:reasonablePermissionName"]
 			</value>
 		</property>
