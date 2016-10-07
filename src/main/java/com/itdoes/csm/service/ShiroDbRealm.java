@@ -17,7 +17,7 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.Permissions;
-import com.itdoes.common.business.service.EntityTransactionalService;
+import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
@@ -34,7 +34,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	private EntityEnv env;
 
 	@Autowired
-	private EntityTransactionalService entityService;
+	private EntityDbService dbService;
 
 	private EntityPair<Account, UUID> pair;
 
@@ -67,13 +67,13 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	}
 
 	private Account findAccount(String username) {
-		final Account account = entityService.findOne(pair, Specifications.build(Account.class,
+		final Account account = dbService.findOne(pair, Specifications.build(Account.class,
 				Lists.newArrayList(new FindFilter("username", Operator.EQ, username))));
 		return account;
 	}
 
 	private Account getAccount(String id) {
-		final Account account = entityService.get(pair, UUID.fromString(id));
+		final Account account = dbService.get(pair, UUID.fromString(id));
 		return account;
 	}
 }
