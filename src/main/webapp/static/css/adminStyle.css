@@ -50,7 +50,6 @@ h3 {
 	padding: 5px 0 0 0;
 }
 
-
 a, a:hover {
 	outline: none;
 	text-decoration: none;
@@ -71,9 +70,6 @@ blockquote {
 ul {
 	margin: 2px 0 22px 17px;
 }
-
-
-
 
 #main, #container, #site_content, footer {
 	margin-left: 150px;
@@ -188,9 +184,6 @@ nav {
 	padding: 0 15px 5px 13px;
 }
 
-
-
-
 .sidebar ul {
 	margin: 0 0 15px 0;
 }
@@ -214,7 +207,7 @@ nav {
 }
 
 #adminCategory li a {
-	color : #808080;
+	color: #808080;
 }
 
 #content {
@@ -224,20 +217,18 @@ nav {
 	float: right;
 	font-size: 150%;
 	padding: 14px 0 0 0;
-	
 }
-
 
 }
 #admin_sidebar input {
-
 	margin: 0 0 0 0;
 	margin-top: 10px;
 	padding: 0 10px 4px 28px;
-	
 	line-height: 2.5em;
 	font-size: 140%;
+	padding: 0 10px 4px 28px;
 }
+
 .sidebar ul li {
 	list-style-type: none;
 	margin: 0 0 0 0;
@@ -250,15 +241,20 @@ nav {
 	display: block;
 	text-decoration: underline;
 	line-height: 1.5em;
- 	color:#555;
+	color: #555;
 }
+
 #content span {
-	color:#007efd;
+	color: #007efd;
+	line-height: 1.5em;
+}
+#content input {
 	line-height: 1.5em;
 }
 #content  a:hover {
-	color:#007efd;
+	color: #007efd;
 }
+
 footer {
 	font: 100% 'Droid Sans', arial, sans-serif;
 	height: 125px;
@@ -285,7 +281,6 @@ footer a:hover {
 	text-decoration: underline;
 }
 
-
 /* scroll to top */
 #scroll {
 	position: relative;
@@ -308,8 +303,6 @@ footer a:hover {
 	padding: 0 0 0 0;
 	margin: 0;
 }
-
-
 
 html body ul.sf-menu ul {
 	width: 180px;
@@ -385,7 +378,6 @@ ul.sf-menu li:hover ul ul, ul.sf-menu li:focus ul ul, ul.sf-menu li.sf-hover ul 
 	left: -999999px;
 }
 
-
 span.sf-arrow {
 	width: 7px;
 	height: 7px;
@@ -404,7 +396,6 @@ ul ul span.sf-arrow {
 	top: 20px;
 	background-position: 0 100%;
 }
-
 
 ul#nav {
 	float: right;
@@ -429,24 +420,23 @@ ul#nav li a:hover, ul#nav li a:focus {
 	color: #FFF;
 	text-decoration: underline;
 }
-#pagecount{
-	width:280px;
- margin:10px auto 2px auto; 
- padding-bottom:20px; 
- text-align:center
- }
-#pagecount span{
-	display:inline-block;
+
+#pagecount {
+	width: 280px;
+	margin: 10px auto 2px auto;
+	padding-bottom: 20px;
+	text-align: center
+}
+
+#pagecount span {
+	display: inline-block;
 	color: black;
 	float: left;
 	padding: 6px 12px;
 	text-decoration: none;
 	transition: background-color .3s;
 	font-size: 18px;
-	}
-
-
-
+}
 
 #pagecount span a {
 	color: black;
@@ -456,18 +446,56 @@ ul#nav li a:hover, ul#nav li a:focus {
 	font-size: 18px;
 }
 
+#pagecount
+ 
+span
+:hover
+:not
+ 
+(
+.current
+ 
+)
+{
+background-color
+:
+ 
+#b2b2b2
+;
 
 
-#pagecount span:hover:not(.current) {
-	background-color: #b2b2b2;
 }
-
-span.current{
+span.current {
 	background-color: #53a9ff;
 }
 
-input[type="button"]{
-	margin-top:10px;
-	margin-right:5px;
+input[type="button"] {
+	margin-top: 10px;
+	margin-right: 5px;
 	width: 100px;
+}
+
+input[type="checkbox"] {
+margin-left:15px;
+
+}
+
+#attachment {
+	margin-top:10px;
+	width: 600px;
+	height: 50px;
+	border: 1px solid;
+	font-size: 12px;
+	background-color: white;
+}
+
+#attachment1 {
+
+	width: 600px;
+	height: 70px;
+	margin-top:10px;
+	border: 1px solid;
+	font-size: 12px;
+	background-color: white;
+
 }

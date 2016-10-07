@@ -1,4 +1,4 @@
-var url = "http://localhost:8080/csm/facade/"
+var url = "http://localhost:8080/csm/e/"
 var curPage = 1;
 var pageSize = 8;
 var total, totalPage;
@@ -47,7 +47,7 @@ function ajaxFind(checkKey, url1) {
 		async : false,
 		success : function(result) {
 			if (result.data.content == undefined) {
-				//alert("No Result");
+				// alert("No Result");
 			} else {
 				$.each(result.data.content, function(i, n) {
 					checkList.push(n);
@@ -342,6 +342,26 @@ function ajaxPut(putdata, url1) {
 
 	});
 }
+function ajaxPutUpload(putdata, url1) {
+	$.ajax({
+		type : "POST",
+		url : url1,
+		data : putdata,
+		async : false,
+		cache : false,
+		contentType : false,
+		processData : false,
+		success : function(result) {
+			alert("PUT OK ");
+		},
+		timeout : 3000,
+		error : function(xhr) {
+
+			alert("error： " + xhr.status + " " + xhr.statusText);
+		},
+
+	});
+}
 
 function showAdminCategory1() {
 	var url1 = url + "Category" + "/find";
@@ -365,8 +385,8 @@ function faqAddNewUi(id) {
 	var li = "";
 	li += "QUESTION:<br><textarea name='question' rows='4' cols='75'></textarea><br>";
 	li += "ANSWER:<br><textarea name='answer' rows='8' cols='75'></textarea><br>";
-	li += "Upload File:<input type='file' id='myFile' name='uploadFile' multiple='multiple'  onchange='showUploadFile()' />";
-	li += "<br><textarea name='keywords' rows='3' cols='75'></textarea><br>";
+	li += "Upload File:<input type='file'  name='uploadFile' multiple='multiple'  onchange='showUploadFile()' />";
+	li += "<br><textarea name='attachments' rows='3' cols='75' disabled='disabled'></textarea><br>";
 	li += "<input type ='button' value='submit' onclick='faqAddNew(" + '"' + id
 			+ '"' + ")'></input>"
 	li += "<input type ='button' value='Cancel' onclick=faqCancel(" + '"' + id
@@ -382,21 +402,44 @@ function faqAddNew(id) {
 		alert("Please input question");
 	} else {
 		var answer1 = $("textarea[name='answer']").val();
-		var keywords1 = $("textarea[name='keywords']").val();
-		var savedata = {
-			categoryId : id,
-			question : name1,
-			keywords : keywords1,
-			answer : answer1,
-			active : "1",
-			createAccountId : userId,
-			createDate : getNowFormatDate(),
-			modifyAccountId : userId,
-			modifyDate : getNowFormatDate(),
-		};
 
-		ajaxcreate(savedata, url1);
-		showCategoryDetail(id)
+		var fileData = $("input[name='uploadFile']").get(0);
+		if (fileData.files.length == 0) {
+			var savedata = {
+				categoryId : id,
+				question : name1,
+
+				answer : answer1,
+				active : "1",
+				createAccountId : userId,
+				createDate : getNowFormatDate(),
+				modifyAccountId : userId,
+				modifyDate : getNowFormatDate(),
+			};
+
+			ajaxcreate(savedata, url1);
+			showCategoryDetail(id)
+
+		} else {
+			url1 = url + "Faq" + "/postUpload";
+			var form_data = new FormData();
+			form_data.append("categoryId", id);
+			form_data.append("question", name1);
+			form_data.append("answer", answer1);
+
+			form_data.append("active", "1");
+			form_data.append("createAccountId", userId);
+			form_data.append("createDate", getNowFormatDate());
+			form_data.append("modifyAccountId", userId);
+			form_data.append("modifyDate", getNowFormatDate());
+			for (var i = 0; i < (fileData.files.length); i++) {
+				form_data.append("uploadFile", fileData.files[i]);
+			}
+
+			ajaxcreateUpload(form_data, url1);
+			showCategoryDetail(id)
+
+		}
 
 	}
 }
@@ -418,15 +461,50 @@ function ajaxcreate(savedata, url1) {
 	});
 }
 
+function ajaxcreateUpload(savedata, url1) {
+	$.ajax({
+		type : "POST",
+		url : url1,
+		data : savedata,
+		async : false,
+		cache : false,
+		contentType : false,
+		processData : false,
+		success : function(result) {
+			alert("ADD NEW SUCCESS");
+		},
+		timeout : 3000,
+		error : function(xhr) {
+			alert("error： " + xhr.status + " " + xhr.statusText);
+		},
+
+	});
+}
+
 function adminModifyUi(id) {
 	$("#pagecount").empty();
 	$("#content").empty();
 	var url1 = url + "Faq" + "/get/" + id;
 	var checkResult1 = ajaxGet(url1);
+	if (checkResult1.attachments == undefined) {
+		checkResult1.attachments = "";
+	}
+	;
+	var attachments = checkResult1.attachments.split(",");
 	var li = "";
 	li += "QUESTION:<br><textarea name='question' rows='4' cols='75'></textarea><br>";
 	li += "ANSWER:<br><textarea name='answer' rows='8' cols='75'></textarea><br>";
-	li += "KEYWORDS:<br><textarea name='keywords' rows='4' cols='75'></textarea><br>";
+	li += "<div id='attachment'> Attachments :<br>";
+	if (attachments != "") {
+		for (var i = 0; i < attachments.length; i++) {
+			li += "<input type='checkbox' name='attachments' value=" + "'"
+					+ attachments[i] + "'" + ">" + attachments[i] + "</input>";
+		}
+	}
+	li += "</div>"
+	li += "<div id='attachment1'> ";
+	li += "Upload File:<input type='file'  name='uploadFile' multiple='multiple'  onchange='showUploadFile1()' />";
+	li += "</div>"
 	li += "<input type ='button' value='Submit' onclick='adminFaqPut(" + '"'
 			+ id + '"' + ',' + '"' + checkResult1.categoryId + '"'
 			+ ")'></input>"
@@ -438,28 +516,56 @@ function adminModifyUi(id) {
 	$("#content").append(li);
 	$("textarea[name='question']").val(checkResult1.question);
 	$("textarea[name='answer']").val(checkResult1.answer);
-	$("textarea[name='keywords']").val(checkResult1.keywords);
+
 }
 
 function adminFaqPut(id, categoryId1) {
 	var question1 = $("textarea[name='question']").val();
-	var answer1 = $("textarea[name='answer']").val()
-	var keywords1 = $("textarea[name='keywords']").val()
+	var answer1 = $("textarea[name='answer']").val();
+	var checkedList = $("input[name='attachments']:checked");
+	var attachments = "";
 	if ($.trim(question1) == "") {
 		alert("Please input question");
 	} else {
-		var url1 = url + "Faq" + "/put/" + id;
-		var putdata = {
-			question : question1,
-			answer : answer1,
-			categoryId : categoryId1,
-			modifyAccountId : userId,
-			modifyDate : getNowFormatDate(),
-		}
-		ajaxPut(putdata, url1);
-		$("#content").empty();
-		showCategoryDetail(categoryId1);
+		var fileData = $("input[name='uploadFile']").get(0);
+		if ((fileData.files.length == 0) && (checkedList.length == 0)) {
+			var url1 = url + "Faq" + "/put/" + id;
+			var putdata = {
+				question : question1,
+				answer : answer1,
+				categoryId : categoryId1,
+				modifyAccountId : userId,
+				modifyDate : getNowFormatDate(),
+			}
+			ajaxPut(putdata, url1);
+			$("#content").empty();
+			showCategoryDetail(categoryId1);
+		} else {
+			if (checkedList.length != 0) {
+				$("input[name='attachments']:checked").each(function(i, n) {
+					if (i == (checkedList.length - 1)) {
+						attachments += n.value;
+					} else {
+						attachments += n.value + ",";
+					}
+				});
+			}
+			url1 = url + "Faq" + "/putUpload/"+id;
+			var form_data = new FormData();
+			form_data.append("categoryId", categoryId1);
+			form_data.append("question", question1);
+			form_data.append("answer", answer1);
+			form_data.append("attachments", attachments);
+			form_data.append("modifyAccountId", userId);
+			form_data.append("modifyDate", getNowFormatDate());
+			for (var i = 0; i < (fileData.files.length); i++) {
+				form_data.append("uploadFile", fileData.files[i]);
+			}
 
+			ajaxPutUpload(form_data, url1);
+			$("#content").empty();
+			showCategoryDetail(categoryId1);
+		}
 	}
 }
 
@@ -485,38 +591,42 @@ function faqCancel(id) {
 	showCategoryDetail(id);
 }
 
-function showUploadFile(){
-   var x = $("input[name='uploadFile']")[0];
-   //var x = $("input[name='uploadFile']")[0]
-    var txt = "";
+function showUploadFile() {
+	var fileData = $("input[name='uploadFile']").get(0);
+	// var x = $("input[name='uploadFile']")[0]
+	var txt = "";
+	if ('files' in fileData) {
+		for (var i = 0; i < fileData.files.length; i++) {
+			txt += (i + 1) + ". file ";
+			var file = fileData.files[i];
+			if ('name' in file) {
+				txt += "name: " + file.name;
+			}
+			if ('size' in file) {
+				txt += "  file size: " + file.size + " bytes \n";
+			}
+		}
+	}
 
- 
-    alert(x.files.length);
-    if ('files' in x) {
-        if (x.files.length == 0) {
-            txt = "Select one or more files.";
-        } else {
-        	
-            for (var i = 0; i < x.files.length; i++) {
-                txt +=  (i+1) + ". file ";
-                var file = x.files[i];
-                if ('name' in file) {
-                    txt += "name: " + file.name ;
-                }
-                if ('size' in file) {
-                    txt += "  file size: " + file.size + " bytes \n";
-                }
-            }
-        }
-    } 
-    else {
-        if (x.value == "") {
-            txt += "Select one or more files.";
-        } else {
-            txt += "The files property is not supported by your browser!";
-            txt  += "<br>The path of the selected file: " + x.value; // If the browser does not support the files property, it will return the path of the selected file instead. 
-        }
-    }
-   
-    $("textarea[name='keywords']").val(txt);
+	$("textarea[name='attachments']").val(txt);
+}
+
+function showUploadFile1() {
+	var fileData = $("input[name='uploadFile']").get(0);
+	// var x = $("input[name='uploadFile']")[0]
+	var txt = "<br>";
+	if ('files' in fileData) {
+		for (var i = 0; i < fileData.files.length; i++) {
+			txt += (i + 1) + ". file ";
+			var file = fileData.files[i];
+			if ('name' in file) {
+				txt += "name: " + file.name;
+			}
+			if ('size' in file) {
+				txt += "  file size: " + file.size + " bytes <br>";
+			}
+		}
+	}
+
+	$("#attachment1").append(txt);
 }
