@@ -19,7 +19,7 @@
 				/logout = logout
 				/admin = user
 				/static/** = anon
-				/upload/** = anon
+				/uploads/** = anon
 				/search/createIndex = perms["itdoes:search:createIndex"]
 				/search/** = anon
 				/upload/dir1/dir2/dir3 = perms["itdoes:upload:reasonablePermissionName"]
