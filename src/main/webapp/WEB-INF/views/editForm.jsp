@@ -55,7 +55,8 @@
 			<table>
 				<tr>
 					<td>Id:</td>
-					<td><input type="text" id="categoryId" name="id" value="" /></td>
+					<td><input type="text" id="categoryId" name="id"
+						value="11d5f5f7-d6eb-1034-a268-c6b53a0158b7" /></td>
 				</tr>
 				<tr>
 					<td>Name:</td>
@@ -98,7 +99,8 @@
 			<table>
 				<tr>
 					<td>CategoryId:</td>
-					<td><input type="text" name="categoryId" value="" /></td>
+					<td><input type="text" name="categoryId"
+						value="5a0452fe-d6ea-1034-a268-c6b53a0158b7" /></td>
 				</tr>
 				<tr>
 					<td>Question:</td>
@@ -142,19 +144,23 @@
 			<table>
 				<tr>
 					<td>Id:</td>
-					<td><input type="text" id="faqId" name="id" value="" /></td>
+					<td><input type="text" id="faqId" name="id"
+						value="5a0452fe-d6ea-1034-a268-c6b53a0158b7" /></td>
 				</tr>
 				<tr>
 					<td>CategoryId:</td>
-					<td><input type="text" name="categoryId" value="" /></td>
+					<td><input type="text" name="categoryId"
+						value="5a0452fe-d6ea-1034-a268-c6b53a0158b7" /></td>
 				</tr>
 				<tr>
 					<td>Question:</td>
-					<td><input type="text" name="question" value="question" /></td>
+					<td><input type="text" name="question"
+						value="General Ledger question for Kuzcolighting 1" /></td>
 				</tr>
 				<tr>
 					<td>Answer:</td>
-					<td><input type="text" name="answer" value="answer" /></td>
+					<td><input type="text" name="answer"
+						value="General Ledger answer 1" /></td>
 				</tr>
 				<tr>
 					<td>Attachments:</td>

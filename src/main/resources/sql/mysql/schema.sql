@@ -28,7 +28,6 @@ create table faq (
 	category_id binary(16) not null,
 	question varchar(255) not null,
 	answer varchar(500) not null,
-	keywords varchar(255) not null,
 	attachments varchar(255),
 	active bit not null,
 	create_account_id binary(16) not null,
