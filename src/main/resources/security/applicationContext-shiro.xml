@@ -17,13 +17,17 @@
 			<value>
 				/login = authc
 				/logout = logout
+				/admin = user
 				/static/** = anon
+				/uploads/** = anon
+				/search/createIndex = perms["itdoes:search:createIndex"]
+				/search/** = anon
 				/upload/dir1/dir2/dir3 = perms["itdoes:upload:reasonablePermissionName"]
 			</value>
 		</property>
 		<property name="afterStaticDefinitions">
 			<value>
-				/** = user
+				/** = anon
 			</value>
 		</property>
 	</bean>
