@@ -18,6 +18,7 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@com.itdoes.common.business.entity.EntityPerm(types = { com.itdoes.common.business.entity.EntityPermType.ALL })
 @org.hibernate.search.annotations.Indexed
 public class Faq extends BaseEntity {
 	private static final long serialVersionUID = 70390L;
