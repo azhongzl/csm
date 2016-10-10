@@ -9,6 +9,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.itdoes.common.business.entity.BaseEntity;
+import com.itdoes.common.business.entity.EntityPerm;
+import com.itdoes.common.business.entity.EntityPermType;
 
 /**
  * This code is auto-generated.
@@ -18,7 +20,7 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@com.itdoes.common.business.entity.EntityPerm(types = { com.itdoes.common.business.entity.EntityPermType.ALL })
+@EntityPerm(types = { EntityPermType.WRITE })
 @org.hibernate.search.annotations.Indexed
 public class Faq extends BaseEntity {
 	private static final long serialVersionUID = 70390L;
