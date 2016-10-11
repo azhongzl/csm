@@ -20,7 +20,7 @@ import com.itdoes.common.business.entity.EntityPermType;
 @Entity
 @Table(name = "category")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerm(types = { EntityPermType.ALL })
+@EntityPerm(types = { EntityPermType.WRITE })
 public class Category extends BaseEntity {
 	private static final long serialVersionUID = 115155230L;
 
