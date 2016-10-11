@@ -17,6 +17,7 @@
 			<value>
 				/login = authc
 				/logout = logout
+				/ = anon
 				/admin = user
 				/static/** = anon
 				/uploads/** = anon
@@ -27,7 +28,7 @@
 		</property>
 		<property name="afterStaticDefinitions">
 			<value>
-				/** = anon
+				/** = user
 			</value>
 		</property>
 	</bean>
