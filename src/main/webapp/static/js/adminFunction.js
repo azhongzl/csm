@@ -258,11 +258,11 @@ function addNew() {
 }
 
 function modify() {
-
 	var id = $("input[name='id']:checked").val();
 	if (id !== undefined) {
 		var url1 = url + "Category" + "/get/" + id;
 		var checkResult1 = ajaxGet(url1);
+
 		if (checkResult1.description == undefined) {
 			checkResult1.description = "";
 		}
@@ -276,7 +276,7 @@ function modify() {
 		li += "<input type ='button' value='Cancel' onclick='reset()' ></input>"
 		$("#content").append(li);
 		$("input[name='name']").val(checkResult1.name);
-		$("input[name='describe']").val(checkResult1.description);
+		$("textarea[name='describe']").val(checkResult1.description);
 	} else {
 		alert("Please select category")
 	}
@@ -497,7 +497,7 @@ function adminModifyUi(id) {
 	li += "<div id='attachment'> Attachments :<br>";
 	if (attachments != "") {
 		for (var i = 0; i < attachments.length; i++) {
-			li += "<input type='checkbox' name='attachments' value=" + "'"
+			li += "<input type='checkbox' checked='checked' name='attachments' value=" + "'"
 					+ attachments[i] + "'" + ">" + attachments[i] + "</input>";
 		}
 	}

@@ -35,7 +35,8 @@
 			<div id="sidebar_container">
 				<div class="sidebar">
 					<h3>Categories</h3>
-					<ul id="Category">
+					<ul id="Category" v-for="x in Categorys">
+					<li v-on:click="showCategoryDetail(x.id)">{{x.name}}</li>
 					</ul>
 				</div>
 
@@ -66,11 +67,13 @@
 
 	<script type="text/javascript" src="${ctx}/static/js/jquery.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/function.js"></script>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.7/vue.min.js"></script>
 	<script type="text/javascript">
 		var path = "${ctx}";
 		$(document).ready(function() {
 			showCategory();
 		});
 	</script>
+
 </body>
 </html>

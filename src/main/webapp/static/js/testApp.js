@@ -8,15 +8,22 @@ var userName = "";
 function showCategory() {
 	var url1 = url + "Category" + "/find";
 	var checkKey = "";
-	var checkResult1 = ajaxFind(checkKey, url1);
-	alert(checkResult1);
-	$.each(checkResult1, function(i, n) {
-		$("#Category").append(
-				"<li><a href='#'   onclick='showCategoryDetail(" + '"' + n.id
-						+ '"' + ")'>" + n.name + "</a></li>");
-	});
+	var Categroysq = ajaxFind(checkKey, url1);
+	alert(Categroys);
 }
 
+new Vue({
+	el : '#Category',
+	data : {
+		message : 'hello vue.js.'
+	},
+	methods : {
+		showCategoryDetail : function(id) {
+
+			alert(id);
+		}
+	},
+})
 
 function showCategoryDetail(id1) {
 	var url1 = url + "Faq" + "/find";
@@ -73,15 +80,17 @@ function getCategoryDetail(checkKey, url1) {
 				totalPage = json.data.totalPages;
 				var li = "";
 				var list = json.data.content;
-				$.each(list, function(i, n) {
-					if (n.attachments == undefined) {
-						n.attachments = "";
-					}
-					li += "<a href='#' onclick='showAnswer(" + '"' + n.id + '"'
-							+ "," + '"' + n.answer + '"' +  "," + '"' + n.attachments + '"' +")'>" + n.question
-							+ "</a>";
-					li += "<div id=" + '"' + n.id + '"' + "></div>";
-				});
+				$.each(list,
+						function(i, n) {
+							if (n.attachments == undefined) {
+								n.attachments = "";
+							}
+							li += "<a href='#' onclick='showAnswer(" + '"'
+									+ n.id + '"' + "," + '"' + n.answer + '"'
+									+ "," + '"' + n.attachments + '"' + ")'>"
+									+ n.question + "</a>";
+							li += "<div id=" + '"' + n.id + '"' + "></div>";
+						});
 
 				$("#content").append(li);
 			}
@@ -142,23 +151,23 @@ function changePage(page, id1) {
 	showCategoryDetail(id1);
 }
 
-function showAnswer(id, answer,attachments) {
+function showAnswer(id, answer, attachments) {
 	var li = "";
 	alert(path);
 	var attachments = attachments.split(",");
 	if (attachments != "") {
 		for (var i = 0; i < attachments.length; i++) {
-			li += "<a href='"+path+"/uploads/Faq/"+id+"/"+attachments[i]+"' >" + attachments[i] + "</a>";
+			li += "<a href='" + path + "/uploads/Faq/" + id + "/"
+					+ attachments[i] + "' >" + attachments[i] + "</a>";
 		}
 	}
 	if ($("#" + id).html() == "") {
 		$('#' + id).hide();
 		$('#' + id).append(answer);
-		$('#' + id).append("<br>"+"Attachments : "+li);		
+		$('#' + id).append("<br>" + "Attachments : " + li);
 		$('#' + id).slideDown();
 	} else {
 		$('#' + id).html("");
 		$('#' + id).slideUp();
 	}
 }
-
