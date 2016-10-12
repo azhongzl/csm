@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
-import com.itdoes.common.business.Permissions;
+import com.itdoes.common.business.Perms;
 import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
@@ -57,7 +57,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 		final ShiroUser shiroUser = (ShiroUser) principal;
 		final Account account = getAccount(shiroUser.getId());
 		final SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		info.addStringPermission(Permissions.getAllPermission());
+		info.addStringPermission(Perms.getAllPerm());
 		return info;
 	}
 
