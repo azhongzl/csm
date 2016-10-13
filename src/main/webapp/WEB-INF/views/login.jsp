@@ -8,7 +8,7 @@
 <html>
 <head>
 <title>登录页</title>
-<script src="${ctx}/static/jquery.js" type="text/javascript"></script>
+<script src="${ctx}/static/js/jquery.js" type="text/javascript"></script>
 </head>
 
 <body>
