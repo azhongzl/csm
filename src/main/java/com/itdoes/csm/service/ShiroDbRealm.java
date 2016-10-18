@@ -47,6 +47,10 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	protected AuthenticationInfo doAuthentication(UsernamePasswordToken token) throws AuthenticationException {
 		final String username = token.getUsername();
 		final Account account = findAccount(username);
+		if (account == null) {
+			return null;
+		}
+
 		final byte[] salt = Codecs.hexDecode(account.getSalt());
 		return new SimpleAuthenticationInfo(new ShiroUser(account.getId().toString(), username), account.getPassword(),
 				ByteSource.Util.bytes(salt), getName());
@@ -55,9 +59,8 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	@Override
 	protected AuthorizationInfo doAuthorization(Object principal) {
 		final ShiroUser shiroUser = (ShiroUser) principal;
-		final Account account = getAccount(shiroUser.getId());
 		final SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		info.addStringPermission(Perms.getAllPerm());
+		populatePermission(info, shiroUser.getId());
 		return info;
 	}
 
@@ -75,5 +78,12 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	private Account getAccount(String id) {
 		final Account account = dbService.get(pair, UUID.fromString(id));
 		return account;
+	}
+
+	private void populatePermission(SimpleAuthorizationInfo info, String id) {
+		final Account account = getAccount(id);
+		if (account.getUsername().equals("admin")) {
+			info.addStringPermission(Perms.getAllPerm());
+		}
 	}
 }
