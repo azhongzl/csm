@@ -46,7 +46,11 @@ function ajaxFind(checkKey, url1) {
 		},
 		timeout : 3000,
 		error : function(xhr) {
-			alert(" error： " + xhr.status + " " + xhr.statusText);
+			if (xhr.status == 499) {
+				window.location.replace("/csm" + xhr.statusText);
+			} else {
+				alert(" error： " + xhr.status + " " + xhr.statusText);
+			}
 		},
 	});
 	return (checkList);
