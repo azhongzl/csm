@@ -1,4 +1,4 @@
-var url = "http://localhost:8080/csm/e/"
+var url = "http://localhost:8080/csm/e/";
 var curPage = 1;
 var pageSize = 2;
 var total, totalPage;
@@ -9,7 +9,7 @@ function showCategory() {
 	var url1 = url + "Category" + "/find";
 	var checkKey = "";
 	var checkResult1 = ajaxFind(checkKey, url1);
-	alert(checkResult1);
+
 	$.each(checkResult1, function(i, n) {
 		$("#Category").append(
 				"<li><a href='#'   onclick='showCategoryDetail(" + '"' + n.id

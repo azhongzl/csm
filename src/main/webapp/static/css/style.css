@@ -247,6 +247,12 @@ nav {
 	padding: 14px 0 0 0;
 	
 }
+#content div a{
+
+	font-size: 70%;
+	color : red;
+	
+}
 
 
 }
@@ -483,6 +489,6 @@ ul#nav li a:hover, ul#nav li a:focus {
 	background-color: #b2b2b2;
 }
 
-span.current{
+.current{
 	background-color: #53a9ff;
 }
