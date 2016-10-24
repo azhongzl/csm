@@ -15,8 +15,7 @@
 	<br />
 	<a href="${ctx}/e/Category/find">View Category</a>
 	<form action="${ctx}/e/Category/post" method="post">
-		<input type="hidden" name="createAccountId"
-			value="<shiro:principal property="id" />" /> <input type="hidden"
+		<input type="hidden" name="createAccountId" value="<shiro:principal property="id" />" /> <input type="hidden"
 			name="modifyAccountId" value="<shiro:principal property="id" />" />
 		<fieldset>
 			<table>
@@ -30,8 +29,7 @@
 				</tr>
 				<tr>
 					<td>Active:</td>
-					<td><input type="radio" name="active" value="1" checked />Active
-						<input type="radio" name="active" value="0" />Inactive</td>
+					<td><input type="radio" name="active" value="1" checked />Active <input type="radio" name="active" value="0" />Inactive</td>
 				</tr>
 				<tr>
 					<td>createDateTime:</td>
@@ -51,14 +49,12 @@
 	</form>
 	<br />
 	<form action="#" method="post">
-		<input type="hidden" name="modifyAccountId"
-			value="<shiro:principal property="id" />" />
+		<input type="hidden" name="modifyAccountId" value="<shiro:principal property="id" />" />
 		<fieldset>
 			<table>
 				<tr>
 					<td>Id:</td>
-					<td><input type="text" id="categoryId" name="id"
-						value="11d5f5f7-d6eb-1034-a268-c6b53a0158b7" /></td>
+					<td><input type="text" id="categoryId" name="id" value="11d5f5f7-d6eb-1034-a268-c6b53a0158b7" /></td>
 				</tr>
 				<tr>
 					<td>Name:</td>
@@ -70,8 +66,7 @@
 				</tr>
 				<tr>
 					<td>Active:</td>
-					<td><input type="radio" name="active" value="1" checked />Active
-						<input type="radio" name="active" value="0" />Inactive</td>
+					<td><input type="radio" name="active" value="1" checked />Active <input type="radio" name="active" value="0" />Inactive</td>
 				</tr>
 				<tr>
 					<td>modifyDateTime:</td>
@@ -91,18 +86,14 @@
 	<br />
 
 	<a href="${ctx}/e/Faq/find">View Faq</a>
-	<form action="${ctx}/e/Faq/postUpload" method="post"
-		enctype="multipart/form-data">
-		<input type="hidden" name="createAccountId"
-			value="<shiro:principal property="id" />" /> <input type="hidden"
-			name="modifyAccountId" value="<shiro:principal property="id" />" />
-		<input type="hidden" name="keywords" value="111" />
+	<form action="${ctx}/e/Faq/postUpload" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="createAccountId" value="<shiro:principal property="id" />" /> <input type="hidden"
+			name="modifyAccountId" value="<shiro:principal property="id" />" /> <input type="hidden" name="keywords" value="111" />
 		<fieldset>
 			<table>
 				<tr>
 					<td>CategoryId:</td>
-					<td><input type="text" name="categoryId"
-						value="5a0452fe-d6ea-1034-a268-c6b53a0158b7" /></td>
+					<td><input type="text" name="categoryId" value="5a0452fe-d6ea-1034-a268-c6b53a0158b7" /></td>
 				</tr>
 				<tr>
 					<td>Question:</td>
@@ -118,8 +109,7 @@
 				</tr>
 				<tr>
 					<td>Active:</td>
-					<td><input type="radio" name="active" value="1" checked />Active
-						<input type="radio" name="active" value="0" />Inactive</td>
+					<td><input type="radio" name="active" value="1" checked />Active <input type="radio" name="active" value="0" />Inactive</td>
 				</tr>
 				<tr>
 					<td>createDateTime:</td>
@@ -139,30 +129,25 @@
 	</form>
 	<br />
 	<form action="#" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="modifyAccountId"
-			value="<shiro:principal property="id" />" /> <input type="hidden"
+		<input type="hidden" name="modifyAccountId" value="<shiro:principal property="id" />" /> <input type="hidden"
 			name="keywords" value="111" />
 		<fieldset>
 			<table>
 				<tr>
 					<td>Id:</td>
-					<td><input type="text" id="faqId" name="id"
-						value="5a0452fe-d6ea-1034-a268-c6b53a0158b7" /></td>
+					<td><input type="text" id="faqId" name="id" value="5a0452fe-d6ea-1034-a268-c6b53a0158b7" /></td>
 				</tr>
 				<tr>
 					<td>CategoryId:</td>
-					<td><input type="text" name="categoryId"
-						value="5a0452fe-d6ea-1034-a268-c6b53a0158b7" /></td>
+					<td><input type="text" name="categoryId" value="5a0452fe-d6ea-1034-a268-c6b53a0158b7" /></td>
 				</tr>
 				<tr>
 					<td>Question:</td>
-					<td><input type="text" name="question"
-						value="General Ledger question for Kuzcolighting 1" /></td>
+					<td><input type="text" name="question" value="General Ledger question for Kuzcolighting 1" /></td>
 				</tr>
 				<tr>
 					<td>Answer:</td>
-					<td><input type="text" name="answer"
-						value="General Ledger answer 1" /></td>
+					<td><input type="text" name="answer" value="General Ledger answer 1" /></td>
 				</tr>
 				<tr>
 					<td>Attachments:</td>
@@ -174,8 +159,7 @@
 				</tr>
 				<tr>
 					<td>Active:</td>
-					<td><input type="radio" name="active" value="1" checked />Active
-						<input type="radio" name="active" value="0" />Inactive</td>
+					<td><input type="radio" name="active" value="1" checked />Active <input type="radio" name="active" value="0" />Inactive</td>
 				</tr>
 				<tr>
 					<td>modifyDateTime:</td>
