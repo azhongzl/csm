@@ -220,7 +220,7 @@ function addNewUi() {
 	li += "MODIFY_ACCOUNT_ID:<br><input type ='text' name='modify_account_id'  size='25' disabled='disabled'></input><br>";
 	li += "MODIFY_DATE:<br><input type ='datetime-local' name='modify_date' size='25' disabled='disabled'></input><br>";
 	li += "<input type ='button' value='submit' onclick='addNew()'></input>"
-	li += "<input type ='reset' onclick='reset()' ></input>"
+	li += "<input type ='button' onclick='reset()' ></input>"
 	$("#content").append(li);
 	$("input[name='modify_account_id']").val(userName);
 	$("input[name='modify_date']").val(time);

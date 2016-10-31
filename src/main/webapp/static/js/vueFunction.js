@@ -2,11 +2,9 @@ var url = "http://localhost:8080/csm/e/";
 
 var vmSidebar = new Vue({
 	el : '#sidebar_container',
-
 	data : {
 		categorys : [],
 	},
-
 	computed : {
 		categorys : function() {
 			var url1 = url + "Category" + "/find";
@@ -37,13 +35,9 @@ var vmSidebar = new Vue({
 				vmPagecount.totalPage = result1.data.totalPages;
 				vmPagecount.showKey = true;
 				vmContent.faqs = result1.data.content;
-
-			}
-			;
+			};
 		},
-
 	}
-
 })
 
 function ajaxFind(checkKey, url1) {
@@ -81,7 +75,6 @@ var tr1 = Vue.extend({
 			this.answerKey = !this.answerKey;
 		},
 	},
-
 });
 
 var vmContent = new Vue({

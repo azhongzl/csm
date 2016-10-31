@@ -5,77 +5,61 @@
 <head>
 <title>TEST</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<style>
-a {
-  padding-left: 5px;
-}
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script type="text/javascript" src="../../static/js/jquery.js"></script>
 
-.disabled {
-  color: orange;
-}
-
-/* some simple transitions to make the upvote and downvote
-buttons fade in as a visual cue for the user */
-
-.glyphicon {
-  opacity: 1;
-  transition: opacity .25s ease-in-out;
-  -moz-transition: opacity .25s ease-in-out;
-  -webkit-transition: opacity .25s ease-in-out;
-}
-
-.glyphicon:hover {
-  opacity: 0.75;
-  cursor: pointer;
-}
-</style>
 
 </head>
-
 <body>
 
-<div id="app">
-  <input v-model="a">
-  <input v-model="b">
-    <input v-model="test1">
-  <br>
-  
-  
- <span>{{a}}</span><br>
-  <span >{{b}}</span><br>
-    <span >{{test1}}</span><br>
-  <span  v-for="text in c">{{text}}    {{test}}</span><br>
- <hr>
- <my-test :c.sync="c" :a.sync="a" :b.sync="b"  :is-a="isA" :is-b="isB"></my-test>
- <hr>
- <my-test1 :c.sync="c" :a.sync="a" :b.sync="b" ></my-test1>
- </div>
 
 
-<template id="test">
-  <input v-model="a">
-  <input v-model="b">
-   <input v-model="c.text">
- <span >{{a}}</span><br>
- <span>{{b}}</span><br>
- <span>{{text}}</span><br>
- 
-</template>
-<template id="test1">
-  <input v-model="a">
-  <input v-model="b">
-   <input v-model="c.text">
- <span>{{a}}</span><br>
- <span>{{b}}</span><br>
- <span>{{c.text}}</span><br>
-
-</template>
+  <div id="app1">
+  <my-test></my-test>>
+  </div>
 
 
 
-	<script type="text/javascript" src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
-		<script type="text/javascript" src="../../static/js/jquery.js"></script>
-	<script type="text/javascript" src="../../static/js/testApp.js"></script>
-
+	<div id="app">
+		<h1>Named Views</h1>
+		<ul>
+			<li><router-link to="/">/</router-link></li>
+			<li><router-link to="/other">/other</router-link></li>
+		</ul>
+				
+			<template v-for="n in list"> <input type="radio" name='id' :value="n.id" v-model="picked">{{n.name}}</input> <br>
+			</template>
+		<div>SSSS{{picked}}</div>
+		<router-view class="view one"></router-view>
+		<hr>
+		<router-view class="view two" name="a"></router-view>
+				<hr>
+		<router-view class="view three" name="b"></router-view>
+	</div>
+	<template id="test">
+	
+	      <div class="my-text-input-fields">
+            <template v-for="textField in textFields">
+                <input type="text"  v-model="textField.value"><br>
+                </template>
+           <div style="margin-top:30px;">
+                {{textValues}}
+            </div>
+        </div>
+        </template>
+        
+	<template id="category">
+	<div>
+			<template v-for="n in list">
+			 <input type="radio"  name='id' :value="n.id">{{n.name}}</input>
+			  <br>
+			</template>
+		> <input type='button' value='ADD NEW' v-on:click='addNewUi()'></input> <br> <input type='button' value='DELETE'
+			v-on:click='Categorydelete()'></input> <br> <input type='button' value='MODIFY' v-on:click='modify()'></input> <br>
+			
+	</div>
+	</template>
 </body>
+<script type="text/javascript" src="../../static/js/testApp.js"></script>
 </html>

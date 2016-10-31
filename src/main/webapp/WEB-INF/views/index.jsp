@@ -40,11 +40,11 @@
 				<my-faqs :faqs='faqs' :answer-key='answerKey' v-for="faq in faqs" :faq='faq'></my-faqs>
 			</div>
 			<div id="pagecount" v-show="showKey">
-				<span><a href="#" v-on:click="changePage(1)"> << </a></span> <span><a href="#"
-					v-on:click="changePage(curPage - 1)"> < </a></span> <span v-for="n in totalPage" :class="curPage === n+1 ? 'current' : ''">
-					<a href="#" v-on:click="changePage(n+1)">{{ n+1 }}</a>
-				</span> <span><a href="#" v-on:click="changePage(curPage + 1)"> > </a></span> <span><a href="#"
-					v-on:click="changePage(totalPage)"> >> </a></span>
+				<span><a href="#" v-on:click="changePage(1)">  &laquo; </a></span> <span><a href="#"
+					v-on:click="changePage(curPage - 1)"> &lsaquo;</a></span> <span v-for="n in totalPage" :class="curPage === n ? 'current' : ''">
+					<a href="#" v-on:click="changePage(n)">{{ n}}</a>
+				</span> <span><a href="#" v-on:click="changePage(curPage + 1)">&rsaquo;</a></span> <span><a href="#"
+					v-on:click="changePage(totalPage)"> &raquo; </a></span>
 			</div>
 		</div>
 		<div id="scroll">
@@ -53,7 +53,7 @@
 		<footer>
 			<p>
 				<img src="${ctx}/static/images/twitter.png" alt="twitter" />&nbsp;<img src="${ctx}/static/images/facebook.png"
-					alt="facebook" />&nbsp;<img src="${ctx}/static/images/rss.png" alt="rss" />
+				alt="facebook" />&nbsp;<img src="${ctx}/static/images/rss.png" alt="rss" />
 			</p>
 			<p>
 				<a href="index.html">Home</a> | <a href="javascript:void(0)">Contact Us</a>
