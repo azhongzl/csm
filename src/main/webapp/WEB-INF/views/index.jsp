@@ -7,7 +7,7 @@
 <title>ERP FAQ</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" type="text/css" href="${ctx}/static/css/style.css" />
-<script type="text/javascript" src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/vue.js"></script>
 </head>
 <body>
 	<div id="main">
@@ -65,10 +65,12 @@
 	</div>
 
 	<template id="content1"> 
+	<div>
 		<a href="#" v-on:click="showAnswer(faq.id)">{{faq.question}} </a>
 		<div v-show="answerKey">{{faq.answer}}<br> 
 			<a href="${ctx}/uploads/Faq/{{faq.id}}/{{attachment}}" v-for="attachment in attachments">{{attachment}}	</a>
 		</div>
+	</div>
 	</template>
 
 	<script type="text/javascript" src="${ctx}/static/js/jquery.js"></script>

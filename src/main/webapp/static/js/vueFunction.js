@@ -63,7 +63,6 @@ function ajaxFind(checkKey, url1) {
 }
 var tr1 = Vue.extend({
 	template : "#content1",
-
 	props : [ 'faqs', 'answerKey', 'faq' ],
 	computed : {
 		attachments : function() {
@@ -121,6 +120,6 @@ var vmPagecount = new Vue({
 			}
 		},
 	},
-	computed : {},
+	
 
 })

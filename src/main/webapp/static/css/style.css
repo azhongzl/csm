@@ -249,8 +249,8 @@ nav {
 }
 #content div a{
 
-	font-size: 70%;
-	color : red;
+	font-size: 80%;
+	color : #3453bc;
 	
 }
 
@@ -278,9 +278,16 @@ nav {
 	line-height: 1.5em;
  	color:#555;
 }
-#content div {
+
+#content div div {
 	background-color:white;
-		color:#007efd;
+		color:#647a9b;
+	line-height: 1.5em;
+		font-size: 80%;
+}
+#content div div a{
+	background-color:white;
+		color:#647a9b;
 	line-height: 1.5em;
 }
 #content  a:hover {
