@@ -24,7 +24,7 @@ import com.itdoes.csm.entity.Faq;
 @RestController
 @RequestMapping(value = SearchController.SEARCH_URL_PREFIX, produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class CustomSearchController extends BaseController {
-	public static final String SEARCH_COMMAND_FAQ = "faq";
+	public static final String SEARCH_COMMAND_FAQ = "Faq";
 
 	private static final SearchEntity FAQ_SEARCH_ENTITY = new SearchEntity(Faq.class,
 			new String[] { "question", "answer" });
