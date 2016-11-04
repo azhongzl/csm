@@ -35,7 +35,7 @@ public class CustomSearchController extends BaseController {
 			@RequestParam(value = "page_no", defaultValue = "1") int pageNo,
 			@RequestParam(value = "page_size", defaultValue = "-1") int pageSize,
 			@RequestParam(value = "page_sort", required = false) String pageSort, ServletRequest request) {
-		final Page<?> page = searchService.search(searchString, Faq.class, FAQ_FIELDS,
+		final Page<?> page = searchService.searchDefault(searchString, Faq.class, FAQ_FIELDS,
 				buildPageRequest(pageNo, pageSize, pageSort));
 		return HttpResults.success(page);
 	}
