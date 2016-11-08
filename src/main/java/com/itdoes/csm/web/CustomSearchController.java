@@ -15,7 +15,7 @@ import com.itdoes.common.business.web.SearchController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
-import com.itdoes.csm.entity.Faq;
+import com.itdoes.csm.entity.CsmFaq;
 
 /**
  * @author Jalen Zhong
@@ -23,7 +23,7 @@ import com.itdoes.csm.entity.Faq;
 @RestController
 @RequestMapping(value = SearchController.SEARCH_URL_PREFIX, produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class CustomSearchController extends BaseController {
-	public static final String SEARCH_COMMAND_FAQ = "Faq";
+	public static final String SEARCH_COMMAND_FAQ = "CsmFaq";
 
 	private static final String[] FAQ_FIELDS = { "question", "answer" };
 
@@ -35,7 +35,7 @@ public class CustomSearchController extends BaseController {
 			@RequestParam(value = "page_no", defaultValue = "1") int pageNo,
 			@RequestParam(value = "page_size", defaultValue = "-1") int pageSize,
 			@RequestParam(value = "page_sort", required = false) String pageSort, ServletRequest request) {
-		final Page<?> page = searchService.searchDefault(searchString, Faq.class, FAQ_FIELDS,
+		final Page<?> page = searchService.searchDefault(searchString, CsmFaq.class, FAQ_FIELDS,
 				buildPageRequest(pageNo, pageSize, pageSort));
 		return HttpResults.success(page);
 	}

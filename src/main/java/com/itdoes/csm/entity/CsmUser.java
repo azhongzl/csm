@@ -18,11 +18,11 @@ import com.itdoes.common.business.entity.EntityPermType;
  * @author Jalen Zhong
  */
 @Entity
-@Table(name = "account")
+@Table(name = "csm_user")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @EntityPerm(types = { EntityPermType.ALL })
-public class Account extends BaseEntity {
-	private static final long serialVersionUID = 487334413L;
+public class CsmUser extends BaseEntity {
+	private static final long serialVersionUID = -1566100664L;
 
 	@Id
 	@javax.persistence.GeneratedValue

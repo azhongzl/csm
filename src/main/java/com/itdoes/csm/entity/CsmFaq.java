@@ -18,20 +18,28 @@ import com.itdoes.common.business.entity.EntityPermType;
  * @author Jalen Zhong
  */
 @Entity
-@Table(name = "category")
+@Table(name = "csm_faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @EntityPerm(types = { EntityPermType.WRITE })
-public class Category extends BaseEntity {
-	private static final long serialVersionUID = 115155230L;
+@org.hibernate.search.annotations.Indexed
+public class CsmFaq extends BaseEntity {
+	private static final long serialVersionUID = 2027675641L;
 
 	@Id
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
-	@Column(name = "name")
-	private String name;
-	@Column(name = "description")
-	private String description;
+	@Column(name = "category_id")
+	private java.util.UUID categoryId;
+	@org.hibernate.search.annotations.Field
+	@Column(name = "question")
+	private String question;
+	@org.hibernate.search.annotations.Field
+	@Column(name = "answer")
+	private String answer;
+	@com.itdoes.common.business.entity.UploadField
+	@Column(name = "attachments")
+	private String attachments;
 	@Column(name = "active")
 	private Boolean active;
 	@Column(name = "create_account_id")
@@ -51,20 +59,36 @@ public class Category extends BaseEntity {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public java.util.UUID getCategoryId() {
+		return categoryId;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCategoryId(java.util.UUID categoryId) {
+		this.categoryId = categoryId;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getQuestion() {
+		return question;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
+	public String getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(String attachments) {
+		this.attachments = attachments;
 	}
 
 	public Boolean getActive() {

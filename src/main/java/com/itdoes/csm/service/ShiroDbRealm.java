@@ -24,7 +24,7 @@ import com.itdoes.common.core.jpa.Specifications;
 import com.itdoes.common.core.shiro.AbstractShiroRealm;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.util.Codecs;
-import com.itdoes.csm.entity.Account;
+import com.itdoes.csm.entity.CsmUser;
 
 /**
  * @author Jalen Zhong
@@ -36,23 +36,23 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	@Autowired
 	private EntityDbService dbService;
 
-	private EntityPair<Account, UUID> pair;
+	private EntityPair<CsmUser, UUID> pair;
 
 	@PostConstruct
 	public void myInit() {
-		pair = env.getPair(Account.class.getSimpleName());
+		pair = env.getPair(CsmUser.class.getSimpleName());
 	}
 
 	@Override
 	protected AuthenticationInfo doAuthentication(UsernamePasswordToken token) throws AuthenticationException {
 		final String username = token.getUsername();
-		final Account account = findAccount(username);
-		if (account == null) {
+		final CsmUser user = findUser(username);
+		if (user == null) {
 			return null;
 		}
 
-		final byte[] salt = Codecs.hexDecode(account.getSalt());
-		return new SimpleAuthenticationInfo(new ShiroUser(account.getId().toString(), username), account.getPassword(),
+		final byte[] salt = Codecs.hexDecode(user.getSalt());
+		return new SimpleAuthenticationInfo(new ShiroUser(user.getId().toString(), username), user.getPassword(),
 				ByteSource.Util.bytes(salt), getName());
 	}
 
@@ -69,20 +69,20 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 		return "SHA-256";
 	}
 
-	private Account findAccount(String username) {
-		final Account account = dbService.findOne(pair, Specifications.build(Account.class,
+	private CsmUser findUser(String username) {
+		final CsmUser user = dbService.findOne(pair, Specifications.build(CsmUser.class,
 				Lists.newArrayList(new FindFilter("username", Operator.EQ, username))));
-		return account;
+		return user;
 	}
 
-	private Account getAccount(String id) {
-		final Account account = dbService.get(pair, UUID.fromString(id));
-		return account;
+	private CsmUser getUser(String id) {
+		final CsmUser user = dbService.get(pair, UUID.fromString(id));
+		return user;
 	}
 
 	private void populatePermission(SimpleAuthorizationInfo info, String id) {
-		final Account account = getAccount(id);
-		if (account.getUsername().equals("admin")) {
+		final CsmUser user = getUser(id);
+		if (user.getUsername().equals("admin")) {
 			info.addStringPermission(Perms.getAllPerm());
 		}
 	}
