@@ -1,5 +1,5 @@
 var userName = "user1";
-
+var ctx="";
 const store = new Vuex.Store({
 	  state: {
 		  customers:[
@@ -87,15 +87,14 @@ const content={
 const router = new VueRouter({
 	  mode: 'history',
 	  routes: [
-		         
-		 	{ path: '/', 
+		 	{ path: '/csm/admin/chat', 
 			    	name : 'home',
 					components:{
 					   	customer : customer,
 					   	service : service
 					        	},
 			},
-		 	{ path: '/content:id', 
+		 	{ path: '/csm/admin/chat/content:id', 
 		    	name : 'content',
 				components:{
 				   	customer : customer,

@@ -6,16 +6,12 @@
 <html>
 <head>
 <title></title>
- <meta http-equi="Content-Type" content="text/html; charset=" utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" type="text/css" href="${ctx}/static/css/adminStyle.css" />
-
 <script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
-<link href="bootstrap.min.css" rel="stylesheet">
+<link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
 </head>
 <body>
 	<div id="main" class="container">
