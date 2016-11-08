@@ -52,6 +52,8 @@
 	<mvc:view-controller path="/" view-name="index" />
 	<mvc:view-controller path="/admin/" view-name="admin/index" />
 	<mvc:view-controller path="/edit" view-name="editForm" />
+	<mvc:view-controller path="/chat" view-name="chat" />
+	<mvc:view-controller path="/admin/chat" view-name="admin/chat" />
 
 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
