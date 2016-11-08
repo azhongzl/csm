@@ -23,7 +23,7 @@
 			<div id="logo">
 				<div id="logo_text">
 					<h1>Search</h1>
-					<input type="search" id="search" placeholder="Search..." />
+					<input type="search" id="search"  v-model="search" placeholder="Search..." v-on:keyup.enter = "ajaxSearch" />
 				</div>
 			</div>
 		</header>
@@ -68,7 +68,7 @@
 	<div>
 		<a href="#" v-on:click="showAnswer(faq.id)">{{faq.question}} </a>
 		<div v-show="answerKey">{{faq.answer}}<br> 
-			<a href="${ctx}/uploads/Faq/{{faq.id}}/{{attachment}}" v-for="attachment in attachments">{{attachment}}	</a>
+			<a v-for="attachment in attachments" v-bind:href="'${ctx}/uploads/Faq/'+faq.id+'/'+attachment" >{{attachment}}	</a>
 		</div>
 	</div>
 	</template>

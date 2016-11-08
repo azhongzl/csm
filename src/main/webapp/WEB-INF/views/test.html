@@ -1,65 +1,144 @@
-
-<!DOCTYPE HTML>
-<html>
-
+<!-- http://cdn.attach.w3cfuns.com/notes/pics/201609/27/145354pd6u1ccdym768cdu.png
+http://cdn.attach.w3cfuns.com/notes/pics/201609/27/145439axuw1xlduajr8mm3.png -->
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>TEST</title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-<script type="text/javascript" src="../../static/js/jquery.js"></script>
-
-
+	<meta charset="UTF-8">
+	<title>chat</title>
+	<style>
+		#chatblock{
+			position: relative;
+			width: 375px;
+			height: 667px;
+			border: 2px solid black;
+			border-radius: 5px;
+		}
+		#content{
+			width: 375px;
+			height: 569px;
+			overflow: auto;
+		}
+		.footer{
+			display: -webkit-inline-flex;
+			display: -moz-inline-flex;
+			display: -ms-inline-flex;
+			display: -o-inline-flex;
+			display: inline-flex;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 375px;
+			height: 98px;
+			background-color: #eee;
+		}
+		#icon{
+			width: 35px;
+			height: 35px;
+			border-radius: 5px;
+			margin: 7% 7%;
+			background: #a0a0a0;
+		}
+		#chatbox{
+			width: 200px;
+			height: 30px;
+			margin: 7% 0;
+			font-size: 20px;
+		}
+		#btn{
+			width: 50px;
+			height: 35px;
+			margin: 7% 2%;
+		}
+		.green{
+			display: inline-block;
+			padding: 5px 8px;
+			font-family: 微软雅黑;
+			font-size: 16px;
+			border-radius: 3 px;
+			background-color: #2EDB23;
+			color: white;
+		}
+		.grey{
+			display: inline-block;
+			padding: 5px 8px;
+			margin-right: 0;
+			font-family: 微软雅黑;
+			font-size: 16px;
+			background-color: #C1C1C1;
+		}
+		.greyblock{
+			display: flex;
+			flex-direction: row-reverse;
+			margin: 3px;
+		}
+		.greenblock{
+			display: flex;
+			margin: 3px;
+		}
+	</style>
 </head>
 <body>
+	<div id="chatblock">
+		<div id="content">
+			<!-- style="display:none;" -->
+			<!-- <div class="greyblock" ><span class = "grey">你好呀你好呀</span><img src="img/testicon/chef.png" ></div>
+			<div class="greenblock"><img src="img/testicon/baby.png"><span class = "green">你好呀</span></div> -->
+		</div>
+		<div class="footer">
+			<div id="icon"><img src="http://cdn.attach.w3cfuns.com/notes/pics/201609/27/145439axuw1xlduajr8mm3.png" id="img"></div>
+			<input type="text" id="chatbox">
+			<input type="button" id="btn" value="发送">
+		</div>
+	</div>
+	<script>
+		window.onload = function () {
+			var oInput = document.getElementById('chatbox');
+			var oImgBox = document.getElementById('icon');
+			var oBtn = document.getElementById('btn');
+			var oImg = document.getElementById('img');
+			var oText = document.getElementById('content');
+			// var oImg = document.getElementById('icon');
+			var num = 0;
+			var flag = 0;
+			var arrText = [];
+			var arrImg = [];
+			var arrClass = [];
+			var html = "";
 
-
-
-  <div id="app1">
-  <my-test></my-test>>
-  </div>
-
-
-
-	<div id="app">
-		<h1>Named Views</h1>
-		<ul>
-			<li><router-link to="/">/</router-link></li>
-			<li><router-link to="/other">/other</router-link></li>
-		</ul>
+			oImgBox.onclick = function () {
+				if (num == 0) {oImg.src = "http://cdn.attach.w3cfuns.com/notes/pics/201609/27/145439axuw1xlduajr8mm3.png";num = 1;flag = 0;}
+					else if (num == 1) {oImg.src = "http://cdn.attach.w3cfuns.com/notes/pics/201609/27/145354pd6u1ccdym768cdu.png";num = 0;flag = 1;}
+			};
+			oBtn.onclick = function () {
+				html = "";
+				if (oInput.value == "") {alert("请输入内容");}
+				// alert(oInput.value);
+				else{
+					arrText.unshift(oInput.value);
+					oInput.value = "";
+					if (flag == 0) {
+						arrImg.unshift('http://cdn.attach.w3cfuns.com/notes/pics/201609/27/145439axuw1xlduajr8mm3.png');
+						arrClass.unshift("green");
+					}
+					else if (flag == 1) {
+						arrImg.unshift('http://cdn.attach.w3cfuns.com/notes/pics/201609/27/145354pd6u1ccdym768cdu.png');
+						arrClass.unshift("grey");
+					}
+					for (var i =0; i < arrText.length; i++) {
+						if (arrClass[i]=="green") {
+							html += "<div class = '"+arrClass[i]+"block'><img src="+arrImg[i]+"><span class = '"+arrClass[i]+"'>"+ arrText[i]+"</span></div>";	
+						}
+						else if (arrClass[i]=="grey") {
+							// html += "<div class = '"+arrClass[i]+"block'><span class = '"+arrClass[i]+"'>"+ arrText[i]+"</span><img src="+arrImg[i]+">"+"</div>";
+							html += "<div class = '"+arrClass[i]+"block'><img src="+arrImg[i]+"><span class = '"+arrClass[i]+"'>"+ arrText[i]+"</span></div>";	
+						}
+					}
+					 oText.innerHTML = html;
+				}
 				
-			<template v-for="n in list"> <input type="radio" name='id' :value="n.id" v-model="picked">{{n.name}}</input> <br>
-			</template>
-		<div>SSSS{{picked}}</div>
-		<router-view class="view one"></router-view>
-		<hr>
-		<router-view class="view two" name="a"></router-view>
-				<hr>
-		<router-view class="view three" name="b"></router-view>
-	</div>
-	<template id="test">
-	
-	      <div class="my-text-input-fields">
-            <template v-for="textField in textFields">
-                <input type="text"  v-model="textField.value"><br>
-                </template>
-           <div style="margin-top:30px;">
-                {{textValues}}
-            </div>
-        </div>
-        </template>
-        
-	<template id="category">
-	<div>
-			<template v-for="n in list">
-			 <input type="radio"  name='id' :value="n.id">{{n.name}}</input>
-			  <br>
-			</template>
-		> <input type='button' value='ADD NEW' v-on:click='addNewUi()'></input> <br> <input type='button' value='DELETE'
-			v-on:click='Categorydelete()'></input> <br> <input type='button' value='MODIFY' v-on:click='modify()'></input> <br>
-			
-	</div>
-	</template>
+			};
+
+		};
+	</script>
 </body>
-<script type="text/javascript" src="../../static/js/testApp.js"></script>
 </html>
