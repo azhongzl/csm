@@ -41,7 +41,7 @@
 		</property>
 		<property name="afterStaticDefinitions">
 			<value>
-				/** = user
+				/** = anon
 			</value>
 		</property>
 	</bean>
