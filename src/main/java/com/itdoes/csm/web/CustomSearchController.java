@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itdoes.common.business.service.SearchService;
-import com.itdoes.common.business.service.SearchService.SearchEntity;
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.business.web.SearchController;
 import com.itdoes.common.core.Result;
@@ -24,10 +23,9 @@ import com.itdoes.csm.entity.Faq;
 @RestController
 @RequestMapping(value = SearchController.SEARCH_URL_PREFIX, produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class CustomSearchController extends BaseController {
-	public static final String SEARCH_COMMAND_FAQ = "faq";
+	public static final String SEARCH_COMMAND_FAQ = "Faq";
 
-	private static final SearchEntity FAQ_SEARCH_ENTITY = new SearchEntity(Faq.class,
-			new String[] { "question", "answer" });
+	private static final String[] FAQ_FIELDS = { "question", "answer" };
 
 	@Autowired
 	private SearchService searchService;
@@ -37,7 +35,7 @@ public class CustomSearchController extends BaseController {
 			@RequestParam(value = "page_no", defaultValue = "1") int pageNo,
 			@RequestParam(value = "page_size", defaultValue = "-1") int pageSize,
 			@RequestParam(value = "page_sort", required = false) String pageSort, ServletRequest request) {
-		final Page<?> page = searchService.search(searchString, FAQ_SEARCH_ENTITY,
+		final Page<?> page = searchService.searchDefault(searchString, Faq.class, FAQ_FIELDS,
 				buildPageRequest(pageNo, pageSize, pageSort));
 		return HttpResults.success(page);
 	}
