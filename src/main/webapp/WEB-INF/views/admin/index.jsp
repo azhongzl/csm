@@ -10,10 +10,10 @@
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" type="text/css" href="${ctx}/static/css/adminStyle.css" />
-<script type="text/javascript" src="${ctx}/static/js/jquery.js"></script>
-<script type="text/javascript" src="${ctx}/static/js/vue.js"></script>
-<script type="text/javascript" src="${ctx}/static/js/vue-router.js"></script>
-<script type="text/javascript" src="${ctx}/static/js/vuex.min.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
 </head>
 
 <body>

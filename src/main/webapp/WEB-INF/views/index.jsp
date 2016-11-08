@@ -7,7 +7,7 @@
 <title>ERP FAQ</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" type="text/css" href="${ctx}/static/css/style.css" />
-<script type="text/javascript" src="${ctx}/static/js/vue.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
 </head>
 <body>
 	<div id="main">
@@ -73,7 +73,7 @@
 	</div>
 	</template>
 
-	<script type="text/javascript" src="${ctx}/static/js/jquery.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/vueFunction.js"></script>
 
 
