@@ -18,28 +18,20 @@ import com.itdoes.common.business.entity.EntityPermType;
  * @author Jalen Zhong
  */
 @Entity
-@Table(name = "faq")
+@Table(name = "csm_faq_category")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @EntityPerm(types = { EntityPermType.WRITE })
-@org.hibernate.search.annotations.Indexed
-public class Faq extends BaseEntity {
-	private static final long serialVersionUID = 70390L;
+public class CsmFaqCategory extends BaseEntity {
+	private static final long serialVersionUID = 1207564311L;
 
 	@Id
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
-	@Column(name = "category_id")
-	private java.util.UUID categoryId;
-	@org.hibernate.search.annotations.Field
-	@Column(name = "question")
-	private String question;
-	@org.hibernate.search.annotations.Field
-	@Column(name = "answer")
-	private String answer;
-	@com.itdoes.common.business.entity.UploadField
-	@Column(name = "attachments")
-	private String attachments;
+	@Column(name = "name")
+	private String name;
+	@Column(name = "description")
+	private String description;
 	@Column(name = "active")
 	private Boolean active;
 	@Column(name = "create_account_id")
@@ -59,36 +51,20 @@ public class Faq extends BaseEntity {
 		this.id = id;
 	}
 
-	public java.util.UUID getCategoryId() {
-		return categoryId;
+	public String getName() {
+		return name;
 	}
 
-	public void setCategoryId(java.util.UUID categoryId) {
-		this.categoryId = categoryId;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getQuestion() {
-		return question;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setQuestion(String question) {
-		this.question = question;
-	}
-
-	public String getAnswer() {
-		return answer;
-	}
-
-	public void setAnswer(String answer) {
-		this.answer = answer;
-	}
-
-	public String getAttachments() {
-		return attachments;
-	}
-
-	public void setAttachments(String attachments) {
-		this.attachments = attachments;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Boolean getActive() {

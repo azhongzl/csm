@@ -1,8 +1,8 @@
-drop table if exists faq;
-drop table if exists category;
-drop table if exists account;
+drop table if exists csm_faq;
+drop table if exists csm_faq_category;
+drop table if exists csm_user;
 
-create table account (
+create table csm_user (
 	id binary(16) not null,
 	username varchar(100) not null,
 	password char(64) not null,
@@ -11,7 +11,7 @@ create table account (
     primary key (id)
 ) engine=InnoDB;
 
-create table category (
+create table csm_faq_category (
 	id binary(16) not null,
 	name varchar(100) not null,
 	description varchar(255),
@@ -23,7 +23,7 @@ create table category (
     primary key (id)
 ) engine=InnoDB;
 
-create table faq (
+create table csm_faq (
 	id binary(16) not null,
 	category_id binary(16) not null,
 	question varchar(255) not null,
