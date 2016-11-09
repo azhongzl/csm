@@ -20,8 +20,8 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
  */
 @Configuration
 @EnableWebSocketMessageBroker
-public class ChatWebSocketMessageBrokerConfigurer implements WebSocketMessageBrokerConfigurer {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChatWebSocketMessageBrokerConfigurer.class);
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketConfig.class);
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
