@@ -476,7 +476,7 @@ const router = new VueRouter({
   mode: 'history',
 	routes: [
 	         
-	 	{ path: '/csm/admin/', 
+	 	{ path: '/csm/admin//', 
 		    	name : 'home',
 			    	},
 	

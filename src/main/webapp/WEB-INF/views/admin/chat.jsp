@@ -21,8 +21,7 @@
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<h2>KUZCOLIGHTING</h2>
 						<ul class="nav navbar-nav navbar-right" style="font-size: 15px">
-							<li><router-link :to="{name:'home'}">HOME</router-link></li>
-							<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong
+							<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">About<strong
 									class="caret"></strong></a>
 								<ul class="dropdown-menu">
 									<li><a href="#">managment</a></li>
@@ -42,18 +41,20 @@
 				<router-view name="customer"></router-view>
 				<h3>Customer Service</h3>
 				<router-view name="service"></router-view>
-				<button class="btn btn-primary btn-lg btn-block" >Pull service group</button>
+
 			</div>
 			<router-view name="content"></router-view>
 		</div>
 
 	</div>
-<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
 	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/chatFunction.js"></script>
 	<script>
-		$( document ).ready(function() {
-		   router.push({name :  'home'});
+		$(document).ready(function() {
+			router.push({
+				name : 'home'
+			});
 		});
 	</script>
 	<!------------------ template------------------- -->
@@ -68,19 +69,22 @@
 
 	<template id="service">
 	<div class="list-group" style="height: 360px; overflow: auto">
-
 		<ul class="list-group">
 			<li class="list-group-item" v-for="(user,index) in service"><span class="badge" style="background-color: blue;">online</span><a
 				href="#" v-on:click="showUser(user.name,user.department,index)">{{user.name}}</a></li>
 		</ul>
+		<label for="name">Select service group</label><br>
+		<select class="form-control"  v-model="selected" v-on:change="test(selected)">
+			<option v-for="service in serviceList" :value="service" >{{service.name}}</option>
+		</select>
 	</div>
 	</template>
 
 	<template id="content">
 	<div class="col-md-9 column">
 		<div class="row clearfix">
-			<div class="col-md-12 column" style="background-color: #f7f7f7; height: 600px; padding-top: 10px; overflow: auto">
-			</div>
+			<div id="sentence" class="col-md-12 column"
+				style="background-color: #f7f7f7; height: 600px; padding-top: 10px; overflow: auto"></div>
 		</div>
 		<div class="row clearfix">
 			<div class="col-md-12 column"
@@ -89,16 +93,16 @@
 					<button class="btn btn-default" type="button">image</button>
 					<button class="btn btn-default" type="button">files</button>
 				</div>
-					<div class="form-inline"  style="margin-top: 20px">
-						<input  type="text" size="100" v-on:keyup.enter="send(sentence)" v-model="sentence"/>
-						<button type="button" class="btn btn-default" v-on:click="send(sentence)">Send</button>
-					</div>
+				<div class="form-inline" style="margin-top: 20px">
+					<input type="text" size="100" v-on:keyup.enter="send(sentence)" v-model="sentence" />
+					<button type="button" class="btn btn-default" v-on:click="send(sentence)">Send</button>
+				</div>
 			</div>
 		</div>
 	</div>
 	</template>
 
 
-		<!------------------ template------------------- -->
+	<!------------------ template------------------- -->
 </body>
 </html>

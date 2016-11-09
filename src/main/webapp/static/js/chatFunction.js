@@ -9,11 +9,19 @@ const store = new Vuex.Store({
 		             ],
 		  service:[
 		   		     { name:'service group1',department:'IT'},
-		   		     { name:'service group2',department:'IT'},
-		   		     { name:'service group3',department:'IT'},
-		   		
-		   	             
 		   		  ],
+		 serviceList:[
+					{ name:'service group2',department:'IT'},
+					{ name:'service group3',department:'IT'},
+				   	 { name:'service group4',department:'IT'},
+				   	 { name:'service group5',department:'IT'},
+				   	 { name:'service group6',department:'IT'},
+				   	 { name:'service group7',department:'IT'},
+				   	 { name:'service group8',department:'IT'},
+				   	 { name:'service group9',department:'IT'},				   	 
+				   ],
+		   		  
+		   		  
 	  },
 	  mutations: {
 			  addUser(state,payload) {
@@ -48,38 +56,62 @@ const customer={
 
 const service={
 	  template:'#service',
+	  data: function(){
+		  return{
+			  selected:"",  
+		  }
+	  },
 	  computed:{
 		  service(){
 			  return this.$store.state.service;
+		  },
+		  serviceList(){
+			  return this.$store.state.serviceList;
 		  }
 	  },
 
 	methods:{
 		showUser(name,department,index){
- 	  alert(name+"          "+department+"          "+index);
+			alert(name+"          "+department+"          "+index);
 		},
+		
+		test(res){
+			this.$store.state.service.push(res);
+		},
+		
 		}
 	};
 
 const content={
 		  template:'#content',
+		  data:function(){
+			return {
+				sentence:""
+					}; 
+		  },
 			watch:{
 				'$route'(to,from){
 				let id=	this.$route.params.id;
-				alert(id);
+				userName=id;
+				$("#sentence").empty();
 				}
 			},
 			created:function(){
-				alert(this.$route.params.id);
+				let id=	this.$route.params.id;
+				userName=id;
+				$("#sentence").empty();
 			},
 		  computed:{
 			  
 		  },
 
 		methods:{
-				send(sentence){
-					alert(sentence);
-				}
+				send(res){
+				if (res.length>0){
+					$("#sentence").append (userName+":"+"<p>"+res+"<p>");
+					this.sentence="";	
+				}	
+			}
 			}
 		};
 
@@ -87,7 +119,7 @@ const content={
 const router = new VueRouter({
 	  mode: 'history',
 	  routes: [
-		 	{ path: '/csm/admin/chat', 
+		 	{ path: '/csm/admin/', 
 			    	name : 'home',
 					components:{
 					   	customer : customer,
@@ -115,6 +147,3 @@ new Vue({
 	});
 
 
-function test1(){
-	alert();
-}
