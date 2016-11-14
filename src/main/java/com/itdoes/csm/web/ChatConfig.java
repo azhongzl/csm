@@ -34,10 +34,10 @@ public class ChatConfig {
 	@EventListener
 	private void handleSessionConnected(SessionConnectedEvent event) {
 		final Message<?> message = event.getMessage();
-		final StompHeaderAccessor sha = StompHeaderAccessor.wrap(message);
-		final String userId = sha.getUser().getName();
-
+		// Only monitor customers
 		if (!SpringMessagings.getNativeHeaders(message).containsKey(KEY_ADMIN)) {
+			final StompHeaderAccessor sha = StompHeaderAccessor.wrap(message);
+			final String userId = sha.getUser().getName();
 			final ChatEvent loginEvent = new ChatEvent(userId);
 			template.convertAndSend(TOPIC_LOGIN, loginEvent);
 			onlineUserStore.add(sha.getSessionId(), loginEvent);
