@@ -1,14 +1,14 @@
-package com.itdoes.csm.web;
+package com.itdoes.csm.dto;
 
 /**
  * @author Jalen Zhong
  */
-public class ChatUserDto {
+public class ChatUser {
 	private final String username;
 	private boolean online;
 	private boolean unhandled;
 
-	public ChatUserDto(String username) {
+	public ChatUser(String username) {
 		this.username = username;
 	}
 

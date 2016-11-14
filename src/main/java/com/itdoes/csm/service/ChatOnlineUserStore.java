@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.itdoes.csm.web.ChatEvent;
+import com.itdoes.csm.dto.ChatEvent;
 
 /**
  * @author Jalen Zhong

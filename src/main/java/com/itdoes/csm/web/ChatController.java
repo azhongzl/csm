@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.common.collect.Maps;
 import com.itdoes.common.core.util.Collections3;
+import com.itdoes.csm.dto.ChatEvent;
+import com.itdoes.csm.dto.ChatMessage;
+import com.itdoes.csm.dto.ChatUser;
 import com.itdoes.csm.service.ChatOnlineUserStore;
 
 /**
@@ -98,9 +101,9 @@ public class ChatController {
 	}
 
 	@SubscribeMapping("/chatAInit")
-	public Collection<ChatUserDto> chatAInit() {
-		final Collection<ChatUserDto> users = Arrays.asList(new ChatUserDto("admin"), new ChatUserDto("user"));
-		for (ChatUserDto user : users) {
+	public Collection<ChatUser> chatAInit() {
+		final Collection<ChatUser> users = Arrays.asList(new ChatUser("admin"), new ChatUser("user"));
+		for (ChatUser user : users) {
 			final String username = user.getUsername();
 			if (onlineUserStore.containsUser(username)) {
 				user.setOnline(true);

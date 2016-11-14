@@ -12,6 +12,7 @@ import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.itdoes.common.core.spring.SpringMessagings;
+import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.service.ChatOnlineUserStore;
 
 /**
