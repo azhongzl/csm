@@ -20,10 +20,10 @@ function connect() {
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function(frame) {
 		setConnected(true);
-		stompClient.subscribe('/topic/chat/message/' + username, function(
-				message) {
-			showMessage(JSON.parse(message.body));
-		});
+		stompClient.subscribe('/topic/chat/message/' + userId,
+				function(message) {
+					showMessage(JSON.parse(message.body));
+				});
 		stompClient.subscribe('/app/chatCInitMessage', function(message) {
 			showMessages(JSON.parse(message.body));
 		});
@@ -51,7 +51,7 @@ function showMessages(messageList) {
 
 function showMessage(message) {
 	$("#messages").append(
-			"<tr><td>" + message.sender + "</td><td>" + message.dateTime
+			"<tr><td>" + message.senderId + "</td><td>" + message.dateTime
 					+ "</td></tr><tr><td>" + message.message + "</td></tr>");
 }
 

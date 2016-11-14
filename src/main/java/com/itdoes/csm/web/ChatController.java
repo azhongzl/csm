@@ -64,51 +64,52 @@ public class ChatController {
 
 	@MessageMapping("/chatCSendMessage")
 	public void chatCSendMessage(ChatMessage message, Principal principal) {
-		final String username = principal.getName();
-		message.setSender(username);
+		final String userId = principal.getName();
+		message.setSenderId(userId);
 		message.setDateTime(LocalDateTime.now());
 		message.setMessage(message.getMessage());
-		template.convertAndSend("/topic/chat/message/" + username, message);
-		addChatMessage(username, message);
+		template.convertAndSend("/topic/chat/message/" + userId, message);
+		addChatMessage(userId, message);
 
-		final ChatEvent messageEvent = new ChatEvent(username);
-		unHandledCustomerMap.put(username, messageEvent);
+		final ChatEvent messageEvent = new ChatEvent(userId);
+		unHandledCustomerMap.put(userId, messageEvent);
 		template.convertAndSend("/topic/chat/unhandledCustomer", messageEvent);
 	}
 
 	@SubscribeMapping("/chatCInitMessage")
 	public List<ChatMessage> chatCInitMessage(Principal principal) {
-		final String username = principal.getName();
-		List<ChatMessage> messageList = messageMap.get(username);
+		final String userId = principal.getName();
+		List<ChatMessage> messageList = messageMap.get(userId);
 		if (Collections3.isEmpty(messageList)) {
 			final ChatMessage message = new ChatMessage();
-			message.setSender("Customer Service");
+			message.setSenderId("Customer Service");
 			message.setDateTime(LocalDateTime.now());
-			message.setMessage("Welcome, " + username + "! Our agent will contact you soon. Please wait...");
-			addChatMessage(username, message);
+			message.setMessage("Welcome, " + userId + "! Our agent will contact you soon. Please wait...");
+			addChatMessage(userId, message);
 		}
 
 		return messageList;
 	}
 
-	private void addChatMessage(String username, ChatMessage message) {
-		List<ChatMessage> messageList = messageMap.get(username);
+	private void addChatMessage(String userId, ChatMessage message) {
+		List<ChatMessage> messageList = messageMap.get(userId);
 		if (Collections3.isEmpty(messageList)) {
 			messageList = Lists.newArrayList();
-			messageMap.put(username, messageList);
+			messageMap.put(userId, messageList);
 		}
 		messageList.add(message);
 	}
 
 	@SubscribeMapping("/chatAInit")
 	public Collection<ChatUser> chatAInit() {
-		final Collection<ChatUser> users = Arrays.asList(new ChatUser("admin"), new ChatUser("user"));
+		final Collection<ChatUser> users = Arrays.asList(new ChatUser("1c93b13d-d6ea-1034-a268-c6b53a0158b7", "admin"),
+				new ChatUser("490aa897-d6ea-1034-a268-c6b53a0158b7", "user"));
 		for (ChatUser user : users) {
-			final String username = user.getUsername();
-			if (onlineUserStore.containsUser(username)) {
+			final String userId = user.getUserId();
+			if (onlineUserStore.containsUser(userId)) {
 				user.setOnline(true);
 			}
-			if (unHandledCustomerMap.containsKey(username)) {
+			if (unHandledCustomerMap.containsKey(userId)) {
 				user.setUnhandled(true);
 			}
 		}
@@ -117,8 +118,8 @@ public class ChatController {
 
 	@MessageMapping("/chatASendMessage")
 	public void chatASendMessage(ChatMessage message, Principal principal) {
-		final String username = principal.getName();
-		message.setSender(username);
+		final String userId = principal.getName();
+		message.setSenderId(userId);
 		message.setDateTime(LocalDateTime.now());
 		message.setMessage(message.getMessage());
 		template.convertAndSend("/topic/chat/message/" + message.getRoomId(), message);

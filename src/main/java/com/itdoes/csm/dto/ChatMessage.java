@@ -6,18 +6,10 @@ import java.time.LocalDateTime;
  * @author Jalen Zhong
  */
 public class ChatMessage {
-	private String sender;
 	private String roomId;
+	private String senderId;
 	private LocalDateTime dateTime;
 	private String message;
-
-	public String getSender() {
-		return sender;
-	}
-
-	public void setSender(String sender) {
-		this.sender = sender;
-	}
 
 	public String getRoomId() {
 		return roomId;
@@ -25,6 +17,14 @@ public class ChatMessage {
 
 	public void setRoomId(String roomId) {
 		this.roomId = roomId;
+	}
+
+	public String getSenderId() {
+		return senderId;
+	}
+
+	public void setSenderId(String senderId) {
+		this.senderId = senderId;
 	}
 
 	public LocalDateTime getDateTime() {
