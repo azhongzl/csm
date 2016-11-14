@@ -1,4 +1,4 @@
-package com.itdoes.csm.web;
+package com.itdoes.csm.dto;
 
 import java.time.LocalDateTime;
 

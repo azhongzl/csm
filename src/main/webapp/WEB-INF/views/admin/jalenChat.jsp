@@ -48,7 +48,7 @@
 			<div class="col-md-12">
 				<form class="form-inline">
 					<div class="form-group">
-						<label for="message">To:</label> <input type="text" id="recipient" class="form-control" placeholder=""><label
+						<label for="message">To:</label> <input type="text" id="roomId" class="form-control" placeholder=""><label
 							for="message">Message:</label><input type="text" id="message" class="form-control"
 							placeholder="Your message here...">
 					</div>
