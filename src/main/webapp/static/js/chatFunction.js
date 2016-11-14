@@ -8,31 +8,34 @@ const store = new Vuex.Store({
 		             { name:'customer3'}
 		             ],
 		  service:[
-		   		     { name:'service group1',department:'IT'},
+		   		     { name:'service group1',department:'IT',customer:"any"},
 		   		  ],
 		 serviceList:[
-					{ name:'service group2',department:'IT'},
-					{ name:'service group3',department:'IT'},
-				   	 { name:'service group4',department:'IT'},
-				   	 { name:'service group5',department:'IT'},
-				   	 { name:'service group6',department:'IT'},
-				   	 { name:'service group7',department:'IT'},
-				   	 { name:'service group8',department:'IT'},
-				   	 { name:'service group9',department:'IT'},				   	 
+					 { name:'service group1',department:'IT',custormer:""},	
+					 { name:'service group2',department:'IT',custormer:""},
+					 { name:'service group3',department:'IT',custormer:""},
+				   	 { name:'service group4',department:'IT',custormer:""},
+				   	 { name:'service group5',department:'IT',custormer:""},
+				   	 { name:'service group6',department:'IT',custormer:""},
+				   	 { name:'service group7',department:'IT',custormer:""},
+				   	 { name:'service group8',department:'IT',custormer:""},
+			   	 
 				   ],
 		   		  
 		   		  
 	  },
 	  mutations: {
 			  addUser(state,payload) {
-              state.chatUser.push(payload);
-              state.chatUser1.splice(payload.index,1)
+			  state.service.push(payload.id);
 		    },
 			  removeUser(state,payload) {
-		    	state.chatUser.splice(payload.index,1)
-		    	state.chatUser1.push(payload);
-
+		    	state.service.splice(payload.id,1);
 			    },
+			 closeChat(state,payload) {
+			    state.customers.splice(payload.index,1);
+			    
+  
+				    },
 	  }
 	});
 
@@ -47,8 +50,9 @@ const customer={
 	  },
 
 	methods:{
-		showUser(name){
-	     alert(name);
+		closeChat(index,name){	
+			router.push({name: 'home'});
+			store.commit('closeChat',{index:index,name:name});
 		}
 	}
 	};
@@ -63,7 +67,15 @@ const service={
 	  },
 	  computed:{
 		  service(){
-			  return this.$store.state.service;
+			  let id = this.$route.params.id;
+			  let service1 = [];
+			  let service2 = this.$store.state.service;
+			  $.each(service2,function(i,n){
+				  if(n.customer==id ||n.customer=="any" ){
+					  service1.push(n);
+				  }
+			  });
+			  return service1;
 		  },
 		  serviceList(){
 			  return this.$store.state.serviceList;
@@ -71,12 +83,16 @@ const service={
 	  },
 
 	methods:{
-		showUser(name,department,index){
-			alert(name+"          "+department+"          "+index);
+		showUser(name,index){
+		   	store.commit('removeUser',{id:index});
+			
 		},
 		
-		test(res){
-			this.$store.state.service.push(res);
+		select(res){
+			let id=	this.$route.params.id;
+			res.customer = id;
+		   	store.commit('addUser',{id:res});
+
 		},
 		
 		}
@@ -108,22 +124,22 @@ const content={
 		methods:{
 				send(res){
 				if (res.length>0){
-					$("#sentence").append (userName+":"+"<p>"+res+"<p>");
+					$("#sentence").append ("<div>"+userName+" : "+"<p class='speech'>"+res+"</p></div>");
 					this.sentence="";	
 				}	
 			}
-			}
+		  }
 		};
 
 
 const router = new VueRouter({
 	  mode: 'history',
 	  routes: [
-		 	{ path: '/csm/admin/', 
+		 	{ path: '/csm/admin/chat/home', 
 			    	name : 'home',
 					components:{
 					   	customer : customer,
-					   	service : service
+
 					        	},
 			},
 		 	{ path: '/csm/admin/chat/content:id', 
@@ -137,7 +153,6 @@ const router = new VueRouter({
 		  ],
 		  
 		});
-
 
 
 new Vue({

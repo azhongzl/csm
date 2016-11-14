@@ -12,6 +12,7 @@
 <script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
 <link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
+<link href="${ctx}/static/css/chat.css" rel="stylesheet">
 </head>
 <body>
 	<div id="main" class="container">
@@ -36,14 +37,14 @@
 			</div>
 		</div>
 		<div class="row clearfix">
-			<div class="col-md-3 column" style="background-color: #d5eaff; height: 800px">
+			<div class="col-md-3 column "  style="background-color: #d5eaff; height: 800px">
 				<h3>Customer</h3>
 				<router-view name="customer"></router-view>
 				<h3>Customer Service</h3>
 				<router-view name="service"></router-view>
-
 			</div>
 			<router-view name="content"></router-view>
+			
 		</div>
 
 	</div>
@@ -61,7 +62,7 @@
 	<template id="customer">
 	<div class="list-group" style="height: 250px; overflow: auto">
 		<ul class="list-group">
-			<li class="list-group-item" v-for="customer in customers"><span class="badge" style="background-color: blue;">online</span>
+			<li class="list-group-item" v-for="(customer,index) in customers">
 				<router-link :to="{name:'content',params :{id:customer.name}}">{{customer.name}}</router-link></li>
 		</ul>
 	</div>
@@ -71,10 +72,10 @@
 	<div class="list-group" style="height: 360px; overflow: auto">
 		<ul class="list-group">
 			<li class="list-group-item" v-for="(user,index) in service"><span class="badge" style="background-color: blue;">online</span><a
-				href="#" v-on:click="showUser(user.name,user.department,index)">{{user.name}}</a></li>
+				href="#" v-on:click="showUser(user.name,index)">{{user.name}}</a></li>
 		</ul>
 		<label for="name">Select service group</label><br>
-		<select class="form-control"  v-model="selected" v-on:change="test(selected)">
+		<select class="form-control"  v-model="selected" v-on:change="select(selected)">
 			<option v-for="service in serviceList" :value="service" >{{service.name}}</option>
 		</select>
 	</div>

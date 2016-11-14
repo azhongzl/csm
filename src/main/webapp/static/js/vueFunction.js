@@ -7,7 +7,7 @@ var vmSidebar = new Vue({
 	},
 	computed : {
 		categorys : function() {
-			var url1 = url + "Category" + "/find";
+			var url1 = url + "CsmFaqCategory" + "/find";
 			var checkKey = "";
 			var result = ajaxFind(checkKey, url1);
 			return result.data.content;
@@ -18,7 +18,7 @@ var vmSidebar = new Vue({
 		showCategoryDetail : function(id) {
 			vmContent.faqs = [];
 			vmPagecount.id = id;
-			var url1 = url + "Faq" + "/find";
+			var url1 = url + "CsmFaq" + "/find";
 			var checkKey = {
 				ff_categoryId : id,
 				page_size : vmPagecount.pageSize,
@@ -118,7 +118,7 @@ var vmPagecount = new Vue({
 				this.curPage = page;
 				vmContent.faqs = [];
 				if(vmContent.label=="Faq"){
-					var url1 = url + "Faq" + "/find";
+					var url1 = url + "CsmFaq" + "/find";
 					var checkKey = {
 						ff_categoryId : this.id,
 						page_size : this.pageSize,

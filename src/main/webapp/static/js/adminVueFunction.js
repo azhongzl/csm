@@ -14,13 +14,13 @@ const store = new Vuex.Store({
 	  },
 	  mutations: {
 		  getCategory:state=> {
-		   	let url1 = url + "Category" + "/find";
+		   	let url1 = url + "CsmFaqCategory" + "/find";
 	    	let checkKey = "";
 	    	let result = ajaxFind(checkKey, url1);
 	    	state.CategoryList = result.data.content;
 	    },
 		  getFaq(state,payload) {
-			let url1 = url + "Faq" + "/find";
+			let url1 = url + "CsmFaq" + "/find";
 			let checkKey = {
 				ff_categoryId : payload.id,
 				page_size : state.pageSize,
@@ -70,7 +70,7 @@ const addNew = {
 		},
 		methods: {
 			addNew(){
-				var url1 = url + "Category" + "/post";
+				var url1 = url + "CsmFaqCategory" + "/post";
 				if ($.trim(this.name).length == 0) {
 					alert("Please input name");
 				} else {
@@ -109,7 +109,7 @@ const modify = {
 		created: function(){
 			var id = this.$route.query.id;
 			if (id.trim().length !== 0) {
-				var url1 = url + "Category" + "/get/" + id;
+				var url1 = url + "CsmFaqCategory" + "/get/" + id;
 				var checkResult1 = ajaxGet(url1);
 
 				if (checkResult1.description == undefined) {
@@ -130,7 +130,7 @@ const modify = {
 				if ($.trim(this.name).length == 0) {
 					alert("Please input name");
 				} else {
-					var url1 = url + "Category" + "/put/" + id;
+					var url1 = url + "CsmFaqCategory" + "/put/" + id;
 					var putdata = {
 						name : this.name,
 						description : this.describe,
@@ -159,13 +159,13 @@ const categoryDelete = {
 				if (id.trim().length !== 0) {
 					var r=confirm("Are you sure?");
 					if (r==true){
-						var url1 = url + "Faq" + "/find";
+						var url1 = url + "CsmFaq" + "/find";
 						var checkKey = {
 							ff_categoryId : id,
 						};
 						var checkResult = ajaxFind(checkKey, url1);
 						if (checkResult.data.content == undefined) {
-							url1 = url + "Category" + "/delete/" + id;
+							url1 = url + "CsmFaqCategory" + "/delete/" + id;
 							$.ajax({
 								type : "GET",
 								url : url1,
@@ -243,7 +243,7 @@ const faqModify = {
 		},
 		created:function(){
 			var id=this.$route.params.id;
-			var url1 = url + "Faq" + "/get/" + id;
+			var url1 = url + "CsmFaq" + "/get/" + id;
 			var checkResult1 = ajaxGet(url1);
 			if (checkResult1.attachments !== undefined) {
             	this.attachments = checkResult1.attachments.split(",");
@@ -280,7 +280,7 @@ const faqModify = {
 	    			var fileData = $("input[name='uploadFile']").get(0);
 	    			
 	    			if ((fileData.files.length == 0) && (this.attach.length == 0)) {
-	    				var url1 = url + "Faq" + "/put/" + id1;
+	    				var url1 = url + "CsmFaq" + "/put/" + id1;
 	    				var putdata = {
 	    					question : this.question,
 	    					answer : this.answer,
@@ -300,7 +300,7 @@ const faqModify = {
 	    						}
 	    					});
 	    				}
-	    				url1 = url + "Faq" + "/putUpload/"+id1;
+	    				url1 = url + "CsmFaq" + "/putUpload/"+id1;
 	    				var form_data = new FormData();
 	    				form_data.append("question", this.question);
 	    				form_data.append("answer", this.answer);
@@ -318,7 +318,7 @@ const faqModify = {
 
 	    	adminFaqDelete() {
 	    		let id1=this.$route.params.id;
-	    		var url1 = url + "Faq" + "/delete/" + id1;
+	    		var url1 = url + "CsmFaq" + "/delete/" + id1;
 	    		$.ajax({
 	    			type : "GET",
 	    			url : url1,
@@ -354,7 +354,7 @@ const faqAddNew = {
 	    methods:{
 	    	faqAddNew(){
 	    		let id=this.$route.query.id;
-	    		let url1 = url + "Faq" + "/post";
+	    		let url1 = url + "CsmFaq" + "/post";
 	    	
 	    		if ($.trim(this.question).length == 0) {
 	    			alert("Please input question");
@@ -376,7 +376,7 @@ const faqAddNew = {
 	    				ajaxcreate(savedata, url1);
 	    				router.push({name:'showFaqList', params:{id:id}})
 	    			} else {
-	    				url1 = url + "Faq" + "/postUpload";
+	    				url1 = url + "CsmFaq" + "/postUpload";
 	    				var form_data = new FormData();
 	    				form_data.append("categoryId", id);
 	    				form_data.append("question", this.question);
