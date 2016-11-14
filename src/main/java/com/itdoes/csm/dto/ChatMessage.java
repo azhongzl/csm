@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class ChatMessage {
 	private String roomId;
 	private String senderId;
+	private String senderName;
 	private LocalDateTime dateTime;
 	private String message;
 
@@ -25,6 +26,14 @@ public class ChatMessage {
 
 	public void setSenderId(String senderId) {
 		this.senderId = senderId;
+	}
+
+	public String getSenderName() {
+		return senderName;
+	}
+
+	public void setSenderName(String senderName) {
+		this.senderName = senderName;
 	}
 
 	public LocalDateTime getDateTime() {

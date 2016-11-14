@@ -2,7 +2,6 @@ package com.itdoes.csm.web;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +34,14 @@ public class ChatController {
 
 	private Map<String, List<ChatMessage>> messageMap = Maps.newHashMap();
 
+	private Map<String, ChatUser> userMap = Maps.newHashMap();
+	{
+		userMap.put("1c93b13d-d6ea-1034-a268-c6b53a0158b7",
+				new ChatUser("1c93b13d-d6ea-1034-a268-c6b53a0158b7", "admin"));
+		userMap.put("490aa897-d6ea-1034-a268-c6b53a0158b7",
+				new ChatUser("490aa897-d6ea-1034-a268-c6b53a0158b7", "user"));
+	}
+
 	private Map<String, ChatEvent> unHandledCustomerMap = Maps.newHashMap();
 
 	@Autowired
@@ -66,6 +73,7 @@ public class ChatController {
 	public void chatCSendMessage(ChatMessage message, Principal principal) {
 		final String userId = principal.getName();
 		message.setSenderId(userId);
+		message.setSenderName(userMap.get(userId).getUsername());
 		message.setDateTime(LocalDateTime.now());
 		message.setMessage(message.getMessage());
 		template.convertAndSend("/topic/chat/message/" + userId, message);
@@ -82,9 +90,11 @@ public class ChatController {
 		List<ChatMessage> messageList = messageMap.get(userId);
 		if (Collections3.isEmpty(messageList)) {
 			final ChatMessage message = new ChatMessage();
-			message.setSenderId("Customer Service");
+			message.setSenderId("Customer Service Id");
+			message.setSenderName("Customer Service");
 			message.setDateTime(LocalDateTime.now());
-			message.setMessage("Welcome, " + userId + "! Our agent will contact you soon. Please wait...");
+			message.setMessage("Welcome, " + userMap.get(userId).getUsername()
+					+ "! Our agent will contact you soon. Please wait...");
 			addChatMessage(userId, message);
 		}
 
@@ -102,8 +112,7 @@ public class ChatController {
 
 	@SubscribeMapping("/chatAInit")
 	public Collection<ChatUser> chatAInit() {
-		final Collection<ChatUser> users = Arrays.asList(new ChatUser("1c93b13d-d6ea-1034-a268-c6b53a0158b7", "admin"),
-				new ChatUser("490aa897-d6ea-1034-a268-c6b53a0158b7", "user"));
+		final Collection<ChatUser> users = userMap.values();
 		for (ChatUser user : users) {
 			final String userId = user.getUserId();
 			if (onlineUserStore.containsUser(userId)) {
@@ -120,6 +129,7 @@ public class ChatController {
 	public void chatASendMessage(ChatMessage message, Principal principal) {
 		final String userId = principal.getName();
 		message.setSenderId(userId);
+		message.setSenderName(userMap.get(userId).getUsername());
 		message.setDateTime(LocalDateTime.now());
 		message.setMessage(message.getMessage());
 		template.convertAndSend("/topic/chat/message/" + message.getRoomId(), message);
