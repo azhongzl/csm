@@ -55,11 +55,10 @@ function sendMessage() {
 		'message' : $("#message").val(),
 		'roomId' : $("#roomId").val()
 	}));
-	var customer = $("#roomId").val();
-	$("#customer-" + customer).stop();
-	if(intervalMap.has(customer)){
-		clearInterval(intervalMap.get(customer));
-		intervalMap.delete(customer);
+	var roomId = $("#roomId").val();
+	if(intervalMap.has(roomId)){
+		clearInterval(intervalMap.get(roomId));
+		intervalMap.delete(roomId);
 	}
 }
 
@@ -72,7 +71,7 @@ function showMessages(messageList) {
 
 function showMessage(message) {
 	$("#messages").append(
-			"<tr><td>" + message.sender + "</td><td>" + message.dateTime
+			"<tr><td>" + message.senderId + "</td><td>" + message.dateTime
 					+ "</td></tr><tr><td>" + message.message + "</td></tr>");
 }
 
@@ -83,11 +82,11 @@ function showCustomerSet(customerSet) {
 }
 
 function showCustomer(customer) {
-	var customerName = customer.username;
+	var customerId = customer.userId;
 	$("#customerSet").append(
-			"<div id='customer-" + customerName + "'><tr><td>" + customerName
+			"<div id='customer-" + customerId + "'><tr><td>" + customer.username
 					+ "</td></tr></div>");
-	$("#customer-" + customerName).click(
+	$("#customer-" + customerId).click(
 			function() {
 				for (var i = 0; i < subscribeList.length; i++) {
 					subscribeList[i].unsubscribe();
@@ -95,17 +94,17 @@ function showCustomer(customer) {
 				subscribeList = [];
 
 				var subApp = stompClient.subscribe('/app/chatAInitMessage/'
-						+ customerName, function(message) {
+						+ customerId, function(message) {
 					showMessages(JSON.parse(message.body));
 				});
 				var subTopic = stompClient.subscribe('/topic/chat/message/'
-						+ customerName, function(message) {
+						+ customerId, function(message) {
 					showMessage(JSON.parse(message.body));
 				});
 				subscribeList.push(subApp);
 				subscribeList.push(subTopic);
 
-				$("#roomId").val(customerName);
+				$("#roomId").val(customerId);
 			});
 
 	if (customer.online) {
@@ -117,22 +116,22 @@ function showCustomer(customer) {
 }
 
 function showOnlineCustomer(customer) {
-	$("#customer-" + customer.username).css('color', 'red');
+	$("#customer-" + customer.userId).css('color', 'red');
 }
 
 function removeOnlineCustomer(customer) {
-	$("#customer-" + customer.username).css('color', 'black');
+	$("#customer-" + customer.userId).css('color', 'black');
 }
 
 var intervalMap = new Map();
 
 function showUnhandledCustomer(customer) {
-	var username = customer.username;
-	if (!intervalMap.has(username)) {
+	var userId = customer.userId;
+	if (!intervalMap.has(userId)) {
 		var interval = setInterval(function() {
-			$("#customer-" + username).fadeOut(100).fadeIn(100);
+			$("#customer-" + userId).fadeOut(100).fadeIn(100);
 		}, 200);
-		intervalMap.set(username, interval);
+		intervalMap.set(userId, interval);
 	}
 }
 

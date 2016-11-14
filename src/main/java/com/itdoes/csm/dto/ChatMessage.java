@@ -6,17 +6,17 @@ import java.time.LocalDateTime;
  * @author Jalen Zhong
  */
 public class ChatMessage {
-	private String sender;
+	private String senderId;
 	private String roomId;
 	private LocalDateTime dateTime;
 	private String message;
 
-	public String getSender() {
-		return sender;
+	public String getSenderId() {
+		return senderId;
 	}
 
-	public void setSender(String sender) {
-		this.sender = sender;
+	public void setSenderId(String senderId) {
+		this.senderId = senderId;
 	}
 
 	public String getRoomId() {

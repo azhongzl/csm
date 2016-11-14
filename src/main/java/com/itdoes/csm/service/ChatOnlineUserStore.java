@@ -19,12 +19,12 @@ public class ChatOnlineUserStore {
 
 	public void add(String sessionId, ChatEvent event) {
 		onlineUserMap.put(sessionId, event);
-		onlineUserSet.add(event.getUsername());
+		onlineUserSet.add(event.getUserId());
 	}
 
 	public void remove(String sessionId) {
 		final ChatEvent event = onlineUserMap.remove(sessionId);
-		onlineUserSet.remove(event.getUsername());
+		onlineUserSet.remove(event.getUserId());
 	}
 
 	public ChatEvent get(String sessionId) {
@@ -35,7 +35,7 @@ public class ChatOnlineUserStore {
 		return onlineUserMap;
 	}
 
-	public boolean containsUser(String username) {
-		return onlineUserSet.contains(username);
+	public boolean containsUser(String userId) {
+		return onlineUserSet.contains(userId);
 	}
 }

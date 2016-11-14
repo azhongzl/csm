@@ -4,12 +4,22 @@ package com.itdoes.csm.dto;
  * @author Jalen Zhong
  */
 public class ChatUser {
+	private final String userId;
 	private final String username;
 	private boolean online;
 	private boolean unhandled;
 
-	public ChatUser(String username) {
+	public ChatUser(String userId, String username) {
+		this.userId = userId;
 		this.username = username;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public String getUsername() {
+		return username;
 	}
 
 	public boolean isOnline() {
@@ -26,9 +36,5 @@ public class ChatUser {
 
 	public void setUnhandled(boolean unhandled) {
 		this.unhandled = unhandled;
-	}
-
-	public String getUsername() {
-		return username;
 	}
 }
