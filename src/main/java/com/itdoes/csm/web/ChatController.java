@@ -121,10 +121,10 @@ public class ChatController {
 		message.setSender(username);
 		message.setDateTime(LocalDateTime.now());
 		message.setMessage(message.getMessage());
-		template.convertAndSend("/topic/chat/message/" + message.getRecipient(), message);
-		addChatMessage(message.getRecipient(), message);
+		template.convertAndSend("/topic/chat/message/" + message.getRoomId(), message);
+		addChatMessage(message.getRoomId(), message);
 
-		unHandledCustomerMap.remove(message.getRecipient());
+		unHandledCustomerMap.remove(message.getRoomId());
 	}
 
 	@SubscribeMapping("/chatAInitMessage/{customerName}")

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  */
 public class ChatMessage {
 	private String sender;
-	private String recipient;
+	private String roomId;
 	private LocalDateTime dateTime;
 	private String message;
 
@@ -19,12 +19,12 @@ public class ChatMessage {
 		this.sender = sender;
 	}
 
-	public String getRecipient() {
-		return recipient;
+	public String getRoomId() {
+		return roomId;
 	}
 
-	public void setRecipient(String recipient) {
-		this.recipient = recipient;
+	public void setRoomId(String roomId) {
+		this.roomId = roomId;
 	}
 
 	public LocalDateTime getDateTime() {

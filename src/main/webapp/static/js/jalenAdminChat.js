@@ -53,9 +53,9 @@ function disconnect() {
 function sendMessage() {
 	stompClient.send('/app/chatASendMessage', {}, JSON.stringify({
 		'message' : $("#message").val(),
-		'recipient' : $("#recipient").val()
+		'roomId' : $("#roomId").val()
 	}));
-	var customer = $("#recipient").val();
+	var customer = $("#roomId").val();
 	$("#customer-" + customer).stop();
 	if(intervalMap.has(customer)){
 		clearInterval(intervalMap.get(customer));
@@ -105,7 +105,7 @@ function showCustomer(customer) {
 				subscribeList.push(subApp);
 				subscribeList.push(subTopic);
 
-				$("#recipient").val(customerName);
+				$("#roomId").val(customerName);
 			});
 
 	if (customer.online) {
