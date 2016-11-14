@@ -51,7 +51,7 @@ function showMessages(messageList) {
 
 function showMessage(message) {
 	$("#messages").append(
-			"<tr><td>" + message.senderId + "</td><td>" + message.dateTime
+			"<tr><td>" + message.senderName + "</td><td>" + message.dateTime
 					+ "</td></tr><tr><td>" + message.message + "</td></tr>");
 }
 
