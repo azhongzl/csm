@@ -10,18 +10,18 @@ public class ChatUser {
 		return new ChatUser(user.getId().toString(), user.getUsername());
 	}
 
-	private final String id;
+	private final String userId;
 	private final String username;
 	private boolean online;
 	private boolean unhandled;
 
-	public ChatUser(String id, String username) {
-		this.id = id;
+	public ChatUser(String userId, String username) {
+		this.userId = userId;
 		this.username = username;
 	}
 
-	public String getId() {
-		return id;
+	public String getUserId() {
+		return userId;
 	}
 
 	public String getUsername() {

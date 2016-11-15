@@ -3,10 +3,13 @@ package com.itdoes.csm.web;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,6 +33,7 @@ import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.dto.ChatMessage;
 import com.itdoes.csm.dto.ChatUser;
+import com.itdoes.csm.entity.CsmChatMessage;
 import com.itdoes.csm.entity.CsmUser;
 import com.itdoes.csm.service.ChatOnlineUserStore;
 
@@ -38,6 +42,8 @@ import com.itdoes.csm.service.ChatOnlineUserStore;
  */
 @Controller
 public class ChatController {
+	public static final int MESSAGE_PAGE_SIZE = 10;
+
 	@Autowired
 	private EntityEnv env;
 
@@ -46,15 +52,15 @@ public class ChatController {
 
 	private Specification<CsmUser> customerSpec = Specifications.build(CsmUser.class,
 			Lists.newArrayList(new FindFilter("admin", Operator.EQ, false)));
-
 	private Sort customerSort = new Sort(Direction.ASC, "username");
+
+	private PageRequest messagePageRequest = new PageRequest(0, MESSAGE_PAGE_SIZE,
+			new Sort(Direction.DESC, "createDateTime"));
 
 	private final SimpMessagingTemplate template;
 
 	@Autowired
-	private ChatOnlineUserStore onlineUserStore;
-
-	private Map<String, List<ChatMessage>> messageMap = Maps.newHashMap();
+	private ChatOnlineUserStore onlineCustomerStore;
 
 	private Map<String, ChatEvent> unHandledCustomerMap = Maps.newHashMap();
 
@@ -87,12 +93,14 @@ public class ChatController {
 	public void chatCSendMessage(ChatMessage message, Principal principal) {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
 		final String userId = shiroUser.getId();
-		message.setSenderId(userId);
+		message.setRoomId(userId);
 		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
-		message.setMessage(message.getMessage());
 		template.convertAndSend("/topic/chat/message/" + userId, message);
-		addChatMessage(userId, message);
+
+		final CsmChatMessage csmChatMessage = message.toCsmChatMessage();
+		csmChatMessage.setSenderId(UUID.fromString(userId));
+		dbService.save(env.getPair(CsmChatMessage.class.getSimpleName()), csmChatMessage);
 
 		final ChatEvent messageEvent = new ChatEvent(userId);
 		unHandledCustomerMap.put(userId, messageEvent);
@@ -103,28 +111,21 @@ public class ChatController {
 	public List<ChatMessage> chatCInitMessage(Principal principal) {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
 		final String userId = shiroUser.getId();
-		List<ChatMessage> messageList = messageMap.get(userId);
-		if (Collections3.isEmpty(messageList)) {
-			final ChatMessage message = new ChatMessage();
-			message.setSenderId("Customer Service Id");
-			message.setSenderName("Customer Service");
-			message.setCreateDateTime(LocalDateTime.now());
-			message.setMessage(
+		List<ChatMessage> chatMessageList = getChatMessageList(userId);
+
+		if (Collections3.isEmpty(chatMessageList)) {
+			chatMessageList = Lists.newArrayListWithCapacity(1);
+
+			final ChatMessage chatMessage = new ChatMessage();
+			chatMessage.setSenderName("Customer Service");
+			chatMessage.setCreateDateTime(LocalDateTime.now());
+			chatMessage.setMessage(
 					"Welcome, " + shiroUser.getUsername() + "! Our agent will contact you soon. Please wait...");
-			message.setFromAdmin(true);
-			addChatMessage(userId, message);
+			chatMessage.setFromAdmin(true);
+			chatMessageList.add(chatMessage);
 		}
 
-		return messageList;
-	}
-
-	private void addChatMessage(String userId, ChatMessage message) {
-		List<ChatMessage> messageList = messageMap.get(userId);
-		if (Collections3.isEmpty(messageList)) {
-			messageList = Lists.newArrayList();
-			messageMap.put(userId, messageList);
-		}
-		messageList.add(message);
+		return chatMessageList;
 	}
 
 	@SubscribeMapping("/chatAInit")
@@ -135,8 +136,8 @@ public class ChatController {
 		final List<ChatUser> chatCustomerList = Lists.newArrayListWithCapacity(csmUserList.size());
 		for (CsmUser csmUser : csmUserList) {
 			final ChatUser chatUser = ChatUser.valueOf(csmUser);
-			final String userId = chatUser.getId();
-			if (onlineUserStore.containsUser(userId)) {
+			final String userId = chatUser.getUserId();
+			if (onlineCustomerStore.containsUser(userId)) {
 				chatUser.setOnline(true);
 			}
 			if (unHandledCustomerMap.containsKey(userId)) {
@@ -150,22 +151,53 @@ public class ChatController {
 	@MessageMapping("/chatASendMessage")
 	public void chatASendMessage(ChatMessage message, Principal principal) {
 		final String userId = principal.getName();
-		message.setSenderId(userId);
 		message.setSenderName("Customer Service - " + userId);
 		message.setCreateDateTime(LocalDateTime.now());
-		message.setMessage(message.getMessage());
 		message.setFromAdmin(true);
 		template.convertAndSend("/topic/chat/message/" + message.getRoomId(), message);
-		addChatMessage(message.getRoomId(), message);
+
+		final CsmChatMessage csmChatMessage = message.toCsmChatMessage();
+		csmChatMessage.setSenderId(UUID.fromString(userId));
+		dbService.save(env.getPair(CsmChatMessage.class.getSimpleName()), csmChatMessage);
 
 		final ChatEvent messageEvent = new ChatEvent(message.getRoomId());
 		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
 		unHandledCustomerMap.remove(message.getRoomId());
 	}
 
-	@SubscribeMapping("/chatAInitMessage/{customerName}")
-	public List<ChatMessage> chatAInitMessage(Principal principal, @DestinationVariable String customerName) {
-		List<ChatMessage> messageList = messageMap.get(customerName);
-		return messageList;
+	@SubscribeMapping("/chatAInitMessage/{roomId}")
+	public List<ChatMessage> chatAInitMessage(Principal principal, @DestinationVariable String roomId) {
+		final List<ChatMessage> chatMessageList = getChatMessageList(roomId);
+		return chatMessageList;
+	}
+
+	private List<ChatMessage> getChatMessageList(String roomId) {
+		final List<CsmChatMessage> csmChatMessageList = getCsmChatMessageList(roomId);
+		if (Collections3.isEmpty(csmChatMessageList)) {
+			return Collections.emptyList();
+		}
+
+		final List<ChatMessage> chatMessageList = Lists.newArrayListWithCapacity(csmChatMessageList.size());
+		for (int i = csmChatMessageList.size() - 1; i >= 0; i--) {
+			final CsmChatMessage csmChatMessage = csmChatMessageList.get(i);
+			final ChatMessage chatMessage = ChatMessage.valueOf(csmChatMessage);
+			// TODO
+			chatMessage.setSenderName(csmChatMessage.getSenderId().toString());
+			chatMessageList.add(chatMessage);
+		}
+		return chatMessageList;
+	}
+
+	private List<CsmChatMessage> getCsmChatMessageList(String roomId) {
+		final List<CsmChatMessage> csmChatMessageList = dbService
+				.find(env.getPair(CsmChatMessage.class.getSimpleName()), buildMessageSpecification(roomId),
+						messagePageRequest)
+				.getContent();
+		return csmChatMessageList;
+	}
+
+	private Specification<CsmChatMessage> buildMessageSpecification(String roomId) {
+		return Specifications.build(CsmChatMessage.class,
+				Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId)));
 	}
 }
