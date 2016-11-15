@@ -31,7 +31,6 @@ import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
-import com.itdoes.csm.dto.ChatMessage;
 import com.itdoes.csm.dto.ChatUser;
 import com.itdoes.csm.entity.CsmChatMessage;
 import com.itdoes.csm.entity.CsmUser;
@@ -90,17 +89,18 @@ public class ChatController {
 	}
 
 	@MessageMapping("/chatCSendMessage")
-	public void chatCSendMessage(ChatMessage message, Principal principal) {
+	public void chatCSendMessage(CsmChatMessage message, Principal principal) {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
 		final String userId = shiroUser.getId();
-		message.setRoomId(userId);
+		final UUID userIdUuid = UUID.fromString(userId);
+		message.setRoomId(userIdUuid);
+		message.setSenderId(userIdUuid);
 		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
+		message.setFromAdmin(false);
 		template.convertAndSend("/topic/chat/message/" + userId, message);
 
-		final CsmChatMessage csmChatMessage = message.toCsmChatMessage();
-		csmChatMessage.setSenderId(UUID.fromString(userId));
-		dbService.save(env.getPair(CsmChatMessage.class.getSimpleName()), csmChatMessage);
+		dbService.save(env.getPair(CsmChatMessage.class.getSimpleName()), message);
 
 		final ChatEvent messageEvent = new ChatEvent(userId);
 		unHandledCustomerMap.put(userId, messageEvent);
@@ -108,24 +108,24 @@ public class ChatController {
 	}
 
 	@SubscribeMapping("/chatCInitMessage")
-	public List<ChatMessage> chatCInitMessage(Principal principal) {
+	public List<CsmChatMessage> chatCInitMessage(Principal principal) {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
 		final String userId = shiroUser.getId();
-		List<ChatMessage> chatMessageList = getChatMessageList(userId);
+		List<CsmChatMessage> messageList = getChatMessageList(userId);
 
-		if (Collections3.isEmpty(chatMessageList)) {
-			chatMessageList = Lists.newArrayListWithCapacity(1);
+		if (Collections3.isEmpty(messageList)) {
+			messageList = Lists.newArrayListWithCapacity(1);
 
-			final ChatMessage chatMessage = new ChatMessage();
-			chatMessage.setSenderName("Customer Service");
-			chatMessage.setCreateDateTime(LocalDateTime.now());
-			chatMessage.setMessage(
+			final CsmChatMessage message = new CsmChatMessage();
+			message.setSenderName("Customer Service");
+			message.setCreateDateTime(LocalDateTime.now());
+			message.setMessage(
 					"Welcome, " + shiroUser.getUsername() + "! Our agent will contact you soon. Please wait...");
-			chatMessage.setFromAdmin(true);
-			chatMessageList.add(chatMessage);
+			message.setFromAdmin(true);
+			messageList.add(message);
 		}
 
-		return chatMessageList;
+		return messageList;
 	}
 
 	@SubscribeMapping("/chatAInit")
@@ -149,51 +149,48 @@ public class ChatController {
 	}
 
 	@MessageMapping("/chatASendMessage")
-	public void chatASendMessage(ChatMessage message, Principal principal) {
-		final String userId = principal.getName();
-		message.setSenderName("Customer Service - " + userId);
+	public void chatASendMessage(CsmChatMessage message, Principal principal) {
+		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
+		final String userId = shiroUser.getId();
+		final UUID userIdUuid = UUID.fromString(userId);
+		message.setSenderId(userIdUuid);
+		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(true);
 		template.convertAndSend("/topic/chat/message/" + message.getRoomId(), message);
 
-		final CsmChatMessage csmChatMessage = message.toCsmChatMessage();
-		csmChatMessage.setSenderId(UUID.fromString(userId));
-		dbService.save(env.getPair(CsmChatMessage.class.getSimpleName()), csmChatMessage);
+		dbService.save(env.getPair(CsmChatMessage.class.getSimpleName()), message);
 
-		final ChatEvent messageEvent = new ChatEvent(message.getRoomId());
+		final ChatEvent messageEvent = new ChatEvent(message.getRoomId().toString());
 		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
 		unHandledCustomerMap.remove(message.getRoomId());
 	}
 
 	@SubscribeMapping("/chatAInitMessage/{roomId}")
-	public List<ChatMessage> chatAInitMessage(Principal principal, @DestinationVariable String roomId) {
-		final List<ChatMessage> chatMessageList = getChatMessageList(roomId);
-		return chatMessageList;
+	public List<CsmChatMessage> chatAInitMessage(Principal principal, @DestinationVariable String roomId) {
+		return getChatMessageList(roomId);
 	}
 
-	private List<ChatMessage> getChatMessageList(String roomId) {
-		final List<CsmChatMessage> csmChatMessageList = getCsmChatMessageList(roomId);
-		if (Collections3.isEmpty(csmChatMessageList)) {
+	private List<CsmChatMessage> getChatMessageList(String roomId) {
+		final List<CsmChatMessage> dbMessageList = getChatMessageListFromDb(roomId);
+		if (Collections3.isEmpty(dbMessageList)) {
 			return Collections.emptyList();
 		}
 
-		final List<ChatMessage> chatMessageList = Lists.newArrayListWithCapacity(csmChatMessageList.size());
-		for (int i = csmChatMessageList.size() - 1; i >= 0; i--) {
-			final CsmChatMessage csmChatMessage = csmChatMessageList.get(i);
-			final ChatMessage chatMessage = ChatMessage.valueOf(csmChatMessage);
+		final List<CsmChatMessage> messageList = Lists.newArrayListWithCapacity(dbMessageList.size());
+		for (int i = dbMessageList.size() - 1; i >= 0; i--) {
+			final CsmChatMessage message = dbMessageList.get(i);
 			// TODO
-			chatMessage.setSenderName(csmChatMessage.getSenderId().toString());
-			chatMessageList.add(chatMessage);
+			message.setSenderName(message.getSenderId().toString());
+			messageList.add(message);
 		}
-		return chatMessageList;
+		return messageList;
 	}
 
-	private List<CsmChatMessage> getCsmChatMessageList(String roomId) {
-		final List<CsmChatMessage> csmChatMessageList = dbService
-				.find(env.getPair(CsmChatMessage.class.getSimpleName()), buildMessageSpecification(roomId),
-						messagePageRequest)
-				.getContent();
-		return csmChatMessageList;
+	private List<CsmChatMessage> getChatMessageListFromDb(String roomId) {
+		final List<CsmChatMessage> messageList = dbService.find(env.getPair(CsmChatMessage.class.getSimpleName()),
+				buildMessageSpecification(roomId), messagePageRequest).getContent();
+		return messageList;
 	}
 
 	private Specification<CsmChatMessage> buildMessageSpecification(String roomId) {
