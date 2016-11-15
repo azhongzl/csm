@@ -11,6 +11,7 @@ public class ChatMessage {
 	private String senderName;
 	private LocalDateTime dateTime;
 	private String message;
+	private boolean fromAdmin;
 
 	public String getRoomId() {
 		return roomId;
@@ -50,5 +51,13 @@ public class ChatMessage {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public boolean isFromAdmin() {
+		return fromAdmin;
+	}
+
+	public void setFromAdmin(boolean fromAdmin) {
+		this.fromAdmin = fromAdmin;
 	}
 }

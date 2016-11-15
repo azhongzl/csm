@@ -95,6 +95,7 @@ public class ChatController {
 			message.setDateTime(LocalDateTime.now());
 			message.setMessage("Welcome, " + userMap.get(userId).getUsername()
 					+ "! Our agent will contact you soon. Please wait...");
+			message.setFromAdmin(true);
 			addChatMessage(userId, message);
 		}
 
@@ -132,6 +133,7 @@ public class ChatController {
 		message.setSenderName(userMap.get(userId).getUsername());
 		message.setDateTime(LocalDateTime.now());
 		message.setMessage(message.getMessage());
+		message.setFromAdmin(true);
 		template.convertAndSend("/topic/chat/message/" + message.getRoomId(), message);
 		addChatMessage(message.getRoomId(), message);
 
