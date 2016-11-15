@@ -6,8 +6,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,11 +17,20 @@ import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.itdoes.common.business.EntityEnv;
+import com.itdoes.common.business.service.EntityDbService;
+import com.itdoes.common.core.jpa.FindFilter;
+import com.itdoes.common.core.jpa.FindFilter.Operator;
+import com.itdoes.common.core.jpa.Specifications;
+import com.itdoes.common.core.shiro.ShiroUser;
+import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.dto.ChatMessage;
 import com.itdoes.csm.dto.ChatUser;
+import com.itdoes.csm.entity.CsmUser;
 import com.itdoes.csm.service.ChatOnlineUserStore;
 
 /**
@@ -27,20 +38,23 @@ import com.itdoes.csm.service.ChatOnlineUserStore;
  */
 @Controller
 public class ChatController {
+	@Autowired
+	private EntityEnv env;
+
+	@Autowired
+	private EntityDbService dbService;
+
+	private Specification<CsmUser> customerSpec = Specifications.build(CsmUser.class,
+			Lists.newArrayList(new FindFilter("admin", Operator.EQ, false)));
+
+	private Sort customerSort = new Sort(Direction.ASC, "username");
+
 	private final SimpMessagingTemplate template;
 
 	@Autowired
 	private ChatOnlineUserStore onlineUserStore;
 
 	private Map<String, List<ChatMessage>> messageMap = Maps.newHashMap();
-
-	private Map<String, ChatUser> userMap = Maps.newHashMap();
-	{
-		userMap.put("1c93b13d-d6ea-1034-a268-c6b53a0158b7",
-				new ChatUser("1c93b13d-d6ea-1034-a268-c6b53a0158b7", "admin"));
-		userMap.put("490aa897-d6ea-1034-a268-c6b53a0158b7",
-				new ChatUser("490aa897-d6ea-1034-a268-c6b53a0158b7", "user"));
-	}
 
 	private Map<String, ChatEvent> unHandledCustomerMap = Maps.newHashMap();
 
@@ -71,9 +85,10 @@ public class ChatController {
 
 	@MessageMapping("/chatCSendMessage")
 	public void chatCSendMessage(ChatMessage message, Principal principal) {
-		final String userId = principal.getName();
+		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
+		final String userId = shiroUser.getId();
 		message.setSenderId(userId);
-		message.setSenderName(userMap.get(userId).getUsername());
+		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setMessage(message.getMessage());
 		template.convertAndSend("/topic/chat/message/" + userId, message);
@@ -86,15 +101,16 @@ public class ChatController {
 
 	@SubscribeMapping("/chatCInitMessage")
 	public List<ChatMessage> chatCInitMessage(Principal principal) {
-		final String userId = principal.getName();
+		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
+		final String userId = shiroUser.getId();
 		List<ChatMessage> messageList = messageMap.get(userId);
 		if (Collections3.isEmpty(messageList)) {
 			final ChatMessage message = new ChatMessage();
 			message.setSenderId("Customer Service Id");
 			message.setSenderName("Customer Service");
 			message.setCreateDateTime(LocalDateTime.now());
-			message.setMessage("Welcome, " + userMap.get(userId).getUsername()
-					+ "! Our agent will contact you soon. Please wait...");
+			message.setMessage(
+					"Welcome, " + shiroUser.getUsername() + "! Our agent will contact you soon. Please wait...");
 			message.setFromAdmin(true);
 			addChatMessage(userId, message);
 		}
@@ -113,24 +129,28 @@ public class ChatController {
 
 	@SubscribeMapping("/chatAInit")
 	public Collection<ChatUser> chatAInit() {
-		final Collection<ChatUser> users = userMap.values();
-		for (ChatUser user : users) {
-			final String userId = user.getUserId();
-			if (onlineUserStore.containsUser(userId)) {
-				user.setOnline(true);
+		final List<CsmUser> csmUserList = dbService.findAll(env.getPair(CsmUser.class.getSimpleName()), customerSpec,
+				customerSort);
+
+		final List<ChatUser> chatCustomerList = Lists.newArrayListWithCapacity(csmUserList.size());
+		for (CsmUser csmUser : csmUserList) {
+			final ChatUser chatUser = ChatUser.valueOf(csmUser);
+			if (onlineUserStore.containsUser(chatUser.getUserId())) {
+				chatUser.setOnline(true);
 			}
-			if (unHandledCustomerMap.containsKey(userId)) {
-				user.setUnhandled(true);
+			if (unHandledCustomerMap.containsKey(chatUser.getUserId())) {
+				chatUser.setUnhandled(true);
 			}
+			chatCustomerList.add(chatUser);
 		}
-		return users;
+		return chatCustomerList;
 	}
 
 	@MessageMapping("/chatASendMessage")
 	public void chatASendMessage(ChatMessage message, Principal principal) {
 		final String userId = principal.getName();
 		message.setSenderId(userId);
-		message.setSenderName(userMap.get(userId).getUsername());
+		message.setSenderName("Customer Service - " + userId);
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setMessage(message.getMessage());
 		message.setFromAdmin(true);

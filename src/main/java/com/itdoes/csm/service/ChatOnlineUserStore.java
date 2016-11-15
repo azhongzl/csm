@@ -14,25 +14,25 @@ import com.itdoes.csm.dto.ChatEvent;
  */
 @Service
 public class ChatOnlineUserStore {
-	private final Map<String, ChatEvent> onlineUserMap = Maps.newConcurrentMap();
+	private final Map<String, ChatEvent> onlineSessionMap = Maps.newConcurrentMap();
 	private final Set<String> onlineUserSet = Sets.newConcurrentHashSet();
 
 	public void add(String sessionId, ChatEvent event) {
-		onlineUserMap.put(sessionId, event);
+		onlineSessionMap.put(sessionId, event);
 		onlineUserSet.add(event.getUserId());
 	}
 
 	public void remove(String sessionId) {
-		final ChatEvent event = onlineUserMap.remove(sessionId);
+		final ChatEvent event = onlineSessionMap.remove(sessionId);
 		onlineUserSet.remove(event.getUserId());
 	}
 
 	public ChatEvent get(String sessionId) {
-		return onlineUserMap.get(sessionId);
+		return onlineSessionMap.get(sessionId);
 	}
 
 	public Map<String, ChatEvent> getMap() {
-		return onlineUserMap;
+		return onlineSessionMap;
 	}
 
 	public boolean containsUser(String userId) {
