@@ -74,7 +74,7 @@ public class ChatController {
 		final String userId = principal.getName();
 		message.setSenderId(userId);
 		message.setSenderName(userMap.get(userId).getUsername());
-		message.setDateTime(LocalDateTime.now());
+		message.setCreateDateTime(LocalDateTime.now());
 		message.setMessage(message.getMessage());
 		template.convertAndSend("/topic/chat/message/" + userId, message);
 		addChatMessage(userId, message);
@@ -92,7 +92,7 @@ public class ChatController {
 			final ChatMessage message = new ChatMessage();
 			message.setSenderId("Customer Service Id");
 			message.setSenderName("Customer Service");
-			message.setDateTime(LocalDateTime.now());
+			message.setCreateDateTime(LocalDateTime.now());
 			message.setMessage("Welcome, " + userMap.get(userId).getUsername()
 					+ "! Our agent will contact you soon. Please wait...");
 			message.setFromAdmin(true);
@@ -131,7 +131,7 @@ public class ChatController {
 		final String userId = principal.getName();
 		message.setSenderId(userId);
 		message.setSenderName(userMap.get(userId).getUsername());
-		message.setDateTime(LocalDateTime.now());
+		message.setCreateDateTime(LocalDateTime.now());
 		message.setMessage(message.getMessage());
 		message.setFromAdmin(true);
 		template.convertAndSend("/topic/chat/message/" + message.getRoomId(), message);

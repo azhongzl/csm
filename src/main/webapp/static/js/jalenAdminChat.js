@@ -71,11 +71,11 @@ function showMessages(messageList) {
 function showMessage(message) {
 	if(message.fromAdmin){
 	$("#messages").append(
-			"<tr><td align=right>" + message.senderName + "</td><td align=right>" + message.dateTime
+			"<tr><td align=right>" + message.senderName + "</td><td align=right>" + message.createDateTime
 					+ "</td></tr><tr><td align=right>" + message.message + "</td></tr>");
 	}else{
 		$("#messages").append(
-				"<tr><td>" + message.senderName + "</td><td>" + message.dateTime
+				"<tr><td>" + message.senderName + "</td><td>" + message.createDateTime
 						+ "</td></tr><tr><td>" + message.message + "</td></tr>");
 	}
 }

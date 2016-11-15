@@ -1,3 +1,4 @@
+drop table if exists csm_chat_message;
 drop table if exists csm_faq;
 drop table if exists csm_faq_category;
 drop table if exists csm_user;
@@ -17,9 +18,9 @@ create table csm_faq_category (
 	description varchar(255),
 	active bit not null,
 	create_account_id binary(16) not null,
-	create_date timestamp not null,
+	create_date_time timestamp not null,
 	modify_account_id binary(16) not null,
-	modify_date timestamp not null,
+	modify_date_time timestamp not null,
     primary key (id)
 ) engine=InnoDB;
 
@@ -31,8 +32,18 @@ create table csm_faq (
 	attachments varchar(255),
 	active bit not null,
 	create_account_id binary(16) not null,
-	create_date timestamp not null,
+	create_date_time timestamp not null,
 	modify_account_id binary(16) not null,
-	modify_date timestamp not null,
+	modify_date_time timestamp not null,
+    primary key (id)
+) engine=InnoDB;
+
+create table csm_chat_message (
+	id binary(16) not null,
+	room_id binary(16) not null,
+	sender_id binary(16) not null,
+	create_date_time timestamp not null,
+	from_admin bit not null,
+	message varchar(500) not null,
     primary key (id)
 ) engine=InnoDB;
