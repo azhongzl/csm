@@ -81,7 +81,7 @@ public class ChatController {
 
 		final ChatEvent messageEvent = new ChatEvent(userId);
 		unHandledCustomerMap.put(userId, messageEvent);
-		template.convertAndSend("/topic/chat/unhandledCustomer", messageEvent);
+		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
 	}
 
 	@SubscribeMapping("/chatCInitMessage")
@@ -135,6 +135,8 @@ public class ChatController {
 		template.convertAndSend("/topic/chat/message/" + message.getRoomId(), message);
 		addChatMessage(message.getRoomId(), message);
 
+		final ChatEvent messageEvent = new ChatEvent(message.getRoomId());
+		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
 		unHandledCustomerMap.remove(message.getRoomId());
 	}
 
