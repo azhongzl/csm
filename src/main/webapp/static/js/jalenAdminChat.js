@@ -87,7 +87,7 @@ function showCustomerSet(customerSet) {
 }
 
 function showCustomer(customer) {
-	var customerId = customer.userId;
+	var customerId = customer.id;
 	$("#customerSet").append(
 			"<div id='customer-" + customerId + "'><tr><td>" + customer.username
 					+ "</td></tr></div>");

@@ -135,10 +135,11 @@ public class ChatController {
 		final List<ChatUser> chatCustomerList = Lists.newArrayListWithCapacity(csmUserList.size());
 		for (CsmUser csmUser : csmUserList) {
 			final ChatUser chatUser = ChatUser.valueOf(csmUser);
-			if (onlineUserStore.containsUser(chatUser.getUserId())) {
+			final String userId = chatUser.getId();
+			if (onlineUserStore.containsUser(userId)) {
 				chatUser.setOnline(true);
 			}
-			if (unHandledCustomerMap.containsKey(chatUser.getUserId())) {
+			if (unHandledCustomerMap.containsKey(userId)) {
 				chatUser.setUnhandled(true);
 			}
 			chatCustomerList.add(chatUser);
