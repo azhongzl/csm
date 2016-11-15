@@ -9,7 +9,8 @@ public class ChatMessage {
 	private String roomId;
 	private String senderId;
 	private String senderName;
-	private LocalDateTime dateTime;
+	private LocalDateTime createDateTime;
+	private boolean fromAdmin;
 	private String message;
 
 	public String getRoomId() {
@@ -36,12 +37,20 @@ public class ChatMessage {
 		this.senderName = senderName;
 	}
 
-	public LocalDateTime getDateTime() {
-		return dateTime;
+	public LocalDateTime getCreateDateTime() {
+		return createDateTime;
 	}
 
-	public void setDateTime(LocalDateTime dateTime) {
-		this.dateTime = dateTime;
+	public void setCreateDateTime(LocalDateTime createDateTime) {
+		this.createDateTime = createDateTime;
+	}
+
+	public boolean isFromAdmin() {
+		return fromAdmin;
+	}
+
+	public void setFromAdmin(boolean fromAdmin) {
+		this.fromAdmin = fromAdmin;
 	}
 
 	public String getMessage() {

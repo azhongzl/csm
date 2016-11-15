@@ -50,9 +50,18 @@ function showMessages(messageList) {
 }
 
 function showMessage(message) {
-	$("#messages").append(
-			"<tr><td>" + message.senderName + "</td><td>" + message.dateTime
-					+ "</td></tr><tr><td>" + message.message + "</td></tr>");
+	if (message.fromAdmin) {
+		$("#messages").append(
+				"<tr><td>" + message.senderName + "</td><td>"
+						+ message.createDateTime + "</td></tr><tr><td>"
+						+ message.message + "</td></tr>");
+	} else {
+		$("#messages").append(
+				"<tr><td align=right>" + message.senderName
+						+ "</td><td align=right>" + message.createDateTime
+						+ "</td></tr><tr><td align=right>" + message.message
+						+ "</td></tr>");
+	}
 }
 
 $(function() {

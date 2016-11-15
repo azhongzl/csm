@@ -44,12 +44,12 @@ public class CsmFaq extends BaseEntity {
 	private Boolean active;
 	@Column(name = "create_account_id")
 	private java.util.UUID createAccountId;
-	@Column(name = "create_date")
-	private java.time.LocalDateTime createDate;
+	@Column(name = "create_date_time")
+	private java.time.LocalDateTime createDateTime;
 	@Column(name = "modify_account_id")
 	private java.util.UUID modifyAccountId;
-	@Column(name = "modify_date")
-	private java.time.LocalDateTime modifyDate;
+	@Column(name = "modify_date_time")
+	private java.time.LocalDateTime modifyDateTime;
 
 	public java.util.UUID getId() {
 		return id;
@@ -107,12 +107,12 @@ public class CsmFaq extends BaseEntity {
 		this.createAccountId = createAccountId;
 	}
 
-	public java.time.LocalDateTime getCreateDate() {
-		return createDate;
+	public java.time.LocalDateTime getCreateDateTime() {
+		return createDateTime;
 	}
 
-	public void setCreateDate(java.time.LocalDateTime createDate) {
-		this.createDate = createDate;
+	public void setCreateDateTime(java.time.LocalDateTime createDateTime) {
+		this.createDateTime = createDateTime;
 	}
 
 	public java.util.UUID getModifyAccountId() {
@@ -123,11 +123,11 @@ public class CsmFaq extends BaseEntity {
 		this.modifyAccountId = modifyAccountId;
 	}
 
-	public java.time.LocalDateTime getModifyDate() {
-		return modifyDate;
+	public java.time.LocalDateTime getModifyDateTime() {
+		return modifyDateTime;
 	}
 
-	public void setModifyDate(java.time.LocalDateTime modifyDate) {
-		this.modifyDate = modifyDate;
+	public void setModifyDateTime(java.time.LocalDateTime modifyDateTime) {
+		this.modifyDateTime = modifyDateTime;
 	}
 }
