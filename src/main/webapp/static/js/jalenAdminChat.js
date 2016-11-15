@@ -36,10 +36,14 @@ function connect() {
 		stompClient.subscribe('/topic/chat/logout', function(message) {
 			removeOnlineCustomer(JSON.parse(message.body));
 		});
-		stompClient.subscribe('/topic/chat/unhandledCustomer',
+		stompClient.subscribe('/topic/chat/addUnhandledCustomer',
 				function(message) {
 					showUnhandledCustomer(JSON.parse(message.body));
 				});
+		stompClient.subscribe('/topic/chat/removeUnhandledCustomer',
+				function(message) {
+					removeUnhandledCustomer(JSON.parse(message.body));
+				});		
 	});
 }
 
@@ -55,11 +59,6 @@ function sendMessage() {
 		'message' : $("#message").val(),
 		'roomId' : $("#roomId").val()
 	}));
-	var roomId = $("#roomId").val();
-	if(intervalMap.has(roomId)){
-		clearInterval(intervalMap.get(roomId));
-		intervalMap.delete(roomId);
-	}
 }
 
 function showMessages(messageList) {
@@ -132,6 +131,14 @@ function showUnhandledCustomer(customer) {
 			$("#customer-" + userId).fadeOut(100).fadeIn(100);
 		}, 200);
 		intervalMap.set(userId, interval);
+	}
+}
+
+function removeUnhandledCustomer(customer) {
+	var roomId = customer.userId;
+	if(intervalMap.has(roomId)){
+		clearInterval(intervalMap.get(roomId));
+		intervalMap.delete(roomId);
 	}
 }
 
