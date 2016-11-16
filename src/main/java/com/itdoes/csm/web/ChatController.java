@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ import com.itdoes.csm.dto.ChatUser;
 import com.itdoes.csm.entity.CsmChatMessage;
 import com.itdoes.csm.entity.CsmUser;
 import com.itdoes.csm.service.ChatOnlineUserStore;
+import com.itdoes.csm.service.UserStore;
 
 /**
  * @author Jalen Zhong
@@ -43,20 +45,19 @@ import com.itdoes.csm.service.ChatOnlineUserStore;
 public class ChatController {
 	public static final int MESSAGE_PAGE_SIZE = 10;
 
+	private static final PageRequest MESSAGE_PAGE_REQUEST = new PageRequest(0, MESSAGE_PAGE_SIZE,
+			new Sort(Direction.DESC, "createDateTime"));
+
 	@Autowired
 	private EntityEnv env;
 
 	@Autowired
 	private EntityDbService dbService;
 
-	private Specification<CsmUser> customerSpec = Specifications.build(CsmUser.class,
-			Lists.newArrayList(new FindFilter("admin", Operator.EQ, false)));
-	private Sort customerSort = new Sort(Direction.ASC, "username");
-
-	private PageRequest messagePageRequest = new PageRequest(0, MESSAGE_PAGE_SIZE,
-			new Sort(Direction.DESC, "createDateTime"));
-
 	private final SimpMessagingTemplate template;
+
+	@Autowired
+	private UserStore userStore;
 
 	@Autowired
 	private ChatOnlineUserStore onlineCustomerStore;
@@ -130,14 +131,13 @@ public class ChatController {
 
 	@SubscribeMapping("/chatAInit")
 	public Collection<ChatUser> chatAInit() {
-		final List<CsmUser> csmUserList = dbService.findAll(env.getPair(CsmUser.class.getSimpleName()), customerSpec,
-				customerSort);
+		final Set<CsmUser> csmUserList = userStore.getCustomerSet();
 
 		final List<ChatUser> chatCustomerList = Lists.newArrayListWithCapacity(csmUserList.size());
 		for (CsmUser csmUser : csmUserList) {
 			final ChatUser chatUser = ChatUser.valueOf(csmUser);
 			final String userId = chatUser.getUserId();
-			if (onlineCustomerStore.containsUser(userId)) {
+			if (onlineCustomerStore.isOnlineUser(userId)) {
 				chatUser.setOnline(true);
 			}
 			if (unHandledCustomerMap.containsKey(userId)) {
@@ -180,8 +180,15 @@ public class ChatController {
 		final List<CsmChatMessage> messageList = Lists.newArrayListWithCapacity(dbMessageList.size());
 		for (int i = dbMessageList.size() - 1; i >= 0; i--) {
 			final CsmChatMessage message = dbMessageList.get(i);
-			// TODO
-			message.setSenderName(message.getSenderId().toString());
+
+			final String senderName;
+			final CsmUser user = userStore.getUser(message.getSenderId().toString());
+			if (user == null) {
+				senderName = "Unknown";
+			} else {
+				senderName = user.getUsername();
+			}
+			message.setSenderName(senderName);
 			messageList.add(message);
 		}
 		return messageList;
@@ -189,7 +196,7 @@ public class ChatController {
 
 	private List<CsmChatMessage> getChatMessageListFromDb(String roomId) {
 		final List<CsmChatMessage> messageList = dbService.find(env.getPair(CsmChatMessage.class.getSimpleName()),
-				buildMessageSpecification(roomId), messagePageRequest).getContent();
+				buildMessageSpecification(roomId), MESSAGE_PAGE_REQUEST).getContent();
 		return messageList;
 	}
 

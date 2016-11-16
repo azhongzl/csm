@@ -40,15 +40,15 @@ public class ChatConfig {
 			final String userId = sha.getUser().getName();
 			final ChatEvent loginEvent = new ChatEvent(userId);
 			template.convertAndSend(TOPIC_LOGIN, loginEvent);
-			onlineUserStore.add(sha.getSessionId(), loginEvent);
+			onlineUserStore.addOnlineSession(sha.getSessionId(), loginEvent);
 		}
 	}
 
 	@EventListener
 	private void handleSessionDisconnect(SessionDisconnectEvent event) {
-		Optional.ofNullable(onlineUserStore.get(event.getSessionId())).ifPresent(login -> {
+		Optional.ofNullable(onlineUserStore.getOnlineSession(event.getSessionId())).ifPresent(login -> {
 			template.convertAndSend(TOPIC_LOGOUT, new ChatEvent(login.getUserId()));
-			onlineUserStore.remove(event.getSessionId());
+			onlineUserStore.removeOnlineSession(event.getSessionId());
 		});
 	}
 }
