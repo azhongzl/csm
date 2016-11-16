@@ -12,7 +12,7 @@
 <script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
 <link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
-<link href="${ctx}/static/css/chat.css" rel="stylesheet">
+<link href="${ctx}/static/css/adminChat.css" rel="stylesheet">
 <script src="${ctx}/static/js/lib/sockjs.js"></script>
 <script src="${ctx}/static/js/lib/stomp.js"></script>
 </head>
@@ -54,6 +54,8 @@
 	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/chatAdminFunction.js"></script>
 	<script>
+		userId = "<shiro:principal property="id" />";
+		username = "<shiro:principal property="username" />"
 		$(document).ready(function() {
 			connect();
 			router.push({
@@ -67,7 +69,8 @@
 	<div class="list-group" style="height: 250px; overflow: auto">
 		<ul class="list-group">
 			<li class="list-group-item" v-for="(customer,index) in customers"><router-link
-					:to="{name:'content',params :{id:customer.userId},query:{name:customer.username}}" :id="customer.userId" style="color:#838383">{{customer.username}}</router-link></li>
+					:to="{name:'content',params :{id:customer.userId},query:{name:customer.username}}" :id="customer.userId"
+					style="color:#838383">{{customer.username}}</router-link></li>
 		</ul>
 	</div>
 	</template>
@@ -89,7 +92,7 @@
 	<div class="col-md-9 column">
 		<div class="row clearfix">
 			<div id="sentence" class="col-md-12 column"
-				style="background-color: #f7f7f7; height: 600px; padding-top: 10px; overflow-y: auto;overflow-x: hidden; "></div>
+				style="background-color: #f7f7f7; height: 600px; padding-top: 10px; overflow-y: auto; overflow-x: hidden;"></div>
 		</div>
 		<div class="row clearfix">
 			<div class="col-md-12 column"
