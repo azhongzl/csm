@@ -83,4 +83,15 @@ public class CsmChatMessage extends BaseEntity {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	@javax.persistence.Transient
+	private String senderName;
+
+	public String getSenderName() {
+		return senderName;
+	}
+
+	public void setSenderName(String senderName) {
+		this.senderName = senderName;
+	}
 }

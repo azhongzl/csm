@@ -9,6 +9,7 @@ create table csm_user (
 	password char(64) not null,
 	salt char(16) not null,
 	active bit not null,
+	admin bit not null,
     primary key (id)
 ) engine=InnoDB;
 

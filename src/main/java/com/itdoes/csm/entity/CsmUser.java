@@ -36,6 +36,8 @@ public class CsmUser extends BaseEntity {
 	private String salt;
 	@Column(name = "active")
 	private Boolean active;
+	@Column(name = "admin")
+	private Boolean admin;
 
 	public java.util.UUID getId() {
 		return id;
@@ -75,5 +77,13 @@ public class CsmUser extends BaseEntity {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public Boolean getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Boolean admin) {
+		this.admin = admin;
 	}
 }

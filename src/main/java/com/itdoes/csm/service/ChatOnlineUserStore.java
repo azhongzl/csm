@@ -14,28 +14,28 @@ import com.itdoes.csm.dto.ChatEvent;
  */
 @Service
 public class ChatOnlineUserStore {
-	private final Map<String, ChatEvent> onlineUserMap = Maps.newConcurrentMap();
-	private final Set<String> onlineUserSet = Sets.newConcurrentHashSet();
+	private final Map<String, ChatEvent> onlineSessionMap = Maps.newConcurrentMap();
+	private final Set<String> onlineUserIdSet = Sets.newConcurrentHashSet();
 
-	public void add(String sessionId, ChatEvent event) {
-		onlineUserMap.put(sessionId, event);
-		onlineUserSet.add(event.getUserId());
+	public void addOnlineSession(String sessionId, ChatEvent event) {
+		onlineSessionMap.put(sessionId, event);
+		onlineUserIdSet.add(event.getUserId());
 	}
 
-	public void remove(String sessionId) {
-		final ChatEvent event = onlineUserMap.remove(sessionId);
-		onlineUserSet.remove(event.getUserId());
+	public void removeOnlineSession(String sessionId) {
+		final ChatEvent event = onlineSessionMap.remove(sessionId);
+		onlineUserIdSet.remove(event.getUserId());
 	}
 
-	public ChatEvent get(String sessionId) {
-		return onlineUserMap.get(sessionId);
+	public ChatEvent getOnlineSession(String sessionId) {
+		return onlineSessionMap.get(sessionId);
 	}
 
-	public Map<String, ChatEvent> getMap() {
-		return onlineUserMap;
+	public Map<String, ChatEvent> getOnlineSessionMap() {
+		return onlineSessionMap;
 	}
 
-	public boolean containsUser(String userId) {
-		return onlineUserSet.contains(userId);
+	public boolean isOnlineUser(String userId) {
+		return onlineUserIdSet.contains(userId);
 	}
 }
