@@ -80,9 +80,9 @@ const addNew = {
 						description :  this.describe,
 						active : "1",
 						createAccountId : userId,
-						createDate : modify_date1,
+						createDateTime : modify_date1,
 						modifyAccountId : userId,
-						modifyDate : modify_date1,
+						modifyDateTime : modify_date1,
 					}
 					alert(url1);
 					ajaxcreate(savedata, url1);
@@ -135,7 +135,7 @@ const modify = {
 						name : this.name,
 						description : this.describe,
 						modifyAccountId : userId,
-						modifyDate : getNowFormatDate(),
+						modifyDateTime : getNowFormatDate(),
 					}
 					ajaxPut(putdata, url1);
 			    	store.commit('getCategory');
@@ -285,7 +285,7 @@ const faqModify = {
 	    					question : this.question,
 	    					answer : this.answer,
 	    					modifyAccountId : userId,
-	    					modifyDate : getNowFormatDate(),
+	    					modifyDateTime : getNowFormatDate(),
 	    				}
 	    				ajaxPut(putdata, url1);
 	    				router.push({name:'showFaqList', params:{id:this.id}});
@@ -306,7 +306,7 @@ const faqModify = {
 	    				form_data.append("answer", this.answer);
 	    				form_data.append("attachments", attachments);
 	    				form_data.append("modifyAccountId", userId);
-	    				form_data.append("modifyDate", getNowFormatDate());
+	    				form_data.append("modifyDateTime", getNowFormatDate());
 	    				for (var i = 0; i < (fileData.files.length); i++) {
 	    					form_data.append("uploadFile", fileData.files[i]);
 	    				}
@@ -368,9 +368,9 @@ const faqAddNew = {
 	    					answer : this.answer,
 	    					active : "1",
 	    					createAccountId : userId,
-	    					createDate : getNowFormatDate(),
+	    					createDateTime : getNowFormatDate(),
 	    					modifyAccountId : userId,
-	    					modifyDate : getNowFormatDate(),
+	    					modifyDateTime : getNowFormatDate(),
 	    				};
 
 	    				ajaxcreate(savedata, url1);
@@ -384,9 +384,9 @@ const faqAddNew = {
 
 	    				form_data.append("active", "1");
 	    				form_data.append("createAccountId", userId);
-	    				form_data.append("createDate", getNowFormatDate());
+	    				form_data.append("createDateTime", getNowFormatDate());
 	    				form_data.append("modifyAccountId", userId);
-	    				form_data.append("modifyDate", getNowFormatDate());
+	    				form_data.append("modifyDateTime", getNowFormatDate());
 	    				for (var i = 0; i < (fileData.files.length); i++) {
 	    					form_data.append("uploadFile", fileData.files[i]);
 	    				}
@@ -694,7 +694,6 @@ function ajaxPutUpload(putdata, url1) {
 		},
 		timeout : 3000,
 		error : function(xhr) {
-
 			alert("error： " + xhr.status + " " + xhr.statusText);
 		},
 

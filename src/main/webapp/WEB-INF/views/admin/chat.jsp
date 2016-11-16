@@ -13,6 +13,8 @@
 <script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
 <link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
 <link href="${ctx}/static/css/chat.css" rel="stylesheet">
+<script src="${ctx}/static/js/lib/sockjs.js"></script>
+<script src="${ctx}/static/js/lib/stomp.js"></script>
 </head>
 <body>
 	<div id="main" class="container">
@@ -37,46 +39,48 @@
 			</div>
 		</div>
 		<div class="row clearfix">
-			<div class="col-md-3 column "  style="background-color: #d5eaff; height: 800px">
+			<div class="col-md-3 column " style="background-color: #d5eaff; height: 800px">
 				<h3>Customer</h3>
 				<router-view name="customer"></router-view>
 				<h3>Customer Service</h3>
 				<router-view name="service"></router-view>
 			</div>
 			<router-view name="content"></router-view>
-			
+
 		</div>
 
 	</div>
 	<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
 	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
-	<script type="text/javascript" src="${ctx}/static/js/chatFunction.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/chatAdminFunction.js"></script>
 	<script>
 		$(document).ready(function() {
+			connect();
 			router.push({
 				name : 'home'
 			});
+
 		});
 	</script>
 	<!------------------ template------------------- -->
 	<template id="customer">
 	<div class="list-group" style="height: 250px; overflow: auto">
 		<ul class="list-group">
-			<li class="list-group-item" v-for="(customer,index) in customers">
-				<router-link :to="{name:'content',params :{id:customer.name}}">{{customer.name}}</router-link></li>
+			<li class="list-group-item" v-for="(customer,index) in customers"><router-link
+					:to="{name:'content',params :{id:customer.userId},query:{name:customer.username}}" :id="customer.userId" style="color:#838383">{{customer.username}}</router-link></li>
 		</ul>
 	</div>
 	</template>
 
 	<template id="service">
-	<div class="list-group" style="height: 360px; overflow: auto">
+	<div class="list-group" style="height: 360px; overflow-y: auto">
 		<ul class="list-group">
 			<li class="list-group-item" v-for="(user,index) in service"><span class="badge" style="background-color: blue;">online</span><a
 				href="#" v-on:click="showUser(user.name,index)">{{user.name}}</a></li>
 		</ul>
-		<label for="name">Select service group</label><br>
-		<select class="form-control"  v-model="selected" v-on:change="select(selected)">
-			<option v-for="service in serviceList" :value="service" >{{service.name}}</option>
+		<label for="name">Select service group</label><br> <select class="form-control" v-model="selected"
+			v-on:change="select(selected)">
+			<option v-for="service in serviceList" :value="service">{{service.name}}</option>
 		</select>
 	</div>
 	</template>
@@ -85,17 +89,14 @@
 	<div class="col-md-9 column">
 		<div class="row clearfix">
 			<div id="sentence" class="col-md-12 column"
-				style="background-color: #f7f7f7; height: 600px; padding-top: 10px; overflow: auto"></div>
+				style="background-color: #f7f7f7; height: 600px; padding-top: 10px; overflow-y: auto;overflow-x: hidden; "></div>
 		</div>
 		<div class="row clearfix">
 			<div class="col-md-12 column"
 				style="border: 1px solid #c0c0c0; background-color: #95caff; height: 190px; margin-top: 10px">
-				<div class="btn-group">
-					<button class="btn btn-default" type="button">image</button>
-					<button class="btn btn-default" type="button">files</button>
-				</div>
+				<p>Talk to : {{userName}}</p>
 				<div class="form-inline" style="margin-top: 20px">
-					<input type="text" size="100" v-on:keyup.enter="send(sentence)" v-model="sentence" />
+					<input type="text" size="100" v-on:keyup.enter="send" v-model="sentence" />
 					<button type="button" class="btn btn-default" v-on:click="send(sentence)">Send</button>
 				</div>
 			</div>
