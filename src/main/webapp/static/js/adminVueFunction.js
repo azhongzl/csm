@@ -14,13 +14,13 @@ const store = new Vuex.Store({
 	  },
 	  mutations: {
 		  getCategory:state=> {
-		   	let url1 = url + "Category" + "/find";
+		   	let url1 = url + "CsmFaqCategory" + "/find";
 	    	let checkKey = "";
 	    	let result = ajaxFind(checkKey, url1);
 	    	state.CategoryList = result.data.content;
 	    },
 		  getFaq(state,payload) {
-			let url1 = url + "Faq" + "/find";
+			let url1 = url + "CsmFaq" + "/find";
 			let checkKey = {
 				ff_categoryId : payload.id,
 				page_size : state.pageSize,
@@ -70,7 +70,7 @@ const addNew = {
 		},
 		methods: {
 			addNew(){
-				var url1 = url + "Category" + "/post";
+				var url1 = url + "CsmFaqCategory" + "/post";
 				if ($.trim(this.name).length == 0) {
 					alert("Please input name");
 				} else {
@@ -80,9 +80,9 @@ const addNew = {
 						description :  this.describe,
 						active : "1",
 						createAccountId : userId,
-						createDate : modify_date1,
+						createDateTime : modify_date1,
 						modifyAccountId : userId,
-						modifyDate : modify_date1,
+						modifyDateTime : modify_date1,
 					}
 					alert(url1);
 					ajaxcreate(savedata, url1);
@@ -109,7 +109,7 @@ const modify = {
 		created: function(){
 			var id = this.$route.query.id;
 			if (id.trim().length !== 0) {
-				var url1 = url + "Category" + "/get/" + id;
+				var url1 = url + "CsmFaqCategory" + "/get/" + id;
 				var checkResult1 = ajaxGet(url1);
 
 				if (checkResult1.description == undefined) {
@@ -130,12 +130,12 @@ const modify = {
 				if ($.trim(this.name).length == 0) {
 					alert("Please input name");
 				} else {
-					var url1 = url + "Category" + "/put/" + id;
+					var url1 = url + "CsmFaqCategory" + "/put/" + id;
 					var putdata = {
 						name : this.name,
 						description : this.describe,
 						modifyAccountId : userId,
-						modifyDate : getNowFormatDate(),
+						modifyDateTime : getNowFormatDate(),
 					}
 					ajaxPut(putdata, url1);
 			    	store.commit('getCategory');
@@ -159,13 +159,13 @@ const categoryDelete = {
 				if (id.trim().length !== 0) {
 					var r=confirm("Are you sure?");
 					if (r==true){
-						var url1 = url + "Faq" + "/find";
+						var url1 = url + "CsmFaq" + "/find";
 						var checkKey = {
 							ff_categoryId : id,
 						};
 						var checkResult = ajaxFind(checkKey, url1);
 						if (checkResult.data.content == undefined) {
-							url1 = url + "Category" + "/delete/" + id;
+							url1 = url + "CsmFaqCategory" + "/delete/" + id;
 							$.ajax({
 								type : "GET",
 								url : url1,
@@ -243,7 +243,7 @@ const faqModify = {
 		},
 		created:function(){
 			var id=this.$route.params.id;
-			var url1 = url + "Faq" + "/get/" + id;
+			var url1 = url + "CsmFaq" + "/get/" + id;
 			var checkResult1 = ajaxGet(url1);
 			if (checkResult1.attachments !== undefined) {
             	this.attachments = checkResult1.attachments.split(",");
@@ -280,12 +280,12 @@ const faqModify = {
 	    			var fileData = $("input[name='uploadFile']").get(0);
 	    			
 	    			if ((fileData.files.length == 0) && (this.attach.length == 0)) {
-	    				var url1 = url + "Faq" + "/put/" + id1;
+	    				var url1 = url + "CsmFaq" + "/put/" + id1;
 	    				var putdata = {
 	    					question : this.question,
 	    					answer : this.answer,
 	    					modifyAccountId : userId,
-	    					modifyDate : getNowFormatDate(),
+	    					modifyDateTime : getNowFormatDate(),
 	    				}
 	    				ajaxPut(putdata, url1);
 	    				router.push({name:'showFaqList', params:{id:this.id}});
@@ -300,13 +300,13 @@ const faqModify = {
 	    						}
 	    					});
 	    				}
-	    				url1 = url + "Faq" + "/putUpload/"+id1;
+	    				url1 = url + "CsmFaq" + "/putUpload/"+id1;
 	    				var form_data = new FormData();
 	    				form_data.append("question", this.question);
 	    				form_data.append("answer", this.answer);
 	    				form_data.append("attachments", attachments);
 	    				form_data.append("modifyAccountId", userId);
-	    				form_data.append("modifyDate", getNowFormatDate());
+	    				form_data.append("modifyDateTime", getNowFormatDate());
 	    				for (var i = 0; i < (fileData.files.length); i++) {
 	    					form_data.append("uploadFile", fileData.files[i]);
 	    				}
@@ -318,7 +318,7 @@ const faqModify = {
 
 	    	adminFaqDelete() {
 	    		let id1=this.$route.params.id;
-	    		var url1 = url + "Faq" + "/delete/" + id1;
+	    		var url1 = url + "CsmFaq" + "/delete/" + id1;
 	    		$.ajax({
 	    			type : "GET",
 	    			url : url1,
@@ -354,7 +354,7 @@ const faqAddNew = {
 	    methods:{
 	    	faqAddNew(){
 	    		let id=this.$route.query.id;
-	    		let url1 = url + "Faq" + "/post";
+	    		let url1 = url + "CsmFaq" + "/post";
 	    	
 	    		if ($.trim(this.question).length == 0) {
 	    			alert("Please input question");
@@ -368,15 +368,15 @@ const faqAddNew = {
 	    					answer : this.answer,
 	    					active : "1",
 	    					createAccountId : userId,
-	    					createDate : getNowFormatDate(),
+	    					createDateTime : getNowFormatDate(),
 	    					modifyAccountId : userId,
-	    					modifyDate : getNowFormatDate(),
+	    					modifyDateTime : getNowFormatDate(),
 	    				};
 
 	    				ajaxcreate(savedata, url1);
 	    				router.push({name:'showFaqList', params:{id:id}})
 	    			} else {
-	    				url1 = url + "Faq" + "/postUpload";
+	    				url1 = url + "CsmFaq" + "/postUpload";
 	    				var form_data = new FormData();
 	    				form_data.append("categoryId", id);
 	    				form_data.append("question", this.question);
@@ -384,9 +384,9 @@ const faqAddNew = {
 
 	    				form_data.append("active", "1");
 	    				form_data.append("createAccountId", userId);
-	    				form_data.append("createDate", getNowFormatDate());
+	    				form_data.append("createDateTime", getNowFormatDate());
 	    				form_data.append("modifyAccountId", userId);
-	    				form_data.append("modifyDate", getNowFormatDate());
+	    				form_data.append("modifyDateTime", getNowFormatDate());
 	    				for (var i = 0; i < (fileData.files.length); i++) {
 	    					form_data.append("uploadFile", fileData.files[i]);
 	    				}
@@ -694,7 +694,6 @@ function ajaxPutUpload(putdata, url1) {
 		},
 		timeout : 3000,
 		error : function(xhr) {
-
 			alert("error： " + xhr.status + " " + xhr.statusText);
 		},
 

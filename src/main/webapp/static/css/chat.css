@@ -1,0 +1,49 @@
+.speech1 {
+	background: #c7edcc;
+	color: #317787;
+	border-radius: 10px;
+	width:400px;
+	padding: 5px 5px;
+	word-wrap: break-word;
+	word-break: normal;
+	font-size:16px;
+}
+.speech2 {
+	background: #bff2f7;
+	color: #317787;
+	border-radius: 10px;
+	width:400px;
+	padding: 5px 5px;
+	word-wrap: break-word;
+	word-break: normal;
+	font-size:16px;
+}
+.user1 {
+	display:inline-block;
+	background: #85d88f;
+	color: #000000;
+	border-radius: 15px;
+	padding: 5px 5px;
+	word-wrap: break-word;
+	word-break: normal;
+
+}
+.user2 {
+	display:inline-block;
+	background: #81e4ef;
+	color: #000000;
+	border-radius: 15px;
+	padding: 5px 5px;
+	word-wrap: break-word;
+	word-break: normal;
+
+}
+
+.left{
+clear:both;
+float:left;	
+}
+.right{
+clear:both;
+float:right;	
+}
