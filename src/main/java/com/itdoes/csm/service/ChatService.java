@@ -34,7 +34,7 @@ import com.itdoes.csm.entity.CsmUser;
  * @author Jalen Zhong
  */
 @Service
-public class ChatFacadeService {
+public class ChatService {
 	public static final int MESSAGE_PAGE_SIZE = 10;
 
 	private static final PageRequest MESSAGE_PAGE_REQUEST = new PageRequest(0, MESSAGE_PAGE_SIZE,

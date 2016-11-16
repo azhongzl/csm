@@ -20,7 +20,7 @@ import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.dto.ChatUser;
 import com.itdoes.csm.entity.CsmChatMessage;
-import com.itdoes.csm.service.ChatFacadeService;
+import com.itdoes.csm.service.ChatService;
 
 /**
  * @author Jalen Zhong
@@ -28,7 +28,7 @@ import com.itdoes.csm.service.ChatFacadeService;
 @Controller
 public class ChatController {
 	@Autowired
-	private ChatFacadeService chatService;
+	private ChatService chatService;
 
 	private final SimpMessagingTemplate template;
 
