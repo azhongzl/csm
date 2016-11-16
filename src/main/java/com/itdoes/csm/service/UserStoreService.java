@@ -47,6 +47,10 @@ public class UserStoreService {
 		}
 	}
 
+	public void updateUser(CsmUser user) {
+		userMap.put(user.getId().toString(), user);
+	}
+
 	public void removeUser(String userId) {
 		final CsmUser user = userMap.remove(userId);
 		if (user == null) {
