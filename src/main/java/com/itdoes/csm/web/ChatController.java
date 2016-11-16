@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.collect.Lists;
 import com.itdoes.common.core.shiro.ShiroUser;
@@ -46,6 +47,12 @@ public class ChatController {
 	@RequestMapping("/admin/chat")
 	public String adminChat() {
 		return "admin/chat";
+	}
+
+	@RequestMapping("/admin/chat/hasUnhandledCustomer")
+	@ResponseBody
+	public boolean hasUnhandledCustomer() {
+		return chatService.hasUnhandledCustomer();
 	}
 
 	@RequestMapping("/jalenChat")

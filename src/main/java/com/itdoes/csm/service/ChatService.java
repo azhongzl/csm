@@ -61,7 +61,7 @@ public class ChatService {
 	@Autowired
 	private ChatOnlineService onlineService;
 
-	private Map<String, ChatEvent> unhandledCustomerMap = Maps.newConcurrentMap();
+	private final Map<String, ChatEvent> unhandledCustomerMap = Maps.newConcurrentMap();
 
 	private EntityPair<CsmChatMessage, UUID> messagePair;
 
@@ -89,6 +89,10 @@ public class ChatService {
 
 	public void removeUnhandledCustomer(String userId) {
 		unhandledCustomerMap.remove(userId);
+	}
+
+	public boolean hasUnhandledCustomer() {
+		return !Collections3.isEmpty(unhandledCustomerMap);
 	}
 
 	public void saveChatMessage(CsmChatMessage message) {
