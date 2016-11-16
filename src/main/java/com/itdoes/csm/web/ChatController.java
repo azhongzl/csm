@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.google.common.collect.Lists;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
+import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.dto.ChatUser;
 import com.itdoes.csm.entity.CsmChatMessage;
@@ -81,7 +82,7 @@ public class ChatController {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
 		final String userId = shiroUser.getId();
 		List<CsmChatMessage> messageList = chatService.getChatMessageList(userId);
-		if (messageList == null) {
+		if (Collections3.isEmpty(messageList)) {
 			messageList = Lists.newArrayListWithCapacity(1);
 		}
 
