@@ -13,13 +13,13 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.itdoes.common.core.spring.SpringMessagings;
 import com.itdoes.csm.dto.ChatEvent;
-import com.itdoes.csm.service.ChatOnlineUserStore;
+import com.itdoes.csm.service.ChatOnlineService;
 
 /**
  * @author Jalen Zhong
  */
 @Configuration
-public class ChatConfig {
+public class ChatOnlineConfig {
 	private static final String KEY_ADMIN = "admin";
 
 	private static final String TOPIC_LOGIN = "/topic/chat/login";
@@ -29,7 +29,7 @@ public class ChatConfig {
 	private SimpMessagingTemplate template;
 
 	@Autowired
-	private ChatOnlineUserStore onlineUserStore;
+	private ChatOnlineService onlineService;
 
 	@EventListener
 	private void handleSessionConnected(SessionConnectedEvent event) {
@@ -40,15 +40,15 @@ public class ChatConfig {
 			final String userId = sha.getUser().getName();
 			final ChatEvent loginEvent = new ChatEvent(userId);
 			template.convertAndSend(TOPIC_LOGIN, loginEvent);
-			onlineUserStore.addOnlineSession(sha.getSessionId(), loginEvent);
+			onlineService.addOnlineSession(sha.getSessionId(), loginEvent);
 		}
 	}
 
 	@EventListener
 	private void handleSessionDisconnect(SessionDisconnectEvent event) {
-		Optional.ofNullable(onlineUserStore.getOnlineSession(event.getSessionId())).ifPresent(login -> {
+		Optional.ofNullable(onlineService.getOnlineSession(event.getSessionId())).ifPresent(login -> {
 			template.convertAndSend(TOPIC_LOGOUT, new ChatEvent(login.getUserId()));
-			onlineUserStore.removeOnlineSession(event.getSessionId());
+			onlineService.removeOnlineSession(event.getSessionId());
 		});
 	}
 }

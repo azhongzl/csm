@@ -13,7 +13,7 @@ import com.itdoes.csm.dto.ChatEvent;
  * @author Jalen Zhong
  */
 @Service
-public class ChatOnlineUserStore {
+public class ChatOnlineService {
 	private final Map<String, ChatEvent> onlineSessionMap = Maps.newConcurrentMap();
 	private final Set<String> onlineUserIdSet = Sets.newConcurrentHashSet();
 
