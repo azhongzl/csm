@@ -104,8 +104,8 @@ public class ChatController {
 		dbService.save(env.getPair(CsmChatMessage.class.getSimpleName()), message);
 
 		final ChatEvent messageEvent = new ChatEvent(userId);
-		unHandledCustomerMap.put(userId, messageEvent);
 		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
+		unHandledCustomerMap.put(userId, messageEvent);
 	}
 
 	@SubscribeMapping("/chatCInitMessage")
