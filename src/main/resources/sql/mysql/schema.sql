@@ -1,6 +1,10 @@
 drop table if exists csm_chat_message;
 drop table if exists csm_faq;
 drop table if exists csm_faq_category;
+drop table if exists csm_role_permission;
+drop table if exists csm_user_role;
+drop table if exists csm_permission;
+drop table if exists csm_role;
 drop table if exists csm_user;
 
 create table csm_user (
@@ -10,6 +14,33 @@ create table csm_user (
 	salt char(16) not null,
 	active bit not null,
 	admin bit not null,
+    primary key (id)
+) engine=InnoDB;
+
+create table csm_role (
+	id binary(16) not null,
+	name varchar(100) not null,
+    primary key (id)
+) engine=InnoDB;
+
+create table csm_permission (
+	id binary(16) not null,
+	name varchar(100) not null,
+	permission varchar(100) not null,
+    primary key (id)
+) engine=InnoDB;
+
+create table csm_user_role (
+	id binary(16) not null,
+	user_id binary(16) not null,
+	role_id binary(16) not null,
+    primary key (id)
+) engine=InnoDB;
+
+create table csm_role_permission (
+	id binary(16) not null,
+	role_id binary(16) not null,
+	permission_id binary(16) not null,
     primary key (id)
 ) engine=InnoDB;
 
