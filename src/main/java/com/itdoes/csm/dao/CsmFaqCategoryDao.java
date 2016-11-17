@@ -7,5 +7,5 @@ import com.itdoes.csm.entity.CsmFaqCategory;
  * 
  * @author Jalen Zhong
  */
-public interface CsmFaqCategoryDao extends com.itdoes.common.business.dao.BaseQueryCacheDao<CsmFaqCategory, java.util.UUID> {
+public interface CsmFaqCategoryDao extends com.itdoes.common.business.dao.BaseDao<CsmFaqCategory, java.util.UUID> {
 }
