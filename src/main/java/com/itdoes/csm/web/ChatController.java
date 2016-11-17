@@ -46,6 +46,11 @@ public class ChatController {
 		return "chat";
 	}
 
+	@RequestMapping("/admin/chat/icon")
+	public String adminChatIcon() {
+		return "admin/chatIcon";
+	}
+
 	@RequestMapping("/admin/chat")
 	public String adminChat() {
 		return "admin/chat";
