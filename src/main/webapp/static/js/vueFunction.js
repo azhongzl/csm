@@ -129,7 +129,7 @@ var vmPagecount = new Vue({
 				}
 				if(vmContent.label=="Search"){
 		    		vmContent.faqs=[];
-					var url1 ="http://localhost:8080/csm/search/faq";
+					var url1 ="http://localhost:8080/csm/search/CsmFaq";
 					var checkKey = {
 							ss : this.search,
 							page_size : this.pageSize,
@@ -177,9 +177,9 @@ var vmSearch = new Vue({
 		label:""
 	},
     methods:{
-    	ajaxSearch(){
+    	ajaxSearch:function(){
     		vmContent.faqs=[];
-			var url1 ="http://localhost:8080/csm/search/faq";
+ 			var url1 ="http://localhost:8080/csm/search/CsmFaq";
 			var checkKey = {
 					ss : this.search,
 				};
@@ -199,7 +199,7 @@ var vmSearch = new Vue({
     			timeout : 3000,
     			error : function(xhr) {
     				alert(" error： " + xhr.status + " " + xhr.statusText);
-    			},
+    			}
     		});
 			if (checkList.length == 0) {
 				vmPagecount.total = 0;

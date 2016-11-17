@@ -1,6 +1,7 @@
 var stompClient = null;
 
 $(document).ready(function() {
+	alert();
 	connect();
 });
 

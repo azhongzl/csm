@@ -479,9 +479,6 @@ ul#nav li a:hover, ul#nav li a:focus {
 	font-size: 18px;
 	}
 
-
-
-
 #pagecount span a {
 	color: black;
 	float: left;
@@ -498,4 +495,8 @@ ul#nav li a:hover, ul#nav li a:focus {
 
 .current{
 	background-color: #53a9ff;
+}
+
+template{
+    display: none;
 }

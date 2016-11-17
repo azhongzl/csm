@@ -13,13 +13,13 @@ const store = new Vuex.Store({
 	    totalPage:0,
 	  },
 	  mutations: {
-		  getCategory:state=> {
+		  getCategory:function(state) {
 		   	let url1 = url + "CsmFaqCategory" + "/find";
 	    	let checkKey = "";
 	    	let result = ajaxFind(checkKey, url1);
 	    	state.CategoryList = result.data.content;
 	    },
-		  getFaq(state,payload) {
+		  getFaq:function(state,payload) {
 			let url1 = url + "CsmFaq" + "/find";
 			let checkKey = {
 				ff_categoryId : payload.id,
@@ -48,7 +48,7 @@ const category = {
 		}
 	},
 	computed:{
-		list () {
+		list:function() {
 			return this.$store.state.CategoryList
 		}
 	},
@@ -69,7 +69,7 @@ const addNew = {
 			}
 		},
 		methods: {
-			addNew(){
+			addNew:function(){
 				var url1 = url + "CsmFaqCategory" + "/post";
 				if ($.trim(this.name).length == 0) {
 					alert("Please input name");
@@ -90,7 +90,7 @@ const addNew = {
 					router.push({name : 'category'});
 				}
 			},
-			reset(){
+			reset:function(){
 	
 				router.push({name : 'category'});
 
@@ -125,7 +125,7 @@ const modify = {
 			}
 		},
 		methods: {
-			addNew(){
+			addNew:function(){
 				var id = this.$route.query.id;
 				if ($.trim(this.name).length == 0) {
 					alert("Please input name");
@@ -143,7 +143,7 @@ const modify = {
 					
 				}
 			},
-			reset(){
+			reset:function(){
 				router.push({name: 'category'});
 
 			},
@@ -194,7 +194,7 @@ const categoryDelete = {
 const faq = {
 		template : '#FaqCategory',
 		computed:{
-			list () {
+			list :function() {
 				return this.$store.state.CategoryList
 			}
 		},
@@ -206,7 +206,7 @@ const faq = {
 const showFaqList = {
 		template : '#FaqDetail',
 		watch:{
-			'$route'(to,from){
+			'$route':function(to,from){
 				var id=this.$route.params.id;
 				this.$store.state.curPage=1;
 		    	store.commit('getFaq',{id : id});
@@ -214,7 +214,7 @@ const showFaqList = {
 			}
 		},
 		computed:{
-			list1 () {
+			list1:function() {
 				return this.$store.state.FaqList
 			}
 		},
@@ -223,7 +223,7 @@ const showFaqList = {
 	    	store.commit('getFaq',{id : id});
 	    },
 	    methods:{
-	    	faqAddNewUi(){
+	    	faqAddNewUi:function(){
 	    		router.push({name:'faqAddNew',query:{id:this.$route.params.id}})
 	    	}
 	    }
@@ -254,7 +254,7 @@ const faqModify = {
 			this.id = checkResult1.categoryId;
 		},
 		methods:{
-		    showUploadFile(){
+		    showUploadFile:function(){
 	    		var fileData = $("input[name='uploadFile']").get(0);
 	    		var txt = "";
 	    		if ('files' in fileData) {
@@ -271,7 +271,7 @@ const faqModify = {
 	    		}
 	    		this.attachements1=txt;
 	    	},
-	    	adminFaqPut(){
+	    	adminFaqPut:function(){
 	    		let id1=this.$route.params.id;
 	    		let attachments="";
 	    		if (this.question.trim().length == 0) {
@@ -316,7 +316,7 @@ const faqModify = {
 	    		}
 	    	},
 
-	    	adminFaqDelete() {
+	    	adminFaqDelete:function() {
 	    		let id1=this.$route.params.id;
 	    		var url1 = url + "CsmFaq" + "/delete/" + id1;
 	    		$.ajax({
@@ -334,7 +334,7 @@ const faqModify = {
 
 				router.push({name:'showFaqList', params:{id:this.id}});
 	    	},
-	    	faqCancel(){
+	    	faqCancel:function(){
 				router.push({name:'showFaqList', params:{id:this.id}});
 	    	}
 	    	
@@ -352,7 +352,7 @@ const faqAddNew = {
 			}
 		},
 	    methods:{
-	    	faqAddNew(){
+	    	faqAddNew:function(){
 	    		let id=this.$route.query.id;
 	    		let url1 = url + "CsmFaq" + "/post";
 	    	
@@ -397,10 +397,10 @@ const faqAddNew = {
 
 	    		}
 		    	},
-	    	faqCancel(){
+	    	faqCancel:function(){
 	    		router.push({name:'faq'})
 	    	},
-		    showUploadFile(){
+		    showUploadFile:function(){
 	    		var fileData = $("input[name='uploadFile']").get(0);
 	    		var txt = "";
 	    		if ('files' in fileData) {
@@ -430,20 +430,20 @@ const pageChange = {
 			}
 		},
 		watch:{
-			'$route'(to,from){
+			'$route':function(to,from){
 			this.curPage = this.$store.state.curPage;
 			this.totalPage = this.$store.state.totalPage;
 			this.showKey ="this.$store.state.total==0 ? 'false':'true'";
 			}
 		},
         computed:{
-    	    curPage(){
+    	    curPage:function(){
     	    	return this.$store.state.curPage
      	    },
-    	    totalPage(){
+    	    totalPage:function(){
     	    	return this.$store.state.totalPage
     	    },
-    	    showKey(){
+    	    showKey:function(){
     	    	if  (this.$store.state.total==0){
     	    		return false
     	    	}else{
@@ -453,7 +453,7 @@ const pageChange = {
     	    },
         },
         methods:{
-         	changePage(page){
+         	changePage:function(page){
   			if (this.curPage != page) {
     				if (page > this.totalPage) {
     					this.$store.state.curPage = this.totalPage;
@@ -546,8 +546,8 @@ const router = new VueRouter({
 	})
 
 new Vue({
-	  store,
-	  router,
+	  store:store,
+	  router:router,
 	  el:'#main',
 	})
 
