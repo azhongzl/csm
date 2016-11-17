@@ -19,7 +19,7 @@ import com.itdoes.csm.entity.CsmUser;
  * @author Jalen Zhong
  */
 @Service
-public class UserService {
+public class UserCacheService {
 	@Autowired
 	private EntityEnv env;
 
