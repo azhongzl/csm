@@ -56,12 +56,12 @@ public class ChatService {
 	private EntityDbService dbService;
 
 	@Autowired
-	private UserStoreService userStoreService;
+	private UserCacheService userCacheService;
 
 	@Autowired
 	private ChatOnlineService onlineService;
 
-	private Map<String, ChatEvent> unhandledCustomerMap = Maps.newConcurrentMap();
+	private final Map<String, ChatEvent> unhandledCustomerMap = Maps.newConcurrentMap();
 
 	private EntityPair<CsmChatMessage, UUID> messagePair;
 
@@ -71,10 +71,10 @@ public class ChatService {
 	}
 
 	public List<ChatUser> getCustomerList() {
-		final Set<String> customerIdSet = userStoreService.getCustomerIdSet();
+		final Set<String> customerIdSet = userCacheService.getCustomerIdSet();
 		final List<ChatUser> customerList = Lists.newArrayListWithCapacity(customerIdSet.size());
 		for (String customerId : customerIdSet) {
-			final ChatUser chatUser = ChatUser.valueOf(userStoreService.getUser(customerId));
+			final ChatUser chatUser = ChatUser.valueOf(userCacheService.getUser(customerId));
 			chatUser.setOnline(onlineService.isOnlineUser(customerId));
 			chatUser.setUnhandled(unhandledCustomerMap.containsKey(customerId));
 			customerList.add(chatUser);
@@ -89,6 +89,10 @@ public class ChatService {
 
 	public void removeUnhandledCustomer(String userId) {
 		unhandledCustomerMap.remove(userId);
+	}
+
+	public boolean hasUnhandledCustomer() {
+		return !Collections3.isEmpty(unhandledCustomerMap);
 	}
 
 	public void saveChatMessage(CsmChatMessage message) {
@@ -106,7 +110,7 @@ public class ChatService {
 			final CsmChatMessage message = dbMessageList.get(i);
 
 			final String senderName;
-			final CsmUser user = userStoreService.getUser(message.getSenderId().toString());
+			final CsmUser user = userCacheService.getUser(message.getSenderId().toString());
 			if (user == null) {
 				senderName = "Unknown";
 			} else {
