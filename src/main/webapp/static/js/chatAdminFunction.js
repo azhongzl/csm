@@ -1,7 +1,21 @@
 
 var stompClient = null;
 var subscribeList ;
+//$(document).ready(function() {
+//	connect1();
+//router.push({
+//		name : 'home'
+//	});
+//
+//});
 
+
+$(function() {
+	connect1();
+	router.push({
+			name : 'home'
+		});
+});
 const store = new Vuex.Store({
 	  state: {
 		  customers:[ ],
@@ -23,13 +37,13 @@ const store = new Vuex.Store({
 		   		  
 	  },
 	  mutations: {
-			  addUser(state,payload) {
+			  addUser:function(state,payload) {
 			  state.service.push(payload.id);
 		    },
-			  removeUser(state,payload) {
+			  removeUser:function(state,payload) {
 		    	state.service.splice(payload.id,1);
 			    },
-			 closeChat(state,payload) {
+			 closeChat:function(state,payload) {
 			    state.customers.splice(payload.index,1);
 			    
   
@@ -42,13 +56,13 @@ const store = new Vuex.Store({
 const customer={
 	  template:'#customer',
 	  computed:{
-		  customers(){
+		  customers:function(){
 			  return this.$store.state.customers;
 		  }
 	  },
 
 	methods:{
-		closeChat(index,name){	
+		closeChat:function(index,name){	
 			router.push({name: 'home'});
 			store.commit('closeChat',{index:index,name:name});
 		}
@@ -64,7 +78,7 @@ const service={
 		  }
 	  },
 	  computed:{
-		  service(){
+		  service:function(){
 			  let id = this.$route.params.id;
 			  let service1 = [];
 			  let service2 = this.$store.state.service;
@@ -75,18 +89,18 @@ const service={
 			  });
 			  return service1;
 		  },
-		  serviceList(){
+		  serviceList:function(){
 			  return this.$store.state.serviceList;
 		  }
 	  },
 
 	methods:{
-		showUser(name,index){
+		showUser:function(name,index){
 		   	store.commit('removeUser',{id:index});
 			
 		},
 		
-		select(res){
+		select:function(res){
 			let id=	this.$route.params.id;
 			res.customer = id;
 		   	store.commit('addUser',{id:res});
@@ -106,7 +120,7 @@ const content={
 					}; 
 		  },
 			watch:{
-				'$route'(to,from){
+				'$route':function(to,from){
 					let customerId=	this.$route.params.id;
 					this.userName=this.$route.query.name;
 						showMsg(customerId);
@@ -122,7 +136,7 @@ const content={
 		  },
 
 		methods:{
-				send(){
+				send:function(){
 					let customerId=	this.$route.params.id;
 					stompClient.send('/app/chatASendMessage', {}, JSON.stringify({
 						'message' : this.sentence,
@@ -158,14 +172,14 @@ const router = new VueRouter({
 
 
 new Vue({
-	  store,
-	  router,
+	  store:store,
+	  router:router,
 	  el:'#main',
 	});
 
 
 
-function connect() {
+function connect1() {
 	var socket = new SockJS('/csm/ws');
 	stompClient = Stomp.over(socket);
 	var headers = {

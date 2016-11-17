@@ -11,6 +11,8 @@
 <script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/lib/polyfill.js"></script>
+
 <link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
 <link href="${ctx}/static/css/adminChat.css" rel="stylesheet">
 <script src="${ctx}/static/js/lib/sockjs.js"></script>
@@ -53,16 +55,10 @@
 	<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
 	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/chatAdminFunction.js"></script>
-	<script>
+	<script type=text/javascript >
 		userId = "<shiro:principal property="id" />";
 		username = "<shiro:principal property="username" />"
-		$(document).ready(function() {
-			connect();
-			router.push({
-				name : 'home'
-			});
 
-		});
 	</script>
 	<!------------------ template------------------- -->
 	<template id="customer">

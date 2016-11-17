@@ -11,32 +11,47 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
 <link href="${ctx}/static/css/chat.css" rel="stylesheet">
+<script src="${ctx}/static/js/lib/jquery.js"></script>
+<script src="${ctx}/static/js/lib/bootstrap.js"></script>
+<script src="${ctx}/static/js/lib/jquery.slidereveal.min.js"></script>
 <script src="${ctx}/static/js/lib/sockjs.js"></script>
 <script src="${ctx}/static/js/lib/stomp.js"></script>
 
 </head>
+
+<script type="text/javascript">
+	$(function() {
+
+		$('#slider').slideReveal({
+			trigger : $("#trigger"),
+			position : "right",
+			push : false,
+			width : 640,
+			top : 200
+		});
+	});
+</script>
 <body>
 
+	<div id="slider" class="slider">
+		<div id="main" class="container" style="width: 630px; height: 740px;">
+			<div id="sentence" class="well"
+				style="width: 600px; height: 600px; overflow-y: auto; overflow-x: hidden; background-color: #ebebeb; margin-top: 5px">
+			</div>
+			<div class="well" style="width: 600px; height: 100px; background-color: #dddcd9; margin: auto;">
 
-	<div id="main" class="container" style="width: 630px; height: 740px;">
-		<div id="sentence" class="well"
-			style="width: 600px; height: 600px; overflow-y: auto; overflow-x: hidden; background-color: #ebebeb; margin-top: 5px">
+				<form class="form-inline">
+					<div class="form-group">
+						<input type="text" id="message" class="form-control" placeholder="Your message here..." style="width: 480px;">
+					</div>
+					<button id="send" class="btn btn-default" type="submit" onclick="sendMessage()">Send</button>
+				</form>
+
+				<!-- /input-group -->
+			</div>
 		</div>
-		<div class="well" style="width: 600px; height: 100px; background-color: #dddcd9; margin: auto;">
-
-			<form class="form-inline">
-				<div class="form-group">
-					<input type="text" id="message" class="form-control" placeholder="Your message here..." style="width: 480px;">
-				</div>
-				<button id="send" class="btn btn-default" type="submit" onclick="sendMessage()">Send</button>
-			</form>
-
-			<!-- /input-group -->
-		</div>
-
 	</div>
-	<script src="${ctx}/static/js/lib/jquery.js"></script>
-	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
+	<button id="trigger" class="trigger">try</button>
 	<script type="text/javascript" src="${ctx}/static/js/chatFunction.js"></script>
 	<script type="text/javascript">
 		userId = "<shiro:principal property="id" />";

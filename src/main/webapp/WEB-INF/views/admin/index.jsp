@@ -13,6 +13,7 @@
 <script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/lib/polyfill.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
 </head>
 
@@ -70,7 +71,8 @@
 	<template id="category">
 	<div id="admin_sidebar">
 		<h3>Categories</h3>
-		<template v-for="n in list"> <input type="radio" name="id" :value="n.id" v-model="picked">{{n.name}}</input>
+		<template v-for="n in list"> 
+		<input type="radio" name="id" :value="n.id" v-model="picked"/>{{n.name}}
 		<br>
 		</template>
 		<div id="router">
@@ -85,10 +87,14 @@
 
 	<template id="addNew">
 	<div>
-		NAME:<br> <input type=text name='name' size='75' v-model='name'></input><br> DESCRIPTION:<br>
+		NAME:<br> 
+		<input type=text name='name' size='75' v-model='name'/>
+		<br> DESCRIPTION:<br>
 		<textarea name='describe' rows='4' cols='58' v-model='describe'></textarea>
-		<br> <input type='button' value='submit' v-on:click='addNew()'></input> <input type='button' value='cancel'
-			v-on:click='reset()'></input>
+		<br> 
+		<input type='button' value='submit' v-on:click='addNew()'/>
+		 <input type='button' value='cancel'
+			v-on:click='reset()'/>
 	</div>
 	</template>
 
@@ -98,7 +104,11 @@
 	<div id="admin_sidebar">
 		<h3>Categories</h3>
 		<ul id="adminCategory">
-			<li v-for="n in list"><router-link :to="{name: 'showFaqList', params: { id: n.id }}">{{n.name}}</router-link></li>
+			<li v-for="n in list">
+			<router-link :to="{name: 'showFaqList', params: { id: n.id }}">
+			{{n.name}}
+			</router-link>
+			</li>
 		</ul>
 	</div>
 	</template>
@@ -120,8 +130,8 @@
 		<textarea name='answer' rows='8' cols='75' v-model='answer'></textarea>		
 		<br> Upload File: <input type='file' name='uploadFile' multiple='multiple' v-on:change='showUploadFile()' /> <br>
 		<textarea name='attachments' rows='3' cols='75' disabled='disabled' v-model='attachements'></textarea>
-		<br> <input type='button' value='submit' v-on:click='faqAddNew()'></input> <input type='button' value='cancel'
-			v-on:click='faqCancel()'></input>
+		<br> <input type='button' value='submit' v-on:click='faqAddNew()'/> 
+		<input type='button' value='cancel'	v-on:click='faqCancel()'/>
 	</div>
 	</template>
 
@@ -138,14 +148,14 @@
 		</p>		
 		<template v-for='attachment in attachments'  >
 			<input type='checkbox' :checked='checked' name='attach' :value='attachment' 
-			v-model='attach' v-show="attachments.length === 0?false:true">{{attachment}} </input>  
+			v-model='attach' v-show="attachments.length === 0?false:true"/>{{attachment}}   
 		</template>
 		 <br><br>
 		Upload File: <input type='file' name='uploadFile' multiple='multiple' v-on:change='showUploadFile()' /><br>
 		<textarea name='attachments1' rows='3' cols='75' disabled='disabled' v-model='attachements1'></textarea> <br>
-		<input type='button' value='submit' v-on:click='adminFaqPut()'></input>
-		<input type='button' value='Delete' v-on:click='adminFaqDelete()'></input> 
-		<input type='button' value='cancel' v-on:click='faqCancel()'></input>
+		<input type='button' value='submit' v-on:click='adminFaqPut()'/>
+		<input type='button' value='Delete' v-on:click='adminFaqDelete()'/> 
+		<input type='button' value='cancel' v-on:click='faqCancel()'/>
 	</div>
 	</template>
 	 

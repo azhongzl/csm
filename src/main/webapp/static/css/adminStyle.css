@@ -532,3 +532,6 @@ input[type="radio"] {
   font-size: 16px;
   top: 30px;
 }
+template{
+    display: none;
+}
