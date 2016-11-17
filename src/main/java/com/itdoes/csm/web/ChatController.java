@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.collect.Lists;
+import com.itdoes.common.core.Result;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.common.core.util.Collections3;
+import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.dto.ChatUser;
 import com.itdoes.csm.entity.CsmChatMessage;
@@ -51,8 +53,8 @@ public class ChatController {
 
 	@RequestMapping("/admin/chat/hasUnhandledCustomer")
 	@ResponseBody
-	public boolean hasUnhandledCustomer() {
-		return chatService.hasUnhandledCustomer();
+	public Result hasUnhandledCustomer() {
+		return HttpResults.success(chatService.hasUnhandledCustomer());
 	}
 
 	@RequestMapping("/jalenChat")
