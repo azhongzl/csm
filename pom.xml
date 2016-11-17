@@ -361,7 +361,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>refreshDbWithTest</id>
+			<id>refreshDbWithTestData</id>
 			<build>
 				<plugins>
 					<plugin>
