@@ -12,7 +12,9 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.collect.Lists;
@@ -47,7 +49,10 @@ public class ChatController {
 	}
 
 	@RequestMapping("/admin/chat/icon")
-	public String adminChatIcon() {
+	public String adminChatIcon(@RequestParam(value = "iconWidth", defaultValue = "-1") int iconWidth,
+			@RequestParam(value = "iconHeight", defaultValue = "-1") int iconHeight, Model model) {
+		model.addAttribute("iconWidth", iconWidth);
+		model.addAttribute("iconHeight", iconHeight);
 		return "admin/chatIcon";
 	}
 
