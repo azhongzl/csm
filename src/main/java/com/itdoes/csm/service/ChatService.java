@@ -56,7 +56,7 @@ public class ChatService {
 	private EntityDbService dbService;
 
 	@Autowired
-	private UserStoreService userStoreService;
+	private UserService userService;
 
 	@Autowired
 	private ChatOnlineService onlineService;
@@ -71,10 +71,10 @@ public class ChatService {
 	}
 
 	public List<ChatUser> getCustomerList() {
-		final Set<String> customerIdSet = userStoreService.getCustomerIdSet();
+		final Set<String> customerIdSet = userService.getCustomerIdSet();
 		final List<ChatUser> customerList = Lists.newArrayListWithCapacity(customerIdSet.size());
 		for (String customerId : customerIdSet) {
-			final ChatUser chatUser = ChatUser.valueOf(userStoreService.getUser(customerId));
+			final ChatUser chatUser = ChatUser.valueOf(userService.getUser(customerId));
 			chatUser.setOnline(onlineService.isOnlineUser(customerId));
 			chatUser.setUnhandled(unhandledCustomerMap.containsKey(customerId));
 			customerList.add(chatUser);
@@ -110,7 +110,7 @@ public class ChatService {
 			final CsmChatMessage message = dbMessageList.get(i);
 
 			final String senderName;
-			final CsmUser user = userStoreService.getUser(message.getSenderId().toString());
+			final CsmUser user = userService.getUser(message.getSenderId().toString());
 			if (user == null) {
 				senderName = "Unknown";
 			} else {
