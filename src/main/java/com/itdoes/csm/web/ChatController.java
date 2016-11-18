@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -51,9 +53,18 @@ public class ChatController {
 	@RequestMapping("/admin/chat/icon")
 	public String adminChatIcon(@RequestParam(value = "iconWidth", defaultValue = "-1") int iconWidth,
 			@RequestParam(value = "iconHeight", defaultValue = "-1") int iconHeight, Model model) {
-		model.addAttribute("iconWidth", iconWidth);
-		model.addAttribute("iconHeight", iconHeight);
-		return "admin/chatIcon";
+		final Subject subject = SecurityUtils.getSubject();
+		if (subject.isRemembered() || subject.isAuthenticated()) {
+			if (iconWidth >= 0) {
+				model.addAttribute("iconWidth", iconWidth);
+			}
+			if (iconHeight >= 0) {
+				model.addAttribute("iconHeight", iconHeight);
+			}
+			return "admin/chatIcon";
+		} else {
+			return "loginAtBlank";
+		}
 	}
 
 	@RequestMapping("/admin/chat")
