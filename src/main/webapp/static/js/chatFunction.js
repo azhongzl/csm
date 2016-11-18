@@ -37,17 +37,20 @@ function showMessages(messageList) {
 }
 
 function showMessage(message) {
+	var timeStr="";
+	var num=message.createDateTime.indexOf("T");
+	timeStr=message.createDateTime.substring(0,num)+" "+message.createDateTime.substring(num+1,19);
 	if (message.fromAdmin) {
 		$("#sentence").append(
 				"<p class='user1 left'>" + message.senderName + "</p></br>"
 						+ "<p class='speech1 left'>" + message.message
-						+ "&nbsp;&nbsp;&nbsp;&nbsp;" + message.createDateTime
+						+ "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr
 						+ "</p><hr>");
 	} else {
 		$("#sentence").append(
 				"<p class='user2 right'>" + message.senderName + "</p></br>"
 						+ "<p class='speech2 right'>" + message.message
-						+ "&nbsp;&nbsp;&nbsp;&nbsp;" + message.createDateTime
+						+ "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr
 						+ "</p><hr>");
 	}
 }
