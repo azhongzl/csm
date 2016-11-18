@@ -1,20 +1,16 @@
 
 var stompClient = null;
 var subscribeList ;
-// $(document).ready(function() {
-// connect1();
-// router.push({
-// name : 'home'
-// });
-//
-// });
-
 
 $(function() {
+
 	connect1();
+
 	router.push({
 			name : 'home'
 		});
+
+
 });
 const store = new Vuex.Store({
 	  state: {
@@ -43,11 +39,7 @@ const store = new Vuex.Store({
 			  removeUser:function(state,payload) {
 		    	state.service.splice(payload.id,1);
 			    },
-			 closeChat:function(state,payload) {
-			    state.customers.splice(payload.index,1);
-			    
-  
-				    },
+
 	  }
 	});
 
@@ -62,10 +54,7 @@ const customer={
 	  },
 
 	methods:{
-		closeChat:function(index,name){	
-			router.push({name: 'home'});
-			store.commit('closeChat',{index:index,name:name});
-		}
+
 	}
 	};
 
@@ -151,16 +140,15 @@ const content={
 
 
 const router = new VueRouter({
-	  mode: 'history',
+	
 	  routes: [
-		 	{ path: '/csm/admin/chat/home', 
-			    	name : 'home',
+		 	{ path: '/home', 
+			    	name :'home',
 					components:{
-					   	customer : customer,
-
+					 customer : customer,
 					        	},
 			},
-		 	{ path: '/csm/admin/chat/content:id', 
+		 	{ path: '/content:id', 
 		    	name : 'content',
 				components:{
 				   	customer : customer,
@@ -192,6 +180,7 @@ function connect1() {
 		subscribeList = [];
 		stompClient.subscribe('/app/chatAInit', function(message) {
 			showCustomerSet(JSON.parse(message.body));
+
 		});
 		stompClient.subscribe('/topic/chat/login', function(message) {
 			showOnlineCustomer(JSON.parse(message.body));
@@ -212,7 +201,6 @@ function connect1() {
 function showCustomerSet(customerSet) {
 	for (var i = 0; i < customerSet.length; i++) {
 		showCustomer(customerSet[i]);
-		
 	}
 }
 
