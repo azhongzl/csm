@@ -110,6 +110,7 @@ const modify = {
 			var id = this.$route.query.id;
 			if (id.trim().length !== 0) {
 				var url1 = url + "CsmFaqCategory" + "/get/" + id;
+				alert(url1);
 				var checkResult1 = ajaxGet(url1);
 
 				if (checkResult1.description == undefined) {
@@ -243,7 +244,9 @@ const faqModify = {
 		},
 		created:function(){
 			var id=this.$route.params.id;
+
 			var url1 = url + "CsmFaq" + "/get/" + id;
+
 			var checkResult1 = ajaxGet(url1);
 			if (checkResult1.attachments !== undefined) {
             	this.attachments = checkResult1.attachments.split(",");
@@ -473,52 +476,51 @@ const pageChange = {
 
 
 const router = new VueRouter({
-  mode: 'history',
 	routes: [
 	         
-	 	{ path: '/csm/admin//', 
+	 	{ path: '/', 
 		    	name : 'home',
 			    	},
 	
-		{ path: '/csm/admin/FaqAddNew',
+		{ path: '/FaqAddNew',
 			 	name : 'faqAddNew',
 				components:{
 			   	default : faq,
 			   	content : faqAddNew
 			        	},
 			 },
-	    { path: '/csm/admin/Category',
+	    { path: '/Category',
 		    	name : 'category',
 		    	components:{
 	        	default : category
 	        	},
 	    },
-	    { path: '/csm/admin/addNew', 
+	    { path: '/addNew', 
 	    	name : 'addNew',
 	    	components:{
 	    		default: category,
 		    	content : addNew},
 		    },
-		{ path: '/csm/admin/del', 				    	
+		{ path: '/del', 				    	
 		name : 'categoryDelete',
 		components:{
  		    default: category,
 			content : categoryDelete},
 		    },
 
-		{ path: '/csm/admin/modify',
+		{ path: '/modify',
 		    	name : 'modify',
 		    	components:{
 	    		default: category,
 		    	content : modify},
 		    },
-		    { path: '/csm/admin/Faq', 
+		    { path: '/Faq', 
 		    	name : 'faq1',
 		    	components:{
 		    		 default: faq,
 		      	    	}
 			    	},
-			{ path: '/csm/admin/showFaqList:id',
+			{ path: '/showFaqList:id',
 		    	name : 'showFaqList',
 		    	components:{
 	    			default: faq,
@@ -528,14 +530,14 @@ const router = new VueRouter({
 			},
 	 
 		    
-			{ path: '/csm/admin/FaqModify',
+			{ path: '/FaqModify:id',
 				name : 'faqModify',
 				components:{
 				default : faq,
 				content : faqModify
 				     	},
 			 },
-				{ path: '/csm/admin/pageChange',
+				{ path: '/pageChange',
 					name : 'pageChange',
 					components:{
 						pagecount:pageChange
@@ -544,6 +546,7 @@ const router = new VueRouter({
 	  ],
 	  
 	})
+
 
 new Vue({
 	  store:store,

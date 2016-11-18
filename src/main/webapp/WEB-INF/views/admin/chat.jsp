@@ -9,9 +9,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
-<script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/polyfill.js"></script>
+
 
 <link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
 <link href="${ctx}/static/css/adminChat.css" rel="stylesheet">
@@ -52,14 +52,8 @@
 		</div>
 
 	</div>
-	<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
-	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
-	<script type="text/javascript" src="${ctx}/static/js/chatAdminFunction.js"></script>
-	<script type=text/javascript >
-		userId = "<shiro:principal property="id" />";
-		username = "<shiro:principal property="username" />"
 
-	</script>
+
 	<!------------------ template------------------- -->
 	<template id="customer">
 	<div class="list-group" style="height: 250px; overflow: auto">
@@ -103,7 +97,14 @@
 	</div>
 	</template>
 
-
 	<!------------------ template------------------- -->
+	<script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
+	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/chatAdminFunction.js"></script>
+	<script type=text/javascript>
+		userId = "<shiro:principal property="id" />";
+		username = "<shiro:principal property="username" />"
+	</script>
 </body>
 </html>
