@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ page import="org.apache.shiro.web.filter.authc.FormAuthenticationFilter"%>
-<%@ page import="org.apache.shiro.authc.LockedAccountException "%>
-
+<%@ page import="com.itdoes.common.core.shiro.Shiros"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <html>
@@ -14,10 +13,10 @@
 	<h1>登录页</h1>
 	<form id="loginForm" action="${ctx}/login" method="post">
 		<%
-			String successUrl = request.getParameter("successUrl");
+			String successUrl = (String) request.getAttribute(Shiros.SUCCESS_URL_KEY);
 			if (successUrl != null) {
 		%>
-		<input type="hidden" id="successUrl" name="successUrl" value="<%=successUrl%>" />
+		<input type="hidden" id="successUrl" name="successUrl" value="${successUrl}" />
 		<%
 			}
 		%>
