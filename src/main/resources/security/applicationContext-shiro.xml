@@ -31,7 +31,8 @@
 				/login = authc
 				/logout = logout
 				/ = anon
-				/admin = user
+				/admin/chat/icon = anon
+				/admin/** = user
 				/static/** = anon
 				/uploads/** = anon
 				/search/createIndex = perms["itdoes:search:createIndex"]

@@ -554,7 +554,13 @@ new Vue({
 	  el:'#main',
 	})
 
-
+function handleError(xhr){
+	if(xhr.status == 499){
+		window.location.replace("/csm" + xhr.statusText);
+	}else{
+		alert(" error： " + xhr.status + " " + xhr.statusText);
+	}
+}
 
 function ajaxFind(checkKey, url1) {
 	var checkList = [];
@@ -572,9 +578,7 @@ function ajaxFind(checkKey, url1) {
 			}
 		},
 		timeout : 3000,
-		error : function(xhr) {
-			alert(" error： " + xhr.status + " " + xhr.statusText);
-		},
+		error : handleError,
 	});
 	return (checkList);
 }
