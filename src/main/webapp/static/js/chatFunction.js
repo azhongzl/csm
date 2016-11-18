@@ -1,7 +1,5 @@
 var stompClient = null;
-
 $(document).ready(function() {
-	alert();
 	connect();
 });
 
@@ -22,10 +20,12 @@ function connect() {
 }
 
 function sendMessage() {
+	if($("#message").val().length>0){
 	stompClient.send('/app/chatCSendMessage', {}, JSON.stringify({
 		'message' : $("#message").val()
 	}));
 	$("#message").val("");
+	}
 }
 
 function showMessages(messageList) {

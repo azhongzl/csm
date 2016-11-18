@@ -1,13 +1,13 @@
 
 var stompClient = null;
 var subscribeList ;
-//$(document).ready(function() {
-//	connect1();
-//router.push({
-//		name : 'home'
-//	});
+// $(document).ready(function() {
+// connect1();
+// router.push({
+// name : 'home'
+// });
 //
-//});
+// });
 
 
 $(function() {
@@ -137,12 +137,14 @@ const content={
 
 		methods:{
 				send:function(){
-					let customerId=	this.$route.params.id;
-					stompClient.send('/app/chatASendMessage', {}, JSON.stringify({
-						'message' : this.sentence,
-						'roomId' : customerId,
-					}));
-					this.sentence="";
+					if(this.sentence.length>0){
+						let customerId=	this.$route.params.id;
+						stompClient.send('/app/chatASendMessage', {}, JSON.stringify({
+							'message' : this.sentence,
+							'roomId' : customerId,
+						}));
+						this.sentence="";
+					}
 			}
 		  }
 		};
