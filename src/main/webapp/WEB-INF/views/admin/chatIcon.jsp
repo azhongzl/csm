@@ -19,7 +19,6 @@
 window.setInterval(check, 3000)
 
 function check(){
-	var flash;
 	$.ajax({
 		type : "GET",
 		url : "http://localhost:8080/csm/admin/chat/hasUnhandledCustomer",
