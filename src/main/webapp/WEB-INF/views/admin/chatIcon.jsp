@@ -12,47 +12,47 @@
 		<a id="chatLink" href="${ctx}/admin/chat" target="_blank"><img id="imgId" src="${ctx}/static/images/002.png"
 			width="${iconWidth == null ? 20 : iconWidth}" height="${iconHeight == null ? 20 : iconHeight}" alt="Chat Icon" /></a>
 	</div>
-</body>
-<script type="text/javascript">
-	var timer = window.setInterval(check, 3000);
+	<script type="text/javascript">
+		var timer = window.setInterval(check, 3000);
 
-	function check() {
-		$.ajax({
-			type : "GET",
-			url : "${ctx}/admin/chat/hasUnhandledCustomer",
-			async : false,
-			success : function(result) {
-				if (result.data) {
-					setImg("001.gif");
-				} else {
-					setImg("002.png");
-				}
-			},
-			timeout : 3000,
-			error : handleError,
-		});
-	}
-
-	function handleError(xhr) {
-		if (xhr.status == 499) {
-			window.clearInterval(timer);
-
-			$("#chatLink").removeAttr("href");
-			setImg("002.png");
-
-			window
-					.open(
-							'${ctx}/login?username=${username}&successUrl=/loginRefresh',
-							'_blank');
-		} else {
-			alert(" error: " + xhr.status + " " + xhr.statusText);
+		function check() {
+			$.ajax({
+				type : "GET",
+				url : "${ctx}/admin/chat/hasUnhandledCustomer",
+				async : false,
+				success : function(result) {
+					if (result.data) {
+						setImg("001.gif");
+					} else {
+						setImg("002.png");
+					}
+				},
+				timeout : 3000,
+				error : handleError,
+			});
 		}
-	}
 
-	function setImg(img) {
-		$("#imgId").attr({
-			src : "${ctx}/static/images/" + img
-		});
-	}
-</script>
+		function handleError(xhr) {
+			if (xhr.status == 499) {
+				window.clearInterval(timer);
+
+				$("#chatLink").removeAttr("href");
+				setImg("002.png");
+
+				window
+						.open(
+								'${ctx}/login?username=${username}&successUrl=/loginRefresh',
+								'_blank');
+			} else {
+				alert(" error: " + xhr.status + " " + xhr.statusText);
+			}
+		}
+
+		function setImg(img) {
+			$("#imgId").attr({
+				src : "${ctx}/static/images/" + img
+			});
+		}
+	</script>
+</body>
 </html>
