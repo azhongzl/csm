@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
@@ -46,7 +45,7 @@
 							'${ctx}/login?username=${username}&successUrl=/loginRefresh',
 							'_blank');
 		} else {
-			alert(" error： " + xhr.status + " " + xhr.statusText);
+			alert(" error: " + xhr.status + " " + xhr.statusText);
 		}
 	}
 
