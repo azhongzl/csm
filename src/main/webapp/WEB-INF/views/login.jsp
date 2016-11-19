@@ -51,8 +51,8 @@
 		</div>
 		<div class="control-group">
 			<div class="controls">
-				<label class="checkbox inline" for="rememberMe"> <input type="checkbox" id="rememberMe" name="rememberMe" />
-					记住我
+				<label class="checkbox inline" for="rememberMe"> <input type="checkbox" id="rememberMe" name="rememberMe"
+					checked /> 记住我
 				</label> <input id="submit_btn" class="btn" type="submit" value="登录" />
 				<p class="help-block">
 					(管理员：<b>admin/admin</b>, 普通用户：<b>user/user</b>)
