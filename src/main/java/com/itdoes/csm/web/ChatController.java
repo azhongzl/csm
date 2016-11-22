@@ -94,8 +94,8 @@ public class ChatController {
 	}
 
 	@SubscribeMapping("/chatAInitMessage/{roomId}")
-	public List<CsmChatMessage> chatAInitMessage(@DestinationVariable String roomId) {
-		return chatService.adminInitMessage(roomId);
+	public List<CsmChatMessage> chatAInitMessage(@DestinationVariable String roomId, Principal principal) {
+		return chatService.adminInitMessage(roomId, principal);
 	}
 
 	@MessageMapping("/chatASendMessage")

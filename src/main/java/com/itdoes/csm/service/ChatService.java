@@ -42,6 +42,8 @@ import com.itdoes.csm.entity.CsmUser;
  */
 @Service
 public class ChatService extends BaseService {
+	public static final String CUSTOMER_SERVICE_NAME = "Customer Service";
+
 	public static final int MESSAGE_PAGE_SIZE = 10;
 
 	private static final PageRequest MESSAGE_PAGE_REQUEST = new PageRequest(0, MESSAGE_PAGE_SIZE,
@@ -80,13 +82,13 @@ public class ChatService extends BaseService {
 	public List<CsmChatMessage> customerInitMessage(Principal principal) {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
 		final String userId = shiroUser.getId();
-		List<CsmChatMessage> messageList = adminInitMessage(userId);
+		List<CsmChatMessage> messageList = initMessage(userId, principal, false);
 		if (Collections3.isEmpty(messageList)) {
 			messageList = Lists.newArrayListWithCapacity(1);
 		}
 
 		final CsmChatMessage message = new CsmChatMessage();
-		message.setSenderName("Customer Service");
+		message.setSenderName(CUSTOMER_SERVICE_NAME);
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setMessage("Welcome, " + shiroUser.getUsername() + "! Our agent will contact you soon. Please wait...");
 		message.setFromAdmin(true);
@@ -126,27 +128,8 @@ public class ChatService extends BaseService {
 		return customerList;
 	}
 
-	public List<CsmChatMessage> adminInitMessage(String roomId) {
-		final List<CsmChatMessage> dbMessageList = getChatMessageListFromDb(roomId);
-		if (Collections3.isEmpty(dbMessageList)) {
-			return Collections.emptyList();
-		}
-
-		final List<CsmChatMessage> messageList = Lists.newArrayListWithCapacity(dbMessageList.size());
-		for (int i = dbMessageList.size() - 1; i >= 0; i--) {
-			final CsmChatMessage message = dbMessageList.get(i);
-
-			final String senderName;
-			final CsmUser user = userCacheService.getUser(message.getSenderId().toString());
-			if (user == null) {
-				senderName = "Unknown";
-			} else {
-				senderName = user.getUsername();
-			}
-			message.setSenderName(senderName);
-			messageList.add(message);
-		}
-		return messageList;
+	public List<CsmChatMessage> adminInitMessage(String roomId, Principal principal) {
+		return initMessage(roomId, principal, true);
 	}
 
 	public void adminSendMessage(CsmChatMessage message, Principal principal, SimpMessagingTemplate template) {
@@ -183,6 +166,34 @@ public class ChatService extends BaseService {
 
 	private void saveChatMessage(CsmChatMessage message) {
 		dbService.save(messagePair, message);
+	}
+
+	private List<CsmChatMessage> initMessage(String roomId, Principal principal, boolean forAdmin) {
+		final List<CsmChatMessage> dbMessageList = getChatMessageListFromDb(roomId);
+		if (Collections3.isEmpty(dbMessageList)) {
+			return Collections.emptyList();
+		}
+
+		final List<CsmChatMessage> messageList = Lists.newArrayListWithCapacity(dbMessageList.size());
+		for (int i = dbMessageList.size() - 1; i >= 0; i--) {
+			final CsmChatMessage message = dbMessageList.get(i);
+
+			final String senderId = message.getSenderId().toString();
+			final String senderName;
+			if (!forAdmin && !principal.getName().equals(senderId)) {
+				senderName = CUSTOMER_SERVICE_NAME;
+			} else {
+				final CsmUser user = userCacheService.getUser(senderId);
+				if (user == null) {
+					senderName = "Unknown";
+				} else {
+					senderName = user.getUsername();
+				}
+			}
+			message.setSenderName(senderName);
+			messageList.add(message);
+		}
+		return messageList;
 	}
 
 	private List<CsmChatMessage> getChatMessageListFromDb(String roomId) {
