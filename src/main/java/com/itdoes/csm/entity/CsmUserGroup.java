@@ -18,18 +18,22 @@ import com.itdoes.common.business.entity.EntityPermType;
  * @author Jalen Zhong
  */
 @Entity
-@Table(name = "csm_permission")
+@Table(name = "csm_user_group")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @EntityPerm(types = { EntityPermType.ALL })
-public class CsmPermission extends BaseEntity {
-	private static final long serialVersionUID = -1636844660L;
+public class CsmUserGroup extends BaseEntity {
+	private static final long serialVersionUID = 1943773207L;
 
 	@Id
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
-	@Column(name = "permission")
-	private String permission;
+	@Column(name = "name")
+	private String name;
+	@Column(name = "admin")
+	private Boolean admin;
+	@Column(name = "super_id")
+	private String superId;
 
 	public java.util.UUID getId() {
 		return id;
@@ -39,11 +43,27 @@ public class CsmPermission extends BaseEntity {
 		this.id = id;
 	}
 
-	public String getPermission() {
-		return permission;
+	public String getName() {
+		return name;
 	}
 
-	public void setPermission(String permission) {
-		this.permission = permission;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Boolean admin) {
+		this.admin = admin;
+	}
+
+	public String getSuperId() {
+		return superId;
+	}
+
+	public void setSuperId(String superId) {
+		this.superId = superId;
 	}
 }

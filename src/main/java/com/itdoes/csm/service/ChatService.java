@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
+import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
@@ -34,7 +35,7 @@ import com.itdoes.csm.entity.CsmUser;
  * @author Jalen Zhong
  */
 @Service
-public class ChatService {
+public class ChatService extends BaseService {
 	public static final int MESSAGE_PAGE_SIZE = 10;
 
 	private static final PageRequest MESSAGE_PAGE_REQUEST = new PageRequest(0, MESSAGE_PAGE_SIZE,

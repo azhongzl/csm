@@ -18,18 +18,18 @@ import com.itdoes.common.business.entity.EntityPermType;
  * @author Jalen Zhong
  */
 @Entity
-@Table(name = "csm_user_role")
+@Table(name = "csm_user_group_role")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @EntityPerm(types = { EntityPermType.ALL })
-public class CsmUserRole extends BaseEntity {
-	private static final long serialVersionUID = -906804258L;
+public class CsmUserGroupRole extends BaseEntity {
+	private static final long serialVersionUID = -562646739L;
 
 	@Id
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
-	@Column(name = "user_id")
-	private java.util.UUID userId;
+	@Column(name = "user_group_id")
+	private java.util.UUID userGroupId;
 	@Column(name = "role_id")
 	private java.util.UUID roleId;
 
@@ -41,12 +41,12 @@ public class CsmUserRole extends BaseEntity {
 		this.id = id;
 	}
 
-	public java.util.UUID getUserId() {
-		return userId;
+	public java.util.UUID getUserGroupId() {
+		return userGroupId;
 	}
 
-	public void setUserId(java.util.UUID userId) {
-		this.userId = userId;
+	public void setUserGroupId(java.util.UUID userGroupId) {
+		this.userGroupId = userGroupId;
 	}
 
 	public java.util.UUID getRoleId() {

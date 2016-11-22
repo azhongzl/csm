@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.itdoes.common.business.service.BaseService;
 import com.itdoes.csm.dto.ChatEvent;
 
 /**
  * @author Jalen Zhong
  */
 @Service
-public class ChatOnlineService {
+public class ChatOnlineService extends BaseService {
 	private final Map<String, ChatEvent> onlineSessionMap = Maps.newConcurrentMap();
 	private final Set<String> onlineUserIdSet = Sets.newConcurrentHashSet();
 

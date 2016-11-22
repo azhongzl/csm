@@ -68,7 +68,7 @@ public class CsmChatMessage extends BaseEntity {
 		this.createDateTime = createDateTime;
 	}
 
-	public Boolean getFromAdmin() {
+	public Boolean isFromAdmin() {
 		return fromAdmin;
 	}
 

@@ -67,7 +67,7 @@ public class CsmFaqCategory extends BaseEntity {
 		this.description = description;
 	}
 
-	public Boolean getActive() {
+	public Boolean isActive() {
 		return active;
 	}
 
