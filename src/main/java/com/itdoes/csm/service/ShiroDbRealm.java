@@ -50,7 +50,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	protected AuthenticationInfo doAuthentication(UsernamePasswordToken token) throws AuthenticationException {
 		final String username = token.getUsername();
 		final CsmUser user = findUser(username);
-		if (user == null) {
+		if (user == null || !user.isActive()) {
 			return null;
 		}
 
