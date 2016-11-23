@@ -9,9 +9,8 @@ $(function() {
 	router.push({
 			name : 'home'
 		});
-
-
 });
+
 const store = new Vuex.Store({
 	  state: {
 		  customers:[ ],
@@ -29,8 +28,6 @@ const store = new Vuex.Store({
 				   	 { name:'service group8',department:'IT',custormer:""},
 			   	 
 				   ],
-		   		  
-		   		  
 	  },
 	  mutations: {
 			  addUser:function(state,payload) {
@@ -39,10 +36,8 @@ const store = new Vuex.Store({
 			  removeUser:function(state,payload) {
 		    	state.service.splice(payload.id,1);
 			    },
-
-	  }
+	  			}
 	});
-
 
 
 const customer={
@@ -82,18 +77,15 @@ const service={
 			  return this.$store.state.serviceList;
 		  }
 	  },
-
 	methods:{
 		showUser:function(name,index){
-		   	store.commit('removeUser',{id:index});
+			store.commit('removeUser',{id:index});
 			
 		},
-		
 		select:function(res){
 			let id=	this.$route.params.id;
 			res.customer = id;
 		   	store.commit('addUser',{id:res});
-
 		},
 		
 		}
@@ -121,7 +113,6 @@ const content={
 				showMsg(customerId);
 			},
 		  computed:{
-			  
 		  },
 
 		methods:{
@@ -140,15 +131,15 @@ const content={
 
 
 const router = new VueRouter({
-	
+
 	  routes: [
-		 	{ path: '/home', 
+		 	{ path: '/csm/admin/chat/home', 
 			    	name :'home',
 					components:{
 					 customer : customer,
 					        	},
 			},
-		 	{ path: '/content:id', 
+		 	{ path: '/csm/admin/chat/content:id', 
 		    	name : 'content',
 				components:{
 				   	customer : customer,
@@ -167,8 +158,6 @@ new Vue({
 	  el:'#main',
 	});
 
-
-
 function connect1() {
 	var socket = new SockJS('/csm/ws');
 	stompClient = Stomp.over(socket);
@@ -180,7 +169,6 @@ function connect1() {
 		subscribeList = [];
 		stompClient.subscribe('/app/chatAInit', function(message) {
 			showCustomerSet(JSON.parse(message.body));
-
 		});
 		stompClient.subscribe('/topic/chat/login', function(message) {
 			showOnlineCustomer(JSON.parse(message.body));
@@ -269,9 +257,7 @@ function showMessages(messageList) {
 	for (var i = 0; i < messageList.length; i++) {
 		showMessage(messageList[i]);
 	}
-
     document.getElementById ( 'sentence').scrollTop=document.getElementById ( 'sentence').scrollHeight ;  
- 
 }
 
 function showMessage(message) {

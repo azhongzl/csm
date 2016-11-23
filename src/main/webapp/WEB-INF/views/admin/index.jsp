@@ -49,7 +49,7 @@
 			</div>
 		</div>
 		<div id="scroll">
-			<a title="Scroll to the top" class="top" href="#"><img src="${ctx}/static/images/top.png" alt="top" /></a>
+			<a title="Scroll to the top" class="top" href="javascript:void(0)"><img src="${ctx}/static/images/top.png" alt="top" /></a>
 		</div>
 		<footer>
 			<p>

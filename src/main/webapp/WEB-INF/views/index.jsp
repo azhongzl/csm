@@ -32,7 +32,7 @@
 				<div class="sidebar">
 					<h3>Categories</h3>
 					<ul id="Category">
-						<li v-for="category in categorys"><a href="#" v-on:click="showCategoryDetail(category.id)">{{category.name }}</a></li>
+						<li v-for="category in categorys"><a href="javascript:void(0)" v-on:click="showCategoryDetail(category.id)">{{category.name }}</a></li>
 					</ul>
 				</div>
 			</div>
@@ -40,15 +40,15 @@
 				<my-faqs :faqs='faqs' :answer-key='answerKey' v-for="faq in faqs" :faq='faq'></my-faqs>
 			</div>
 			<div id="pagecount" v-show="showKey">
-				<span><a href="#" v-on:click="changePage(1)">  &laquo; </a></span> <span><a href="#"
+				<span><a href="javascript:void(0)" v-on:click="changePage(1)">  &laquo; </a></span> <span><a href="javascript:void(0)"
 					v-on:click="changePage(curPage - 1)"> &lsaquo;</a></span> <span v-for="n in totalPage" :class="curPage === n ? 'current' : ''">
-					<a href="#" v-on:click="changePage(n)">{{ n}}</a>
-				</span> <span><a href="#" v-on:click="changePage(curPage + 1)">&rsaquo;</a></span> <span><a href="#"
+					<a href="javascript:void(0)" v-on:click="changePage(n)">{{ n}}</a>
+				</span> <span><a href="javascript:void(0)" v-on:click="changePage(curPage + 1)">&rsaquo;</a></span> <span><a href="javascript:void(0)"
 					v-on:click="changePage(totalPage)"> &raquo; </a></span>
 			</div>
 		</div>
 		<div id="scroll">
-			<a title="Scroll to the top" class="top" href="#"><img src="${ctx}/static/images/top.png" alt="top" /></a>
+			<a title="Scroll to the top" class="top" href="javascript:void(0)"><img src="${ctx}/static/images/top.png" alt="top" /></a>
 		</div>
 		<footer>
 			<p>

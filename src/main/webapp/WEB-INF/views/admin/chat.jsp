@@ -26,14 +26,14 @@
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<h2>KUZCOLIGHTING</h2>
 						<ul class="nav navbar-nav navbar-right" style="font-size: 15px">
-							<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">About<strong
+							<li class="dropdown"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">About<strong
 									class="caret"></strong></a>
 								<ul class="dropdown-menu">
-									<li><a href="#">managment</a></li>
-									<li><a href="#">about</a></li>
-									<li><a href="#">Logout</a></li>
+									<li><a href="javascript:void(0)">managment</a></li>
+									<li><a href="javascript:void(0)">about</a></li>
+									<li><a href="javascript:void(0)">Logout</a></li>
 									<li class="divider"></li>
-									<li><a href="#">about</a></li>
+									<li><a href="javascript:void(0)">about</a></li>
 								</ul></li>
 						</ul>
 					</div>
@@ -69,7 +69,7 @@
 	<div class="list-group" style="height: 360px; overflow-y: auto">
 		<ul class="list-group">
 			<li class="list-group-item" v-for="(user,index) in service"><span class="badge" style="background-color: blue;">online</span><a
-				href="#" v-on:click="showUser(user.name,index)">{{user.name}}</a></li>
+				href="javascript:void(0)" v-on:click="showUser(user.name,index)">{{user.name}}</a></li>
 		</ul>
 		<label for="name">Select service group</label><br> <select class="form-control" v-model="selected"
 			v-on:change="select(selected)">
