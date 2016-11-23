@@ -1,14 +1,3 @@
-drop table if exists csm_user;
-create table csm_user (
-	id binary(16) not null,
-	username varchar(100) not null,
-	password char(64) not null,
-	salt char(16) not null,
-	active bit not null,
-	user_group_id binary(16) not null,
-    primary key (id)
-) engine=InnoDB;
-
 drop table if exists csm_user_group;
 create table csm_user_group (
 	id binary(16) not null,
@@ -25,6 +14,13 @@ create table csm_role (
     primary key (id)
 ) engine=InnoDB;
 
+drop table if exists csm_permission;
+create table csm_permission (
+	id binary(16) not null,
+	permission varchar(100) not null,
+    primary key (id)
+) engine=InnoDB;
+
 drop table if exists csm_user_group_role;
 create table csm_user_group_role (
 	id binary(16) not null,
@@ -33,18 +29,22 @@ create table csm_user_group_role (
     primary key (id)
 ) engine=InnoDB;
 
-drop table if exists csm_permission;
-create table csm_permission (
-	id binary(16) not null,
-	permission varchar(100) not null,
-    primary key (id)
-) engine=InnoDB;
-
 drop table if exists csm_role_permission;
 create table csm_role_permission (
 	id binary(16) not null,
 	role_id binary(16) not null,
 	permission_id binary(16) not null,
+    primary key (id)
+) engine=InnoDB;
+
+drop table if exists csm_user;
+create table csm_user (
+	id binary(16) not null,
+	username varchar(100) not null,
+	password char(64) not null,
+	salt char(16) not null,
+	active bit not null,
+	user_group_id binary(16) not null,
     primary key (id)
 ) engine=InnoDB;
 
