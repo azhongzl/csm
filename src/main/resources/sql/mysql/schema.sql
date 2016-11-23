@@ -14,7 +14,7 @@ create table csm_user_group (
 	id binary(16) not null,
 	name varchar(100) not null,
 	admin bit not null,
-	super_id char(16),
+	super_id binary(16),
     primary key (id)
 ) engine=InnoDB;
 

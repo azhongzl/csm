@@ -2,6 +2,36 @@ insert into csm_user (id, username, password, salt, active, user_group_id) value
 insert into csm_user (id, username, password, salt, active, user_group_id) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), 'cust1', '1fbba1433812e09ca3ca25050d3e5bf3dd5a1739b82ae0293ecde54ec70ebbf7', '4124beff23b65c41', 1, unhex(replace('490aa897-d6ea-1034-a268-c6b53a0158b7','-','')));
 insert into csm_user (id, username, password, salt, active, user_group_id) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), 'cust2', '1fbba1433812e09ca3ca25050d3e5bf3dd5a1739b82ae0293ecde54ec70ebbf7', '4124beff23b65c41', 1, unhex(replace('490aa897-d6ea-1034-a268-c6b53a0158b7','-','')));
 
+insert into csm_user_group (id, name, admin, super_id) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), 'group-1', 1, null);
+insert into csm_user_group (id, name, admin, super_id) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), 'group-1-1', 1, unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')));
+insert into csm_user_group (id, name, admin, super_id) values(unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), 'group-1-1-1', 1, unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')));
+insert into csm_user_group (id, name, admin, super_id) values(unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), 'group-1-1-2', 1, unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')));
+insert into csm_user_group (id, name, admin, super_id) values(unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')), 'group-1-1-1-1', 1, unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')));
+
+insert into csm_role (id, name) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), 'role-1');
+insert into csm_role (id, name) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), 'role-1-1');
+insert into csm_role (id, name) values(unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), 'role-1-1-1');
+insert into csm_role (id, name) values(unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), 'role-1-1-2');
+insert into csm_role (id, name) values(unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')), 'role-1-1-1-1');
+
+insert into csm_user_group_role (id, user_group_id, role_id) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')));
+insert into csm_user_group_role (id, user_group_id, role_id) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')));
+insert into csm_user_group_role (id, user_group_id, role_id) values(unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')));
+insert into csm_user_group_role (id, user_group_id, role_id) values(unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')));
+insert into csm_user_group_role (id, user_group_id, role_id) values(unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')));
+
+insert into csm_permission (id, permission) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), 'permission-1');
+insert into csm_permission (id, permission) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1');
+insert into csm_permission (id, permission) values(unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1-1');
+insert into csm_permission (id, permission) values(unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1-2');
+insert into csm_permission (id, permission) values(unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1-1-1');
+
+insert into csm_role_permission (id, role_id, permission_id) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')));
+insert into csm_role_permission (id, role_id, permission_id) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')));
+insert into csm_role_permission (id, role_id, permission_id) values(unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')));
+insert into csm_role_permission (id, role_id, permission_id) values(unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')));
+insert into csm_role_permission (id, role_id, permission_id) values(unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')));
+
 insert into csm_faq_category (id, name, description, active, create_account_id, create_date_time, modify_account_id, modify_date_time) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), 'General Ledger', '', 1, unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), now(), unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), now());
 insert into csm_faq_category (id, name, description, active, create_account_id, create_date_time, modify_account_id, modify_date_time) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), 'AP', '', 1, unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), now(), unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), now());
 insert into csm_faq_category (id, name, description, active, create_account_id, create_date_time, modify_account_id, modify_date_time) values(unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), 'AR', '', 1, unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), now(), unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), now());

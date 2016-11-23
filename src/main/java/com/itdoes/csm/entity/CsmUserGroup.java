@@ -33,7 +33,7 @@ public class CsmUserGroup extends BaseEntity {
 	@Column(name = "admin")
 	private Boolean admin;
 	@Column(name = "super_id")
-	private String superId;
+	private java.util.UUID superId;
 
 	public java.util.UUID getId() {
 		return id;
@@ -59,11 +59,11 @@ public class CsmUserGroup extends BaseEntity {
 		this.admin = admin;
 	}
 
-	public String getSuperId() {
+	public java.util.UUID getSuperId() {
 		return superId;
 	}
 
-	public void setSuperId(String superId) {
+	public void setSuperId(java.util.UUID superId) {
 		this.superId = superId;
 	}
 }
