@@ -27,5 +27,7 @@
 
 	<cache name="com.itdoes.csm.entity.CsmUser" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>
 
-	<cache name="com.itdoes.csm.entity.CsmUserRole" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>
+	<cache name="com.itdoes.csm.entity.CsmUserGroup" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>
+
+	<cache name="com.itdoes.csm.entity.CsmUserGroupRole" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>
 </ehcache>

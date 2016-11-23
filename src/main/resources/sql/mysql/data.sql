@@ -1,1 +1,3 @@
-insert into csm_user (id, username, password, salt, active, admin) values(unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), 'admin', '84c59723099cc04ec1772ebc455643a0d29ce6e38c945f9cc9f759a6c3b21136', '31471bc8bc333a18', 1, 1);
+insert into csm_user_group (id, name, admin) values(unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), 'System', 1);
+insert into csm_user_group (id, name, admin) values(unhex(replace('490aa897-d6ea-1034-a268-c6b53a0158b7','-','')), 'Customer', 0);
+insert into csm_user (id, username, password, salt, active, user_group_id) values(unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), 'admin', '84c59723099cc04ec1772ebc455643a0d29ce6e38c945f9cc9f759a6c3b21136', '31471bc8bc333a18', 1, unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')));

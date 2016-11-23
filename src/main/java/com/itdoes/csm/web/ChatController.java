@@ -1,11 +1,8 @@
 package com.itdoes.csm.web;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
-import org.apache.commons.lang3.Validate;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -18,13 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.common.collect.Lists;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.shiro.ShiroUser;
-import com.itdoes.common.core.shiro.Shiros;
-import com.itdoes.common.core.util.Collections3;
 import com.itdoes.common.core.web.HttpResults;
-import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.dto.ChatUser;
 import com.itdoes.csm.entity.CsmChatMessage;
 import com.itdoes.csm.service.ChatService;
@@ -86,72 +78,28 @@ public class ChatController {
 		return "admin/jalenChat";
 	}
 
-	@MessageMapping("/chatCSendMessage")
-	public void chatCSendMessage(CsmChatMessage message, Principal principal) {
-		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
-		final String userId = shiroUser.getId();
-		final UUID userIdUuid = UUID.fromString(userId);
-		message.setRoomId(userIdUuid);
-		message.setSenderId(userIdUuid);
-		message.setSenderName(shiroUser.getUsername());
-		message.setCreateDateTime(LocalDateTime.now());
-		message.setFromAdmin(false);
-		template.convertAndSend("/topic/chat/message/" + userId, message);
-
-		final ChatEvent messageEvent = new ChatEvent(userId);
-		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
-		chatService.addUnhandledCustomer(messageEvent);
-
-		chatService.saveChatMessage(message);
-	}
-
 	@SubscribeMapping("/chatCInitMessage")
 	public List<CsmChatMessage> chatCInitMessage(Principal principal) {
-		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
-		final String userId = shiroUser.getId();
-		List<CsmChatMessage> messageList = chatService.getChatMessageList(userId);
-		if (Collections3.isEmpty(messageList)) {
-			messageList = Lists.newArrayListWithCapacity(1);
-		}
+		return chatService.customerInitMessage(principal);
+	}
 
-		final CsmChatMessage message = new CsmChatMessage();
-		message.setSenderName("Customer Service");
-		message.setCreateDateTime(LocalDateTime.now());
-		message.setMessage("Welcome, " + shiroUser.getUsername() + "! Our agent will contact you soon. Please wait...");
-		message.setFromAdmin(true);
-		messageList.add(message);
-
-		return messageList;
+	@MessageMapping("/chatCSendMessage")
+	public void chatCSendMessage(CsmChatMessage message, Principal principal) {
+		chatService.customerSendMessage(message, principal, template);
 	}
 
 	@SubscribeMapping("/chatAInit")
 	public List<ChatUser> chatAInit() {
-		return chatService.getCustomerList();
+		return chatService.adminInit();
+	}
+
+	@SubscribeMapping("/chatAInitMessage/{roomId}")
+	public List<CsmChatMessage> chatAInitMessage(@DestinationVariable String roomId, Principal principal) {
+		return chatService.adminInitMessage(roomId, principal);
 	}
 
 	@MessageMapping("/chatASendMessage")
 	public void chatASendMessage(CsmChatMessage message, Principal principal) {
-		final UUID roomIdUuid = message.getRoomId();
-		Validate.notNull(roomIdUuid, "RoomId should not be null");
-
-		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
-		final String userId = shiroUser.getId();
-		final UUID userIdUuid = UUID.fromString(userId);
-		message.setSenderId(userIdUuid);
-		message.setSenderName(shiroUser.getUsername());
-		message.setCreateDateTime(LocalDateTime.now());
-		message.setFromAdmin(true);
-		template.convertAndSend("/topic/chat/message/" + roomIdUuid, message);
-
-		final ChatEvent messageEvent = new ChatEvent(roomIdUuid.toString());
-		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
-		chatService.removeUnhandledCustomer(messageEvent.getUserId());
-
-		chatService.saveChatMessage(message);
-	}
-
-	@SubscribeMapping("/chatAInitMessage/{roomId}")
-	public List<CsmChatMessage> chatAInitMessage(@DestinationVariable String roomId) {
-		return chatService.getChatMessageList(roomId);
+		chatService.adminSendMessage(message, principal, template);
 	}
 }
