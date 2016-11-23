@@ -39,7 +39,10 @@
 
 			$("#chatLink").removeAttr("href");
 			setImg("002.png");
-			window.open('${ctx}/login?username=${username}&successUrl=/loginRefresh','_blank');
+			window
+					.open(
+							'${ctx}/login?username=${username}&successUrl=/loginRefresh',
+							'_blank');
 		} else {
 			alert(" error: " + xhr.status + " " + xhr.statusText);
 		}
