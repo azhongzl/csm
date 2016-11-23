@@ -1,5 +1,6 @@
 package com.itdoes.csm.service;
 
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
-import com.itdoes.common.business.Perms;
 import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
@@ -31,16 +31,19 @@ import com.itdoes.csm.entity.CsmUser;
  */
 public class ShiroDbRealm extends AbstractShiroRealm {
 	@Autowired
-	private EntityEnv env;
+	private EntityEnv entityEnv;
 
 	@Autowired
-	private EntityDbService dbService;
+	private EntityDbService entityDbService;
+
+	@Autowired
+	private UserDbService userDbService;
 
 	private EntityPair<CsmUser, UUID> pair;
 
 	@PostConstruct
 	public void myInit() {
-		pair = env.getPair(CsmUser.class.getSimpleName());
+		pair = entityEnv.getPair(CsmUser.class.getSimpleName());
 	}
 
 	@Override
@@ -70,20 +73,19 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	}
 
 	private CsmUser findUser(String username) {
-		final CsmUser user = dbService.findOne(pair, Specifications.build(CsmUser.class,
+		final CsmUser user = entityDbService.findOne(pair, Specifications.build(CsmUser.class,
 				Lists.newArrayList(new FindFilter("username", Operator.EQ, username))));
 		return user;
 	}
 
 	private CsmUser getUser(String id) {
-		final CsmUser user = dbService.get(pair, UUID.fromString(id));
+		final CsmUser user = entityDbService.get(pair, UUID.fromString(id));
 		return user;
 	}
 
 	private void populatePermission(SimpleAuthorizationInfo info, String id) {
 		final CsmUser user = getUser(id);
-		if (user.getUsername().equals("admin")) {
-			info.addStringPermission(Perms.getAllPerm());
-		}
+		final Set<String> permissionSet = userDbService.findPermissionSetByUserGroup(user.getUserGroupId());
+		info.addStringPermissions(permissionSet);
 	}
 }

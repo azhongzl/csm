@@ -13,11 +13,11 @@ import com.itdoes.csm.dao.CsmUserGroupDao;
  * @author Jalen Zhong
  */
 @Service
-public class UserService extends BaseTransactionalService {
+public class UserDbService extends BaseTransactionalService {
 	@Autowired
 	private CsmUserGroupDao userGroupDao;
 
-	public Set<String> findPermissionSet(UUID userGroupId) {
+	public Set<String> findPermissionSetByUserGroup(UUID userGroupId) {
 		return userGroupDao.findPermission(userGroupId);
 	}
 }

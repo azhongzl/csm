@@ -24,20 +24,17 @@ import com.itdoes.csm.entity.CsmUserGroup;
 @Service
 public class UserCacheService extends BaseService {
 	@Autowired
-	private EntityEnv env;
+	private EntityEnv entityEnv;
 
 	@Autowired
-	private EntityDbService dbService;
+	private EntityDbService entityDbService;
 
 	private final Map<String, CsmUser> userMap = Maps.newConcurrentMap();
 	private final Set<String> customerIdSet = Sets.newConcurrentHashSet();
 
 	@PostConstruct
-	public void init() {
-		final List<CsmUser> userList = dbService.findAll(env.getPair(CsmUser.class.getSimpleName()), null, null);
-		for (CsmUser user : userList) {
-			addUser(user);
-		}
+	public void myInit() {
+		resetUserMap();
 	}
 
 	public void addUser(CsmUser user) {
@@ -73,7 +70,15 @@ public class UserCacheService extends BaseService {
 		return customerIdSet;
 	}
 
+	private void resetUserMap() {
+		final List<CsmUser> userList = entityDbService.findAll(entityEnv.getPair(CsmUser.class.getSimpleName()), null,
+				null);
+		for (CsmUser user : userList) {
+			addUser(user);
+		}
+	}
+
 	private CsmUserGroup findUserGroup(UUID id) {
-		return dbService.get(env.getPair(CsmUserGroup.class.getSimpleName()), id);
+		return entityDbService.get(entityEnv.getPair(CsmUserGroup.class.getSimpleName()), id);
 	}
 }
