@@ -51,8 +51,6 @@
 
 	<mvc:view-controller path="/" view-name="index" />
 	<mvc:view-controller path="/admin/" view-name="admin/index" />
-	<!-- TODO: Following view-controller is only used for testing, should be removed -->
-	<mvc:view-controller path="/edit" view-name="editForm" />
 
 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
