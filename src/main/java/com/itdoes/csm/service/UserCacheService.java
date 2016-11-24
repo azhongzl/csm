@@ -57,9 +57,7 @@ public class UserCacheService extends BaseService {
 			return;
 		}
 
-		if (!findUserGroup(user.getUserGroupId()).isAdmin()) {
-			customerIdSet.remove(userId);
-		}
+		customerIdSet.remove(userId);
 	}
 
 	public CsmUser getUser(String userId) {
