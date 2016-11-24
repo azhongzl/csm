@@ -28,21 +28,23 @@
 	<bean id="shiroFilterChainDefinitionMap" class="com.itdoes.common.business.web.ShiroFilterChainDefinitionMap">
 		<property name="beforeStaticDefinitions">
 			<value>
+				/static/** = anon
+				/uploads/** = user
+				/ = anon
+				/search/** = anon
+				/chat/** = user
+				/refreshParentCloseChildWindow = anon
+				/admin/search/createIndex = perms["itdoes:search:createIndex"]
+				/admin/chat/icon = anon
+				/admin/chat/** = perms["itdoes:chat"]
+				/admin/** = user
 				/login = authc
 				/logout = logout
-				/ = anon
-				/admin/chat/icon = anon
-				/admin/** = user
-				/static/** = anon
-				/uploads/** = anon
-				/search/createIndex = perms["itdoes:search:createIndex"]
-				/search/** = anon
-				/upload/dir1/dir2/dir3 = perms["itdoes:upload:reasonablePermissionName"]
 			</value>
 		</property>
 		<property name="afterStaticDefinitions">
 			<value>
-				/** = anon
+				/** = user
 			</value>
 		</property>
 	</bean>
