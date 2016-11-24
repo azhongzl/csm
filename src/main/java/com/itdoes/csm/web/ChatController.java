@@ -52,11 +52,6 @@ public class ChatController {
 		return "admin/chatIcon";
 	}
 
-	@RequestMapping("/loginRefresh")
-	public String loginRefresh() {
-		return "loginRefresh";
-	}
-
 	@RequestMapping("/admin/chat")
 	public String adminChat() {
 		return "admin/chat";

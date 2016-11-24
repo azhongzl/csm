@@ -41,7 +41,7 @@
 
 				window
 						.open(
-								'${ctx}/login?username=${username}&successUrl=/loginRefresh',
+								'${ctx}/login?username=${username}&successUrl=/refreshParentCloseChildWindow',
 								'_blank');
 			} else {
 				alert(" error: " + xhr.status + " " + xhr.statusText);
