@@ -28,6 +28,8 @@ public class CsmPermission extends BaseEntity {
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
+	@Column(name = "name")
+	private String name;
 	@Column(name = "permission")
 	private String permission;
 
@@ -37,6 +39,14 @@ public class CsmPermission extends BaseEntity {
 
 	public void setId(java.util.UUID id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getPermission() {

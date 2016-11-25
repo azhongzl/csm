@@ -11,11 +11,11 @@ insert into csm_role (id, name) values(unhex(replace('19b7ca19-d6eb-1034-a268-c6
 insert into csm_role (id, name) values(unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), 'role-1-1-2');
 insert into csm_role (id, name) values(unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')), 'role-1-1-1-1');
 
-insert into csm_permission (id, permission) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), 'permission-1');
-insert into csm_permission (id, permission) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1');
-insert into csm_permission (id, permission) values(unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1-1');
-insert into csm_permission (id, permission) values(unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1-2');
-insert into csm_permission (id, permission) values(unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1-1-1');
+insert into csm_permission (id, name, permission) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), 'permission-1', 'permission-1');
+insert into csm_permission (id, name, permission) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1', 'permission-1-1');
+insert into csm_permission (id, name, permission) values(unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1-1', 'permission-1-1-1');
+insert into csm_permission (id, name, permission) values(unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1-2', 'permission-1-1-2');
+insert into csm_permission (id, name, permission) values(unhex(replace('2189b421-d6eb-1034-a268-c6b53a0158b7','-','')), 'permission-1-1-1-1', 'permission-1-1-1-1');
 
 insert into csm_user_group_role (id, user_group_id, role_id) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')));
 insert into csm_user_group_role (id, user_group_id, role_id) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')));

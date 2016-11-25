@@ -17,7 +17,8 @@ create table csm_role (
 drop table if exists csm_permission;
 create table csm_permission (
 	id binary(16) not null,
-	permission varchar(100) not null,
+	name varchar(100) not null,
+	permission varchar(255) not null,
     primary key (id)
 ) engine=InnoDB;
 
