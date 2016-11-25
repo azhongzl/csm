@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itdoes.common.business.EntityPair;
@@ -15,6 +16,9 @@ import com.itdoes.csm.entity.CsmUser;
  */
 @Service
 public class CsmUserService extends EntityService {
+	@Autowired
+	private UserCacheService userCacheService;
+
 	@Override
 	public <T, ID extends Serializable> ID post(EntityPair<T, ID> pair, T entity) {
 		final CsmUser user = (CsmUser) entity;
@@ -22,7 +26,11 @@ public class CsmUserService extends EntityService {
 		Validate.isTrue(StringUtils.isNotBlank(user.getPlainPassword()), "Password should not be null");
 		user.populatePassword();
 
-		return super.post(pair, entity);
+		final ID id = super.post(pair, entity);
+
+		userCacheService.addUser(user);
+
+		return id;
 	}
 
 	@Override
@@ -34,11 +42,15 @@ public class CsmUserService extends EntityService {
 		}
 
 		super.put(pair, entity, oldEntity);
+
+		userCacheService.updateUser(user);
 	}
 
 	@Override
 	public <T, ID extends Serializable> void delete(EntityPair<T, ID> pair, ID id, String realRootPath,
 			boolean uploadDeleteOrphanFiles) {
 		super.delete(pair, id, realRootPath, uploadDeleteOrphanFiles);
+
+		userCacheService.removeUser(id.toString());
 	}
 }
