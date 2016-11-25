@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +30,12 @@ public class UserCacheService extends BaseService {
 	private final Map<String, CsmUser> userMap = Maps.newConcurrentMap();
 	private final Set<String> customerIdSet = Sets.newConcurrentHashSet();
 
-	@PostConstruct
-	public void myInit() {
-		resetUserMap();
+	public void init() {
+		final List<CsmUser> userList = entityDbService.findAll(entityEnv.getPair(CsmUser.class.getSimpleName()), null,
+				null);
+		for (CsmUser user : userList) {
+			addUser(user);
+		}
 	}
 
 	public void addUser(CsmUser user) {
@@ -48,14 +49,19 @@ public class UserCacheService extends BaseService {
 	}
 
 	public void updateUser(CsmUser user) {
-		userMap.put(user.getId().toString(), user);
+		final String userId = user.getId().toString();
+
+		userMap.put(userId, user);
+
+		if (!findUserGroup(user.getUserGroupId()).isAdmin()) {
+			customerIdSet.add(userId);
+		} else {
+			customerIdSet.remove(userId);
+		}
 	}
 
 	public void removeUser(String userId) {
-		final CsmUser user = userMap.remove(userId);
-		if (user == null) {
-			return;
-		}
+		userMap.remove(userId);
 
 		customerIdSet.remove(userId);
 	}
@@ -66,14 +72,6 @@ public class UserCacheService extends BaseService {
 
 	public Set<String> getCustomerIdSet() {
 		return customerIdSet;
-	}
-
-	private void resetUserMap() {
-		final List<CsmUser> userList = entityDbService.findAll(entityEnv.getPair(CsmUser.class.getSimpleName()), null,
-				null);
-		for (CsmUser user : userList) {
-			addUser(user);
-		}
 	}
 
 	private CsmUserGroup findUserGroup(UUID id) {
