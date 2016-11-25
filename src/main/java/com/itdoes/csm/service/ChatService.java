@@ -25,7 +25,6 @@ import com.google.common.collect.Maps;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
-import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
@@ -60,9 +59,6 @@ public class ChatService extends BaseService {
 
 	@Autowired
 	private EntityEnv env;
-
-	@Autowired
-	private EntityDbService dbService;
 
 	@Autowired
 	private UserCacheService userCacheService;
@@ -165,7 +161,7 @@ public class ChatService extends BaseService {
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {
-		dbService.save(messagePair, message);
+		messagePair.getService().post(messagePair, message);
 	}
 
 	private List<CsmChatMessage> initMessage(String roomId, Principal principal, boolean forAdmin) {
@@ -197,7 +193,7 @@ public class ChatService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getChatMessageListFromDb(String roomId) {
-		final List<CsmChatMessage> messageList = dbService
+		final List<CsmChatMessage> messageList = messagePair.getService()
 				.find(messagePair, buildMessageSpecification(roomId), MESSAGE_PAGE_REQUEST).getContent();
 		return messageList;
 	}
