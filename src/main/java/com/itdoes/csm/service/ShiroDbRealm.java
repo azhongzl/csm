@@ -3,8 +3,6 @@ package com.itdoes.csm.service;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -39,13 +37,6 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	@Autowired
 	private UserDbService userDbService;
 
-	private EntityPair<CsmUser, UUID> pair;
-
-	@PostConstruct
-	public void myInit() {
-		pair = entityEnv.getPair(CsmUser.class.getSimpleName());
-	}
-
 	@Override
 	protected AuthenticationInfo doAuthentication(UsernamePasswordToken token) throws AuthenticationException {
 		final String username = token.getUsername();
@@ -73,13 +64,13 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	}
 
 	private CsmUser findUser(String username) {
-		final CsmUser user = entityDbService.findOne(pair, Specifications.build(CsmUser.class,
+		final CsmUser user = entityDbService.findOne(getUserPair(), Specifications.build(CsmUser.class,
 				Lists.newArrayList(new FindFilter("username", Operator.EQ, username))));
 		return user;
 	}
 
 	private CsmUser getUser(String id) {
-		final CsmUser user = entityDbService.get(pair, UUID.fromString(id));
+		final CsmUser user = entityDbService.get(getUserPair(), UUID.fromString(id));
 		return user;
 	}
 
@@ -87,5 +78,9 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 		final CsmUser user = getUser(id);
 		final Set<String> permissionSet = userDbService.findPermissionSetByUserGroup(user.getUserGroupId());
 		info.addStringPermissions(permissionSet);
+	}
+
+	private EntityPair<CsmUser, UUID> getUserPair() {
+		return entityEnv.getPair(CsmUser.class.getSimpleName());
 	}
 }

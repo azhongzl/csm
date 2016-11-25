@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -67,13 +65,6 @@ public class ChatService extends BaseService {
 	private ChatOnlineService onlineService;
 
 	private final Map<String, ChatEvent> unhandledCustomerMap = Maps.newConcurrentMap();
-
-	private EntityPair<CsmChatMessage, UUID> messagePair;
-
-	@PostConstruct
-	public void init() {
-		messagePair = env.getPair(CsmChatMessage.class.getSimpleName());
-	}
 
 	public List<CsmChatMessage> customerInitMessage(Principal principal) {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
@@ -161,6 +152,7 @@ public class ChatService extends BaseService {
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {
+		final EntityPair<CsmChatMessage, UUID> messagePair = getMessagePair();
 		messagePair.getService().post(messagePair, message);
 	}
 
@@ -193,6 +185,7 @@ public class ChatService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getChatMessageListFromDb(String roomId) {
+		final EntityPair<CsmChatMessage, UUID> messagePair = getMessagePair();
 		final List<CsmChatMessage> messageList = messagePair.getService()
 				.find(messagePair, buildMessageSpecification(roomId), MESSAGE_PAGE_REQUEST).getContent();
 		return messageList;
@@ -201,5 +194,9 @@ public class ChatService extends BaseService {
 	private Specification<CsmChatMessage> buildMessageSpecification(String roomId) {
 		return Specifications.build(CsmChatMessage.class,
 				Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId)));
+	}
+
+	private EntityPair<CsmChatMessage, UUID> getMessagePair() {
+		return env.getPair(CsmChatMessage.class.getSimpleName());
 	}
 }
