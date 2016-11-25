@@ -175,7 +175,6 @@
 	<script type="text/javascript" src="${ctx}/static/js/adminVueFunction.js"></script>
 	<script type="text/javascript">
 		userId = "<shiro:principal property="id" />";
-
 		userName = "<shiro:principal property="username" />"
 
 	</script>

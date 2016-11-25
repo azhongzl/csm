@@ -84,7 +84,6 @@ const addNew = {
 						modifyAccountId : userId,
 						modifyDateTime : modify_date1,
 					}
-					alert(url1);
 					ajaxcreate(savedata, url1);
 					store.commit('getCategory');
 					router.push({name : 'category'});
@@ -110,7 +109,6 @@ const modify = {
 			var id = this.$route.query.id;
 			if (id.trim().length !== 0) {
 				var url1 = url + "CsmFaqCategory" + "/get/" + id;
-				alert(url1);
 				var checkResult1 = ajaxGet(url1);
 
 				if (checkResult1.description == undefined) {
