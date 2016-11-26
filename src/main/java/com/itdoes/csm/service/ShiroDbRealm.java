@@ -38,7 +38,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	private EntityDbService entityDbService;
 
 	@Autowired
-	private UserDbService userDbService;
+	private PermissionService permissionService;
 
 	@Override
 	protected AuthenticationInfo doAuthentication(UsernamePasswordToken token) throws AuthenticationException {
@@ -66,7 +66,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 			info.addStringPermission(ADMIN.getPermission());
 		} else {
 			final CsmUser user = entityDbService.get(getUserPair(), UUID.fromString(shiroUser.getId()));
-			final Set<String> permissionSet = userDbService.findPermissionSetByUserGroup(user.getUserGroupId());
+			final Set<String> permissionSet = permissionService.findPermissionSetByUserGroup(user.getUserGroupId());
 			info.addStringPermissions(permissionSet);
 		}
 		return info;

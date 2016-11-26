@@ -18,7 +18,7 @@ import com.itdoes.csm.dao.CsmUserGroupDao;
  * @author Jalen Zhong
  */
 @Service
-public class UserDbService extends BaseTransactionalService {
+public class PermissionService extends BaseTransactionalService {
 	@Autowired
 	private CsmUserGroupDao userGroupDao;
 
