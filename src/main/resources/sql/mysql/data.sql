@@ -1,4 +1,4 @@
-insert into csm_user_group (id, name, admin) values(unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), 'System', 1);
+insert into csm_user_group (id, name) values(unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), 'System');
 
 insert into csm_role (id, name) values(unhex(replace('1c93b13d-d6ea-1034-a268-c6b53a0158b7','-','')), 'SystemRole');
 

@@ -3,7 +3,6 @@ package com.itdoes.csm.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.csm.entity.CsmUser;
-import com.itdoes.csm.entity.CsmUserGroup;
 
 /**
  * @author Jalen Zhong
@@ -43,7 +41,7 @@ public class UserCacheService extends BaseService {
 
 		userMap.put(userId, user);
 
-		if (!findUserGroup(user.getUserGroupId()).isAdmin()) {
+		if (!user.isAdmin()) {
 			customerIdSet.add(userId);
 		}
 	}
@@ -53,7 +51,7 @@ public class UserCacheService extends BaseService {
 
 		userMap.put(userId, user);
 
-		if (!findUserGroup(user.getUserGroupId()).isAdmin()) {
+		if (!user.isAdmin()) {
 			customerIdSet.add(userId);
 		} else {
 			customerIdSet.remove(userId);
@@ -72,9 +70,5 @@ public class UserCacheService extends BaseService {
 
 	public Set<String> getCustomerIdSet() {
 		return customerIdSet;
-	}
-
-	private CsmUserGroup findUserGroup(UUID id) {
-		return entityDbService.get(entityEnv.getPair(CsmUserGroup.class.getSimpleName()), id);
 	}
 }
