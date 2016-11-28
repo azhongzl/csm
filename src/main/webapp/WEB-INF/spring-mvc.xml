@@ -53,6 +53,9 @@
 	<mvc:view-controller path="/admin/" view-name="admin/index" />
 	<mvc:view-controller path="/refreshParentCloseChildWindow" view-name="refreshParentCloseChildWindow" />
 
+	<!-- TODO only for test, should be removed in production -->
+	<mvc:view-controller path="/test/" view-name="test/index" />
+
 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
 			<props>
