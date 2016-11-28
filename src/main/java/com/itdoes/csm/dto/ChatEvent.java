@@ -10,8 +10,12 @@ public class ChatEvent {
 	private final LocalDateTime dateTime;
 
 	public ChatEvent(String userId) {
+		this(userId, LocalDateTime.now());
+	}
+
+	public ChatEvent(String userId, LocalDateTime dateTime) {
 		this.userId = userId;
-		this.dateTime = LocalDateTime.now();
+		this.dateTime = dateTime;
 	}
 
 	public String getUserId() {
