@@ -45,7 +45,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 		}
 
 		for (CsmChatUnhandledCustomer unhandledCustomer : unhandledCustomerList) {
-			final String userIdString = unhandledCustomer.getId().toString();
+			final String userIdString = unhandledCustomer.getUserId().toString();
 			unhandledCustomerMap.put(userIdString, new ChatEvent(userIdString, unhandledCustomer.getCreateDateTime()));
 		}
 
