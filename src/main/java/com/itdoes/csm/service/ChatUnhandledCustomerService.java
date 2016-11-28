@@ -45,8 +45,9 @@ public class ChatUnhandledCustomerService extends BaseService {
 		}
 
 		for (CsmChatUnhandledCustomer unhandledCustomer : unhandledCustomerList) {
-			final String userIdString = unhandledCustomer.getUserId().toString();
-			unhandledCustomerMap.put(userIdString, new ChatEvent(userIdString, unhandledCustomer.getCreateDateTime()));
+			final ChatEvent event = new ChatEvent(unhandledCustomer.getUserId().toString(),
+					unhandledCustomer.getCreateDateTime());
+			addUnhandledCustomer(event);
 		}
 
 		entityDbService.deleteAll(pair);
