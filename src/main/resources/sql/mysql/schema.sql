@@ -87,3 +87,11 @@ create table csm_chat_message (
 	message varchar(500) not null,
     primary key (id)
 ) engine=InnoDB;
+
+drop table if exists csm_chat_unhandled_customer;
+create table csm_chat_unhandled_customer (
+	id binary(16) not null,
+	user_id binary(16) not null,
+	create_date_time timestamp not null,
+    primary key (id)
+) engine=InnoDB;

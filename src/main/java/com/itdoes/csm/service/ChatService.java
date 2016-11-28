@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,7 +18,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
@@ -64,7 +62,8 @@ public class ChatService extends BaseService {
 	@Autowired
 	private ChatOnlineService onlineService;
 
-	private final Map<String, ChatEvent> unhandledCustomerMap = Maps.newConcurrentMap();
+	@Autowired
+	private ChatUnhandledCustomerService unhandledCustomerService;
 
 	public List<CsmChatMessage> customerInitMessage(Principal principal) {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
@@ -97,7 +96,7 @@ public class ChatService extends BaseService {
 
 		final ChatEvent messageEvent = new ChatEvent(userId);
 		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
-		addUnhandledCustomer(messageEvent);
+		unhandledCustomerService.addUnhandledCustomer(messageEvent);
 
 		saveChatMessage(message);
 	}
@@ -108,7 +107,7 @@ public class ChatService extends BaseService {
 		for (String customerId : customerIdSet) {
 			final ChatUser chatUser = ChatUser.valueOf(userCacheService.getUser(customerId));
 			chatUser.setOnline(onlineService.isOnlineUser(customerId));
-			chatUser.setUnhandled(unhandledCustomerMap.containsKey(customerId));
+			chatUser.setUnhandled(unhandledCustomerService.hasUnhandledCustomer(customerId));
 			customerList.add(chatUser);
 		}
 		Collections.sort(customerList, ChatUserComparator.INSTANCE);
@@ -134,21 +133,13 @@ public class ChatService extends BaseService {
 
 		final ChatEvent messageEvent = new ChatEvent(roomIdUuid.toString());
 		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
-		removeUnhandledCustomer(messageEvent.getUserId());
+		unhandledCustomerService.removeUnhandledCustomer(messageEvent.getUserId());
 
 		saveChatMessage(message);
 	}
 
-	public boolean hasUnhandledCustomer() {
-		return !Collections3.isEmpty(unhandledCustomerMap);
-	}
-
-	private void addUnhandledCustomer(ChatEvent event) {
-		unhandledCustomerMap.put(event.getUserId(), event);
-	}
-
-	private void removeUnhandledCustomer(String userId) {
-		unhandledCustomerMap.remove(userId);
+	public boolean hasUnhandledCustomers() {
+		return unhandledCustomerService.hasUnhandledCustomers();
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {

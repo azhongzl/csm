@@ -18,7 +18,7 @@
 		function check() {
 			$.ajax({
 				type : "GET",
-				url : "${ctx}/admin/chat/hasUnhandledCustomer",
+				url : "${ctx}/admin/chat/hasUnhandledCustomers",
 				async : false,
 				success : function(result) {
 					if (result.data) {
