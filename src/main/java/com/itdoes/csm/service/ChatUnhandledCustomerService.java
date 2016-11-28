@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,6 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.business.service.EntityDbService;
-import com.itdoes.common.core.shutdownhook.ShutdownHookThread;
-import com.itdoes.common.core.shutdownhook.ShutdownHookThread.ShutdownHookCallback;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.entity.CsmChatUnhandledCustomer;
@@ -35,27 +34,11 @@ public class ChatUnhandledCustomerService extends BaseService {
 	private EntityPair<CsmChatUnhandledCustomer, UUID> pair;
 
 	private final Map<String, ChatEvent> unhandledCustomerMap = Maps.newConcurrentMap();
-	{
-		ShutdownHookThread.getInstance().register(this, new ShutdownHookCallback() {
-			@Override
-			public void shutdown() {
-				if (Collections3.isEmpty(unhandledCustomerMap)) {
-					return;
-				}
-
-				for (ChatEvent event : unhandledCustomerMap.values()) {
-					final CsmChatUnhandledCustomer unhandledCustomer = new CsmChatUnhandledCustomer();
-					unhandledCustomer.setUserId(UUID.fromString(event.getUserId()));
-					unhandledCustomer.setCreateDateTime(LocalDateTime.now());
-					entityDbService.save(pair, unhandledCustomer);
-				}
-			}
-		});
-	}
 
 	@PostConstruct
 	public void myInit() {
 		pair = env.getPair(CsmChatUnhandledCustomer.class.getSimpleName());
+
 		final List<CsmChatUnhandledCustomer> unhandledCustomerList = entityDbService.findAll(pair, null, null);
 		if (Collections3.isEmpty(unhandledCustomerList)) {
 			return;
@@ -67,6 +50,20 @@ public class ChatUnhandledCustomerService extends BaseService {
 		}
 
 		entityDbService.deleteAll(pair);
+	}
+
+	@PreDestroy
+	public void myDestory() {
+		if (Collections3.isEmpty(unhandledCustomerMap)) {
+			return;
+		}
+
+		for (ChatEvent event : unhandledCustomerMap.values()) {
+			final CsmChatUnhandledCustomer unhandledCustomer = new CsmChatUnhandledCustomer();
+			unhandledCustomer.setUserId(UUID.fromString(event.getUserId()));
+			unhandledCustomer.setCreateDateTime(LocalDateTime.now());
+			entityDbService.save(pair, unhandledCustomer);
+		}
 	}
 
 	public boolean hasUnhandledCustomers() {
