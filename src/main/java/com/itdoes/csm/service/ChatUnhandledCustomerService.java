@@ -1,6 +1,5 @@
 package com.itdoes.csm.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -62,7 +61,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 		for (ChatEvent event : unhandledCustomerMap.values()) {
 			final CsmChatUnhandledCustomer unhandledCustomer = new CsmChatUnhandledCustomer();
 			unhandledCustomer.setUserId(UUID.fromString(event.getUserId()));
-			unhandledCustomer.setCreateDateTime(LocalDateTime.now());
+			unhandledCustomer.setCreateDateTime(event.getDateTime());
 			entityDbService.save(pair, unhandledCustomer);
 		}
 	}
