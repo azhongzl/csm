@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,8 @@ public class UserCacheService extends BaseService {
 	private final Map<String, CsmUser> userMap = Maps.newConcurrentMap();
 	private final Set<String> customerIdSet = Sets.newConcurrentHashSet();
 
-	public void init() {
+	@PostConstruct
+	public void myInit() {
 		final List<CsmUser> userList = entityDbService.findAll(entityEnv.getPair(CsmUser.class.getSimpleName()), null,
 				null);
 		for (CsmUser user : userList) {
