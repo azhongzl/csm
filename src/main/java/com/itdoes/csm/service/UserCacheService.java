@@ -61,6 +61,10 @@ public class UserCacheService extends BaseService {
 		userGroupMap.remove(userGroupId);
 	}
 
+	public CsmUserGroup getUserGroup(String userGroupId) {
+		return userGroupMap.get(userGroupId);
+	}
+
 	public void addUser(CsmUser user) {
 		final String userId = user.getId().toString();
 
