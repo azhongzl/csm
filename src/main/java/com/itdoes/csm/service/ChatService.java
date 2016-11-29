@@ -18,6 +18,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
@@ -107,8 +108,31 @@ public class ChatService extends BaseService {
 		saveChatMessage(message);
 	}
 
-	public List<ChatUser> adminInit() {
-		final Set<String> customerIdSet = userCacheService.getCustomerIdSet();
+	public List<ChatUser> adminInit(Principal principal) {
+		final Set<String> customerIdSet;
+
+		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
+		final CsmUser user = userCacheService.getUser(shiroUser.getId());
+		final String userGroupIdString = user.getUserGroupId().toString();
+		final CsmUserGroup userGroup = userCacheService.getUserGroup(userGroupIdString);
+		if (userGroup.isChat()) {
+			customerIdSet = userCacheService.getCustomerIdSet();
+		} else {
+			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService.findAll(
+					env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+					Specifications.build(CsmChatCustomerUserGroup.class,
+							Lists.newArrayList(new FindFilter("user_group_id", Operator.EQ, userGroupIdString))),
+					null);
+			if (Collections3.isEmpty(chatCustomerUserGroupList)) {
+				return Collections.emptyList();
+			}
+
+			customerIdSet = Sets.newHashSetWithExpectedSize(chatCustomerUserGroupList.size());
+			for (CsmChatCustomerUserGroup chatCustomerUserGroup : chatCustomerUserGroupList) {
+				customerIdSet.add(chatCustomerUserGroup.getCustomerUserId().toString());
+			}
+		}
+
 		final List<ChatUser> customerList = Lists.newArrayListWithCapacity(customerIdSet.size());
 		for (String customerId : customerIdSet) {
 			final ChatUser chatUser = ChatUser.valueOf(userCacheService.getUser(customerId));
@@ -155,24 +179,25 @@ public class ChatService extends BaseService {
 		final CsmUserGroup userGroup = userCacheService.getUserGroup(userGroupIdString);
 		if (userGroup.isChat()) {
 			return true;
-		}
+		} else {
+			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService.findAll(
+					env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+					Specifications.build(CsmChatCustomerUserGroup.class,
+							Lists.newArrayList(new FindFilter("user_group_id", Operator.EQ, userGroupIdString))),
+					null);
+			if (Collections3.isEmpty(chatCustomerUserGroupList)) {
+				return false;
+			}
 
-		final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService
-				.findAll(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
-						Specifications.build(CsmChatCustomerUserGroup.class,
-								Lists.newArrayList(new FindFilter("user_group_id", Operator.EQ, userGroupIdString))),
-						null);
-		if (Collections3.isEmpty(chatCustomerUserGroupList)) {
+			for (CsmChatCustomerUserGroup chatCustomerUserGroup : chatCustomerUserGroupList) {
+				if (unhandledCustomerService
+						.hasUnhandledCustomer(chatCustomerUserGroup.getCustomerUserId().toString())) {
+					return true;
+				}
+			}
+
 			return false;
 		}
-
-		for (CsmChatCustomerUserGroup chatCustomerUserGroup : chatCustomerUserGroupList) {
-			if (unhandledCustomerService.hasUnhandledCustomer(chatCustomerUserGroup.getCustomerUserId().toString())) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {

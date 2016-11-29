@@ -84,8 +84,8 @@ public class ChatController {
 	}
 
 	@SubscribeMapping("/chatAInit")
-	public List<ChatUser> chatAInit() {
-		return chatService.adminInit();
+	public List<ChatUser> chatAInit(Principal principal) {
+		return chatService.adminInit(principal);
 	}
 
 	@SubscribeMapping("/chatAInitMessage/{roomId}")
