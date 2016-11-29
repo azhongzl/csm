@@ -2,6 +2,8 @@ drop table if exists csm_user_group;
 create table csm_user_group (
 	id binary(16) not null,
 	name varchar(100) not null,
+	admin bit not null,
+	chat bit not null,
 	super_id binary(16),
     primary key (id)
 ) engine=InnoDB;
@@ -43,7 +45,6 @@ create table csm_user (
 	username varchar(100) not null,
 	password char(64) not null,
 	salt char(16) not null,
-	admin bit not null,
 	active bit not null,
 	user_group_id binary(16) not null,
     primary key (id)

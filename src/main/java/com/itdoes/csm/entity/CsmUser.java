@@ -34,8 +34,6 @@ public class CsmUser extends BaseEntity {
 	private String password;
 	@Column(name = "salt")
 	private String salt;
-	@Column(name = "admin")
-	private Boolean admin;
 	@Column(name = "active")
 	private Boolean active;
 	@Column(name = "user_group_id")
@@ -71,14 +69,6 @@ public class CsmUser extends BaseEntity {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
-	}
-
-	public Boolean isAdmin() {
-		return admin;
-	}
-
-	public void setAdmin(Boolean admin) {
-		this.admin = admin;
 	}
 
 	public Boolean isActive() {
