@@ -15,6 +15,7 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.csm.entity.CsmUser;
+import com.itdoes.csm.entity.CsmUserGroup;
 
 /**
  * @author Jalen Zhong
@@ -27,11 +28,18 @@ public class UserCacheService extends BaseService {
 	@Autowired
 	private EntityDbService entityDbService;
 
+	private final Map<String, CsmUserGroup> userGroupMap = Maps.newConcurrentMap();
 	private final Map<String, CsmUser> userMap = Maps.newConcurrentMap();
 	private final Set<String> customerIdSet = Sets.newConcurrentHashSet();
 
 	@PostConstruct
 	public void myInit() {
+		final List<CsmUserGroup> userGroupList = entityDbService
+				.findAll(entityEnv.getPair(CsmUserGroup.class.getSimpleName()), null, null);
+		for (CsmUserGroup userGroup : userGroupList) {
+			addUserGroup(userGroup);
+		}
+
 		final List<CsmUser> userList = entityDbService.findAll(entityEnv.getPair(CsmUser.class.getSimpleName()), null,
 				null);
 		for (CsmUser user : userList) {
@@ -39,12 +47,26 @@ public class UserCacheService extends BaseService {
 		}
 	}
 
+	public void addUserGroup(CsmUserGroup userGroup) {
+		final String userGroupId = userGroup.getId().toString();
+		userGroupMap.put(userGroupId, userGroup);
+	}
+
+	public void updateUserGroup(CsmUserGroup userGroup) {
+		final String userGroupId = userGroup.getId().toString();
+		userGroupMap.put(userGroupId, userGroup);
+	}
+
+	public void removeUserGroup(String userGroupId) {
+		userGroupMap.remove(userGroupId);
+	}
+
 	public void addUser(CsmUser user) {
 		final String userId = user.getId().toString();
 
 		userMap.put(userId, user);
 
-		if (!user.isAdmin()) {
+		if (!userGroupMap.get(user.getUserGroupId().toString()).isAdmin()) {
 			customerIdSet.add(userId);
 		}
 	}
@@ -54,7 +76,7 @@ public class UserCacheService extends BaseService {
 
 		userMap.put(userId, user);
 
-		if (!user.isAdmin()) {
+		if (!userGroupMap.get(user.getUserGroupId().toString()).isAdmin()) {
 			customerIdSet.add(userId);
 		} else {
 			customerIdSet.remove(userId);
