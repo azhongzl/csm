@@ -1,6 +1,5 @@
 package com.itdoes.csm.service;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,7 +26,6 @@ import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
 import com.itdoes.common.core.shiro.ShiroUser;
-import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.dto.ChatUser;
@@ -72,10 +70,9 @@ public class ChatService extends BaseService {
 	@Autowired
 	private EntityDbService entityDbService;
 
-	public List<CsmChatMessage> customerInitMessage(Principal principal) {
-		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
+	public List<CsmChatMessage> customerInitMessage(ShiroUser shiroUser) {
 		final String userIdString = shiroUser.getId();
-		List<CsmChatMessage> messageList = initMessage(userIdString, principal, false);
+		List<CsmChatMessage> messageList = initMessage(userIdString, shiroUser, false);
 		if (Collections3.isEmpty(messageList)) {
 			messageList = Lists.newArrayListWithCapacity(1);
 		}
@@ -90,8 +87,7 @@ public class ChatService extends BaseService {
 		return messageList;
 	}
 
-	public void customerSendMessage(CsmChatMessage message, Principal principal, SimpMessagingTemplate template) {
-		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
+	public void customerSendMessage(CsmChatMessage message, ShiroUser shiroUser, SimpMessagingTemplate template) {
 		final String userIdString = shiroUser.getId();
 		final UUID userId = UUID.fromString(userIdString);
 		message.setRoomId(userId);
@@ -108,21 +104,17 @@ public class ChatService extends BaseService {
 		saveChatMessage(message);
 	}
 
-	public List<ChatUser> adminInit(Principal principal) {
+	public List<ChatUser> adminInit(ShiroUser shiroUser) {
 		final Set<String> customerIdSet;
-
-		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
-		final CsmUser user = userCacheService.getUser(shiroUser.getId());
-		final String userGroupIdString = user.getUserGroupId().toString();
-		final CsmUserGroup userGroup = userCacheService.getUserGroup(userGroupIdString);
-		if (userGroup.isChat()) {
+		if (isChatUserGroup(shiroUser)) {
 			customerIdSet = userCacheService.getCustomerIdSet();
 		} else {
-			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService.findAll(
-					env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
-					Specifications.build(CsmChatCustomerUserGroup.class,
-							Lists.newArrayList(new FindFilter("user_group_id", Operator.EQ, userGroupIdString))),
-					null);
+			final CsmUser user = userCacheService.getUser(shiroUser.getId());
+			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService
+					.findAll(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+							Specifications.build(CsmChatCustomerUserGroup.class, Lists.newArrayList(
+									new FindFilter("user_group_id", Operator.EQ, user.getUserGroupId().toString()))),
+							null);
 			if (Collections3.isEmpty(chatCustomerUserGroupList)) {
 				return Collections.emptyList();
 			}
@@ -144,15 +136,14 @@ public class ChatService extends BaseService {
 		return customerList;
 	}
 
-	public List<CsmChatMessage> adminInitMessage(String roomId, Principal principal) {
-		return initMessage(roomId, principal, true);
+	public List<CsmChatMessage> adminInitMessage(String roomId, ShiroUser shiroUser) {
+		return initMessage(roomId, shiroUser, true);
 	}
 
-	public void adminSendMessage(CsmChatMessage message, Principal principal, SimpMessagingTemplate template) {
+	public void adminSendMessage(CsmChatMessage message, ShiroUser shiroUser, SimpMessagingTemplate template) {
 		final UUID roomIdUuid = message.getRoomId();
 		Validate.notNull(roomIdUuid, "RoomId should not be null");
 
-		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
 		final String userIdString = shiroUser.getId();
 		final UUID userId = UUID.fromString(userIdString);
 		message.setSenderId(userId);
@@ -168,23 +159,27 @@ public class ChatService extends BaseService {
 		saveChatMessage(message);
 	}
 
-	public boolean hasUnhandledCustomers(Principal principal) {
+	public boolean isChatUserGroup(ShiroUser shiroUser) {
+		final CsmUser user = userCacheService.getUser(shiroUser.getId());
+		final String userGroupIdString = user.getUserGroupId().toString();
+		final CsmUserGroup userGroup = userCacheService.getUserGroup(userGroupIdString);
+		return userGroup.isChat();
+	}
+
+	public boolean hasUnhandledCustomers(ShiroUser shiroUser) {
 		if (!unhandledCustomerService.hasUnhandledCustomers()) {
 			return false;
 		}
 
-		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
-		final CsmUser user = userCacheService.getUser(shiroUser.getId());
-		final String userGroupIdString = user.getUserGroupId().toString();
-		final CsmUserGroup userGroup = userCacheService.getUserGroup(userGroupIdString);
-		if (userGroup.isChat()) {
+		if (isChatUserGroup(shiroUser)) {
 			return true;
 		} else {
-			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService.findAll(
-					env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
-					Specifications.build(CsmChatCustomerUserGroup.class,
-							Lists.newArrayList(new FindFilter("user_group_id", Operator.EQ, userGroupIdString))),
-					null);
+			final CsmUser user = userCacheService.getUser(shiroUser.getId());
+			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService
+					.findAll(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+							Specifications.build(CsmChatCustomerUserGroup.class, Lists.newArrayList(
+									new FindFilter("user_group_id", Operator.EQ, user.getUserGroupId().toString()))),
+							null);
 			if (Collections3.isEmpty(chatCustomerUserGroupList)) {
 				return false;
 			}
@@ -205,7 +200,7 @@ public class ChatService extends BaseService {
 		messagePair.getService().post(messagePair, message);
 	}
 
-	private List<CsmChatMessage> initMessage(String roomId, Principal principal, boolean forAdmin) {
+	private List<CsmChatMessage> initMessage(String roomId, ShiroUser shiroUser, boolean forAdmin) {
 		final List<CsmChatMessage> dbMessageList = getChatMessageListFromDb(roomId);
 		if (Collections3.isEmpty(dbMessageList)) {
 			return Collections.emptyList();
@@ -217,7 +212,7 @@ public class ChatService extends BaseService {
 
 			final String senderId = message.getSenderId().toString();
 			final String senderName;
-			if (!forAdmin && !principal.getName().equals(senderId)) {
+			if (!forAdmin && !shiroUser.getId().equals(senderId)) {
 				senderName = CUSTOMER_SERVICE_NAME;
 			} else {
 				final CsmUser user = userCacheService.getUser(senderId);
