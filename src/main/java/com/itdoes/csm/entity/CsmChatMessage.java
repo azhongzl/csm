@@ -9,6 +9,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.itdoes.common.business.entity.BaseEntity;
+import com.itdoes.common.business.entity.EntityPerm;
+import com.itdoes.common.business.entity.EntityPermFilter;
+import com.itdoes.common.business.entity.EntityPermType;
 
 /**
  * This code is auto-generated.
@@ -18,6 +21,7 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "csm_chat_message")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@EntityPerm(types = { EntityPermType.ALL }, filters = { EntityPermFilter.USER })
 public class CsmChatMessage extends BaseEntity {
 	private static final long serialVersionUID = -1705651342L;
 

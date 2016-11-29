@@ -10,6 +10,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.itdoes.common.business.entity.BaseEntity;
 import com.itdoes.common.business.entity.EntityPerm;
+import com.itdoes.common.business.entity.EntityPermFilter;
 import com.itdoes.common.business.entity.EntityPermType;
 
 /**
@@ -20,7 +21,7 @@ import com.itdoes.common.business.entity.EntityPermType;
 @Entity
 @Table(name = "csm_faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerm(types = { EntityPermType.WRITE })
+@EntityPerm(types = { EntityPermType.WRITE, EntityPermType.READ }, filters = { EntityPermFilter.PERMS, EntityPermFilter.ANON })
 @org.hibernate.search.annotations.Indexed
 public class CsmFaq extends BaseEntity {
 	private static final long serialVersionUID = 2027675641L;
