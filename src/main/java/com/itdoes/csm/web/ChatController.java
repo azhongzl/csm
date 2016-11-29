@@ -59,12 +59,6 @@ public class ChatController {
 		return "admin/chat";
 	}
 
-	@RequestMapping("/admin/chat/isChatUserGroup")
-	@ResponseBody
-	public Result isChatUserGroup(Principal principal) {
-		return HttpResults.success(chatService.isChatUserGroup(getShiroUser(principal)));
-	}
-
 	@RequestMapping("/admin/chat/hasUnhandledCustomers")
 	@ResponseBody
 	public Result hasUnhandledCustomers(Principal principal) {

@@ -142,27 +142,22 @@ public class ChatService extends BaseService {
 		saveChatMessage(message);
 	}
 
-	public boolean isChatUserGroup(ShiroUser shiroUser) {
-		final CsmUser user = userCacheService.getUser(shiroUser.getId());
-		final String userGroupIdString = user.getUserGroupId().toString();
-		final CsmUserGroup userGroup = userCacheService.getUserGroup(userGroupIdString);
-		return userGroup.isChat();
-	}
-
 	public boolean hasUnhandledCustomers(ShiroUser shiroUser) {
 		if (!unhandledCustomerService.hasUnhandledCustomers()) {
 			return false;
 		}
 
-		if (isChatUserGroup(shiroUser)) {
+		final CsmUser user = userCacheService.getUser(shiroUser.getId());
+		final String userGroupIdString = user.getUserGroupId().toString();
+		final CsmUserGroup userGroup = userCacheService.getUserGroup(userGroupIdString);
+		if (userGroup.isChat()) {
 			return true;
 		} else {
-			final CsmUser user = userCacheService.getUser(shiroUser.getId());
-			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService
-					.findAll(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
-							Specifications.build(CsmChatCustomerUserGroup.class, Lists.newArrayList(
-									new FindFilter("user_group_id", Operator.EQ, user.getUserGroupId().toString()))),
-							null);
+			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService.findAll(
+					env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+					Specifications.build(CsmChatCustomerUserGroup.class,
+							Lists.newArrayList(new FindFilter("user_group_id", Operator.EQ, userGroupIdString))),
+					null);
 			if (Collections3.isEmpty(chatCustomerUserGroupList)) {
 				return false;
 			}
