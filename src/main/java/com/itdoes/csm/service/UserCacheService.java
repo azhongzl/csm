@@ -97,7 +97,7 @@ public class UserCacheService extends BaseService {
 							if (permission != null) {
 								final String permRow = permission.getPermission();
 								if (StringUtils.isNotBlank(permRow)) {
-									final String[] permRowItems = StringUtils.split(permRow);
+									final String[] permRowItems = StringUtils.split(permRow, ",");
 									if (!Collections3.isEmpty(permRowItems)) {
 										for (String permRowItem : permRowItems) {
 											if (StringUtils.isNotBlank(permRowItem)) {
