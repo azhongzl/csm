@@ -59,8 +59,8 @@ public class ChatController {
 
 	@RequestMapping("/admin/chat/hasUnhandledCustomers")
 	@ResponseBody
-	public Result hasUnhandledCustomers() {
-		return HttpResults.success(chatService.hasUnhandledCustomers());
+	public Result hasUnhandledCustomers(Principal principal) {
+		return HttpResults.success(chatService.hasUnhandledCustomers(principal));
 	}
 
 	@RequestMapping("/jalenChat")

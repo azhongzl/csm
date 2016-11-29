@@ -138,7 +138,7 @@ public class ChatService extends BaseService {
 		saveChatMessage(message);
 	}
 
-	public boolean hasUnhandledCustomers() {
+	public boolean hasUnhandledCustomers(Principal principal) {
 		return unhandledCustomerService.hasUnhandledCustomers();
 	}
 
