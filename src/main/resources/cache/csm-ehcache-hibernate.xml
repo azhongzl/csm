@@ -13,6 +13,8 @@
 
 	<!-- Entity cache setting -->
 
+	<cache name="com.itdoes.csm.entity.CsmChatCustomerUserGroup" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>
+
 	<cache name="com.itdoes.csm.entity.CsmChatMessage" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>
 
 	<cache name="com.itdoes.csm.entity.CsmChatUnhandledCustomer" maxEntriesLocalHeap="1000" maxEntriesLocalDisk="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="600"><persistence strategy="localTempSwap"/></cache>

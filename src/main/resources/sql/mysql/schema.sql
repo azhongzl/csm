@@ -88,6 +88,15 @@ create table csm_chat_message (
     primary key (id)
 ) engine=InnoDB;
 
+drop table if exists csm_chat_customer_user_group;
+create table csm_chat_customer_user_group (
+	id binary(16) not null,
+	customer_user_id binary(16) not null,
+	user_group_id binary(16) not null,
+	operator_user_id binary(16) not null,
+    primary key (id)
+) engine=InnoDB;
+
 drop table if exists csm_chat_unhandled_customer;
 create table csm_chat_unhandled_customer (
 	id binary(16) not null,
