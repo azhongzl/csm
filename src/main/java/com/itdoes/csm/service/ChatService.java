@@ -67,8 +67,8 @@ public class ChatService extends BaseService {
 
 	public List<CsmChatMessage> customerInitMessage(Principal principal) {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
-		final String userId = shiroUser.getId();
-		List<CsmChatMessage> messageList = initMessage(userId, principal, false);
+		final String userIdString = shiroUser.getId();
+		List<CsmChatMessage> messageList = initMessage(userIdString, principal, false);
 		if (Collections3.isEmpty(messageList)) {
 			messageList = Lists.newArrayListWithCapacity(1);
 		}
@@ -85,16 +85,16 @@ public class ChatService extends BaseService {
 
 	public void customerSendMessage(CsmChatMessage message, Principal principal, SimpMessagingTemplate template) {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
-		final String userId = shiroUser.getId();
-		final UUID userIdUuid = UUID.fromString(userId);
-		message.setRoomId(userIdUuid);
-		message.setSenderId(userIdUuid);
+		final String userIdString = shiroUser.getId();
+		final UUID userId = UUID.fromString(userIdString);
+		message.setRoomId(userId);
+		message.setSenderId(userId);
 		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(false);
-		template.convertAndSend("/topic/chat/message/" + userId, message);
+		template.convertAndSend("/topic/chat/message/" + userIdString, message);
 
-		final ChatEvent messageEvent = new ChatEvent(userId);
+		final ChatEvent messageEvent = new ChatEvent(userIdString);
 		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
 		unhandledCustomerService.addUnhandledCustomer(messageEvent);
 
@@ -123,9 +123,9 @@ public class ChatService extends BaseService {
 		Validate.notNull(roomIdUuid, "RoomId should not be null");
 
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
-		final String userId = shiroUser.getId();
-		final UUID userIdUuid = UUID.fromString(userId);
-		message.setSenderId(userIdUuid);
+		final String userIdString = shiroUser.getId();
+		final UUID userId = UUID.fromString(userIdString);
+		message.setSenderId(userId);
 		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(true);
@@ -139,6 +139,9 @@ public class ChatService extends BaseService {
 	}
 
 	public boolean hasUnhandledCustomers(Principal principal) {
+		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
+		final String userIdString = shiroUser.getId();
+		final UUID userId = UUID.fromString(userIdString);
 		return unhandledCustomerService.hasUnhandledCustomers();
 	}
 
