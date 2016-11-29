@@ -51,7 +51,7 @@ public class CsmUserService extends EntityService {
 
 		super.put(pair, entity, oldEntity);
 
-		userCacheService.updateUser(user);
+		userCacheService.modifyUser(user);
 	}
 
 	@Override

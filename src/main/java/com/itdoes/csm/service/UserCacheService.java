@@ -52,7 +52,7 @@ public class UserCacheService extends BaseService {
 		userGroupMap.put(userGroupId, userGroup);
 	}
 
-	public void updateUserGroup(CsmUserGroup userGroup) {
+	public void modifyUserGroup(CsmUserGroup userGroup) {
 		final String userGroupId = userGroup.getId().toString();
 		userGroupMap.put(userGroupId, userGroup);
 	}
@@ -75,7 +75,7 @@ public class UserCacheService extends BaseService {
 		}
 	}
 
-	public void updateUser(CsmUser user) {
+	public void modifyUser(CsmUser user) {
 		final String userId = user.getId().toString();
 
 		userMap.put(userId, user);

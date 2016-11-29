@@ -32,7 +32,7 @@ public class CsmUserGroupService extends EntityService {
 
 		super.put(pair, entity, oldEntity);
 
-		userCacheService.updateUserGroup(userGroup);
+		userCacheService.modifyUserGroup(userGroup);
 	}
 
 	@Override
