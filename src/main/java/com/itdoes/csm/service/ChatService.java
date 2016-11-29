@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
+import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
@@ -29,8 +30,10 @@ import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.dto.ChatUser;
+import com.itdoes.csm.entity.CsmChatCustomerUserGroup;
 import com.itdoes.csm.entity.CsmChatMessage;
 import com.itdoes.csm.entity.CsmUser;
+import com.itdoes.csm.entity.CsmUserGroup;
 
 /**
  * @author Jalen Zhong
@@ -64,6 +67,9 @@ public class ChatService extends BaseService {
 
 	@Autowired
 	private ChatUnhandledCustomerService unhandledCustomerService;
+
+	@Autowired
+	private EntityDbService entityDbService;
 
 	public List<CsmChatMessage> customerInitMessage(Principal principal) {
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
@@ -139,10 +145,34 @@ public class ChatService extends BaseService {
 	}
 
 	public boolean hasUnhandledCustomers(Principal principal) {
+		if (!unhandledCustomerService.hasUnhandledCustomers()) {
+			return false;
+		}
+
 		final ShiroUser shiroUser = Shiros.getShiroUser(principal);
-		final String userIdString = shiroUser.getId();
-		final UUID userId = UUID.fromString(userIdString);
-		return unhandledCustomerService.hasUnhandledCustomers();
+		final CsmUser user = userCacheService.getUser(shiroUser.getId());
+		final String userGroupIdString = user.getUserGroupId().toString();
+		final CsmUserGroup userGroup = userCacheService.getUserGroup(userGroupIdString);
+		if (userGroup.isChat()) {
+			return true;
+		}
+
+		final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService
+				.findAll(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+						Specifications.build(CsmChatCustomerUserGroup.class,
+								Lists.newArrayList(new FindFilter("user_group_id", Operator.EQ, userGroupIdString))),
+						null);
+		if (Collections3.isEmpty(chatCustomerUserGroupList)) {
+			return false;
+		}
+
+		for (CsmChatCustomerUserGroup chatCustomerUserGroup : chatCustomerUserGroupList) {
+			if (unhandledCustomerService.hasUnhandledCustomer(chatCustomerUserGroup.getCustomerUserId().toString())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {
