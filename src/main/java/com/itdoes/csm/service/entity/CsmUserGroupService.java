@@ -1,4 +1,4 @@
-package com.itdoes.csm.service;
+package com.itdoes.csm.service.entity;
 
 import java.io.Serializable;
 
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.EntityService;
 import com.itdoes.csm.entity.CsmUserGroup;
+import com.itdoes.csm.service.UserCacheService;
 
 /**
  * @author Jalen Zhong

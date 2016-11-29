@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang3.Validate;
@@ -17,7 +16,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
@@ -105,32 +103,17 @@ public class ChatService extends BaseService {
 	}
 
 	public List<ChatUser> adminInit(ShiroUser shiroUser) {
-		final Set<String> customerIdSet;
-		if (isChatUserGroup(shiroUser)) {
-			customerIdSet = userCacheService.getCustomerIdSet();
-		} else {
-			final CsmUser user = userCacheService.getUser(shiroUser.getId());
-			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService
-					.findAll(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
-							Specifications.build(CsmChatCustomerUserGroup.class, Lists.newArrayList(
-									new FindFilter("user_group_id", Operator.EQ, user.getUserGroupId().toString()))),
-							null);
-			if (Collections3.isEmpty(chatCustomerUserGroupList)) {
-				return Collections.emptyList();
+		final List<ChatUser> customerList = Lists.newArrayList();
+		for (CsmUser user : userCacheService.getUserMap().values()) {
+			final CsmUserGroup userGroup = userCacheService.getUserGroup(user.getUserGroupId().toString());
+			if (userGroup != null) {
+				if (!userGroup.isAdmin()) {
+					final ChatUser chatUser = ChatUser.valueOf(user);
+					chatUser.setOnline(onlineService.isOnlineUser(chatUser.getUserId()));
+					chatUser.setUnhandled(unhandledCustomerService.hasUnhandledCustomer(chatUser.getUserId()));
+					customerList.add(chatUser);
+				}
 			}
-
-			customerIdSet = Sets.newHashSetWithExpectedSize(chatCustomerUserGroupList.size());
-			for (CsmChatCustomerUserGroup chatCustomerUserGroup : chatCustomerUserGroupList) {
-				customerIdSet.add(chatCustomerUserGroup.getCustomerUserId().toString());
-			}
-		}
-
-		final List<ChatUser> customerList = Lists.newArrayListWithCapacity(customerIdSet.size());
-		for (String customerId : customerIdSet) {
-			final ChatUser chatUser = ChatUser.valueOf(userCacheService.getUser(customerId));
-			chatUser.setOnline(onlineService.isOnlineUser(customerId));
-			chatUser.setUnhandled(unhandledCustomerService.hasUnhandledCustomer(customerId));
-			customerList.add(chatUser);
 		}
 		Collections.sort(customerList, ChatUserComparator.INSTANCE);
 		return customerList;

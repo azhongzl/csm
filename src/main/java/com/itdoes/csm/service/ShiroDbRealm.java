@@ -1,8 +1,5 @@
 package com.itdoes.csm.service;
 
-import java.util.Set;
-import java.util.UUID;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -12,13 +9,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.common.collect.Lists;
-import com.itdoes.common.business.EntityEnv;
-import com.itdoes.common.business.EntityPair;
-import com.itdoes.common.business.service.EntityDbService;
-import com.itdoes.common.core.jpa.FindFilter;
-import com.itdoes.common.core.jpa.FindFilter.Operator;
-import com.itdoes.common.core.jpa.Specifications;
 import com.itdoes.common.core.shiro.AbstractShiroRealm;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.util.Codecs;
@@ -32,13 +22,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 	private static final Admin ADMIN = Admin.getInstance();
 
 	@Autowired
-	private EntityEnv entityEnv;
-
-	@Autowired
-	private EntityDbService entityDbService;
-
-	@Autowired
-	private PermissionService permissionService;
+	private UserCacheService userCacheService;
 
 	@Override
 	protected AuthenticationInfo doAuthentication(UsernamePasswordToken token) throws AuthenticationException {
@@ -48,8 +32,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 			return newAuthenticationInfo(ADMIN.getIdString(), ADMIN.getUsername(), ADMIN.getPassword(),
 					ADMIN.getSalt());
 		} else {
-			final CsmUser user = entityDbService.findOne(getUserPair(), Specifications.build(CsmUser.class,
-					Lists.newArrayList(new FindFilter("username", Operator.EQ, username))));
+			final CsmUser user = findUser(username);
 			if (user == null || !user.isActive()) {
 				return null;
 			}
@@ -65,9 +48,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 		if (ADMIN.isAdminById(shiroUser.getId())) {
 			info.addStringPermission(ADMIN.getPermission());
 		} else {
-			final CsmUser user = entityDbService.get(getUserPair(), UUID.fromString(shiroUser.getId()));
-			final Set<String> permissionSet = permissionService.findPermissionSetByUserGroup(user.getUserGroupId());
-			info.addStringPermissions(permissionSet);
+			info.addStringPermissions(userCacheService.getPermissionSetByUser(shiroUser.getId()));
 		}
 		return info;
 	}
@@ -82,7 +63,13 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 				ByteSource.Util.bytes(Codecs.hexDecode(salt)), getName());
 	}
 
-	private EntityPair<CsmUser, UUID> getUserPair() {
-		return entityEnv.getPair(CsmUser.class.getSimpleName());
+	private CsmUser findUser(String username) {
+		final String userIdString = userCacheService.getUserId(username);
+		if (userIdString == null) {
+			return null;
+		}
+
+		final CsmUser user = userCacheService.getUser(userIdString);
+		return user;
 	}
 }

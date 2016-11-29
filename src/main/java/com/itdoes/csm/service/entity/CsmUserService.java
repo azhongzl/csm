@@ -1,4 +1,4 @@
-package com.itdoes.csm.service;
+package com.itdoes.csm.service.entity;
 
 import java.io.Serializable;
 
@@ -11,6 +11,7 @@ import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.EntityService;
 import com.itdoes.csm.dto.Admin;
 import com.itdoes.csm.entity.CsmUser;
+import com.itdoes.csm.service.UserCacheService;
 
 /**
  * @author Jalen Zhong
