@@ -73,16 +73,6 @@ public class UserCacheService extends BaseService {
 		for (CsmUser user : userList) {
 			addUser(user);
 		}
-
-		// TODO to be removed
-		for (CsmUserGroup userGroup : userGroupMap.values()) {
-			Set<CsmUserGroup> set = getSubUserGroupSet(userGroup.getId().toString());
-			System.out.println(userGroup.getName());
-			for (CsmUserGroup ug : set) {
-				System.out.println(ug.getName());
-			}
-			System.out.println("========================================");
-		}
 	}
 
 	public Set<String> getPermissionSetByUser(String userId) {
