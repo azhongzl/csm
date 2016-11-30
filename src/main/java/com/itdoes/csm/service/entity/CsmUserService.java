@@ -42,9 +42,11 @@ public class CsmUserService extends EntityService {
 	@Override
 	public <T, ID extends Serializable> void put(EntityPair<T, ID> pair, T entity, T oldEntity) {
 		final CsmUser user = (CsmUser) entity;
+		final CsmUser oldUser = (CsmUser) oldEntity;
 
 		Validate.isTrue(!ADMIN.isAdminByUsername(user.getUsername()) && !ADMIN.isAdminById(user.getId()),
 				"Cannot modify admin user");
+		Validate.isTrue(user.getUsername().equals(oldUser.getUsername()), "Cannot modify username");
 
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
