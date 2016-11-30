@@ -159,11 +159,11 @@ public class ChatService extends BaseService {
 		if (userGroup.isChat()) {
 			return true;
 		} else {
-			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService.findAll(
-					env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
-					Specifications.build(CsmChatCustomerUserGroup.class,
-							Lists.newArrayList(new FindFilter("user_group_id", Operator.EQ, userGroupIdString))),
-					null);
+			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService
+					.findAll(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+							Specifications.build(CsmChatCustomerUserGroup.class,
+									Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, userGroupIdString))),
+							null);
 			if (Collections3.isEmpty(chatCustomerUserGroupList)) {
 				return false;
 			}
@@ -182,8 +182,8 @@ public class ChatService extends BaseService {
 	private boolean isIncludedInChat(String userGroupId, String customerId) {
 		return entityDbService.count(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
 				Specifications.build(CsmChatCustomerUserGroup.class,
-						Lists.newArrayList(new FindFilter("user_group_id", Operator.EQ, userGroupId),
-								new FindFilter("customer_user_id", Operator.EQ, customerId)))) > 0;
+						Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, userGroupId),
+								new FindFilter("customerUserId", Operator.EQ, customerId)))) > 0;
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {
