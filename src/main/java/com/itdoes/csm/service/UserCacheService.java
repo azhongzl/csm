@@ -131,9 +131,9 @@ public class UserCacheService extends BaseService {
 		return userGroupMap.get(userGroupId);
 	}
 
-	public Set<CsmUserGroup> getSubUserGroupSet(String userGroupId) {
+	private Set<CsmUserGroup> getSubUserGroupSet(String userGroupId) {
 		final Set<CsmUserGroup> userGroupSet = Sets.newHashSet();
-		recurseSubUserGroup(userGroupMap.get(userGroupId), userGroupSet);
+		recurseSubUserGroup(getUserGroup(userGroupId), userGroupSet);
 		return userGroupSet;
 	}
 
