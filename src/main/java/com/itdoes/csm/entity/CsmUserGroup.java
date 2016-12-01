@@ -13,6 +13,8 @@ import com.itdoes.common.business.entity.EntityPerm;
 import com.itdoes.common.business.entity.EntityPermCommand;
 import com.itdoes.common.business.entity.EntityPermFilter;
 import com.itdoes.common.business.entity.EntityPermType;
+import com.itdoes.common.business.entity.FieldConstraint;
+import com.itdoes.common.business.entity.FieldConstraintStrategy;
 
 /**
  * This code is auto-generated.
@@ -37,6 +39,7 @@ public class CsmUserGroup extends BaseEntity {
 	@Column(name = "chat")
 	private Boolean chat;
 	@Column(name = "super_id")
+	@FieldConstraint(entity = CsmUserGroup.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	private java.util.UUID superId;
 
 	public java.util.UUID getId() {

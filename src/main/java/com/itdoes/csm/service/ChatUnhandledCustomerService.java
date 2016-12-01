@@ -49,7 +49,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 			addUnhandledCustomer(event);
 		}
 
-		entityDbService.deleteAll(pair);
+		entityDbService.deleteIterable(pair, unhandledCustomerList);
 	}
 
 	@PreDestroy

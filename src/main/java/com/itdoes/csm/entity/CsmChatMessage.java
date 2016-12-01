@@ -13,6 +13,8 @@ import com.itdoes.common.business.entity.EntityPerm;
 import com.itdoes.common.business.entity.EntityPermCommand;
 import com.itdoes.common.business.entity.EntityPermFilter;
 import com.itdoes.common.business.entity.EntityPermType;
+import com.itdoes.common.business.entity.FieldConstraint;
+import com.itdoes.common.business.entity.FieldConstraintStrategy;
 
 /**
  * This code is auto-generated.
@@ -31,8 +33,10 @@ public class CsmChatMessage extends BaseEntity {
 	@Column(name = "id")
 	private java.util.UUID id;
 	@Column(name = "room_id")
+	@FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	private java.util.UUID roomId;
 	@Column(name = "sender_id")
+	@FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	private java.util.UUID senderId;
 	@Column(name = "create_date_time")
 	private java.time.LocalDateTime createDateTime;

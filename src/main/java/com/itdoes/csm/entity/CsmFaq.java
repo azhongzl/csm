@@ -13,6 +13,8 @@ import com.itdoes.common.business.entity.EntityPerm;
 import com.itdoes.common.business.entity.EntityPermCommand;
 import com.itdoes.common.business.entity.EntityPermFilter;
 import com.itdoes.common.business.entity.EntityPermType;
+import com.itdoes.common.business.entity.FieldConstraint;
+import com.itdoes.common.business.entity.FieldConstraintStrategy;
 
 /**
  * This code is auto-generated.
@@ -22,7 +24,8 @@ import com.itdoes.common.business.entity.EntityPermType;
 @Entity
 @Table(name = "csm_faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerm({ @EntityPermType(command = EntityPermCommand.WRITE, filter = EntityPermFilter.PERMS), @EntityPermType(command = EntityPermCommand.READ, filter = EntityPermFilter.ANON) })
+@EntityPerm({ @EntityPermType(command = EntityPermCommand.WRITE, filter = EntityPermFilter.PERMS),
+		@EntityPermType(command = EntityPermCommand.READ, filter = EntityPermFilter.ANON) })
 @org.hibernate.search.annotations.Indexed
 public class CsmFaq extends BaseEntity {
 	private static final long serialVersionUID = 2027675641L;
@@ -33,6 +36,7 @@ public class CsmFaq extends BaseEntity {
 	private java.util.UUID id;
 	@Column(name = "category_id")
 	private java.util.UUID categoryId;
+	@FieldConstraint(entity = CsmFaqCategory.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	@org.hibernate.search.annotations.Field
 	@Column(name = "question")
 	private String question;

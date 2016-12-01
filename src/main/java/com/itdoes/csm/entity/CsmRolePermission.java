@@ -13,6 +13,8 @@ import com.itdoes.common.business.entity.EntityPerm;
 import com.itdoes.common.business.entity.EntityPermCommand;
 import com.itdoes.common.business.entity.EntityPermFilter;
 import com.itdoes.common.business.entity.EntityPermType;
+import com.itdoes.common.business.entity.FieldConstraint;
+import com.itdoes.common.business.entity.FieldConstraintStrategy;
 
 /**
  * This code is auto-generated.
@@ -31,8 +33,10 @@ public class CsmRolePermission extends BaseEntity {
 	@Column(name = "id")
 	private java.util.UUID id;
 	@Column(name = "role_id")
+	@FieldConstraint(entity = CsmRole.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	private java.util.UUID roleId;
 	@Column(name = "permission_id")
+	@FieldConstraint(entity = CsmPermission.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	private java.util.UUID permissionId;
 
 	public java.util.UUID getId() {
