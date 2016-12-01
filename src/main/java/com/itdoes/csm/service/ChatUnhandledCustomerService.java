@@ -10,6 +10,7 @@ import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
@@ -58,12 +59,16 @@ public class ChatUnhandledCustomerService extends BaseService {
 			return;
 		}
 
+		final List<CsmChatUnhandledCustomer> unhandledCustomerList = Lists
+				.newArrayListWithCapacity(unhandledCustomerMap.size());
 		for (ChatEvent event : unhandledCustomerMap.values()) {
 			final CsmChatUnhandledCustomer unhandledCustomer = new CsmChatUnhandledCustomer();
 			unhandledCustomer.setUserId(UUID.fromString(event.getUserId()));
 			unhandledCustomer.setCreateDateTime(event.getDateTime());
-			entityDbService.save(pair, unhandledCustomer);
+			unhandledCustomerList.add(unhandledCustomer);
 		}
+
+		entityDbService.postIterable(pair, unhandledCustomerList);
 	}
 
 	public boolean hasUnhandledCustomers() {
