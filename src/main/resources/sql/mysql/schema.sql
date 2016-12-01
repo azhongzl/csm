@@ -5,8 +5,7 @@ create table csm_user_group (
 	admin bit not null,
 	chat bit not null,
 	super_id binary(16),
-    primary key (id),
-    foreign key (super_id) references csm_user_group(id)
+    primary key (id)
 ) engine=InnoDB;
 
 drop table if exists csm_role;
@@ -29,9 +28,7 @@ create table csm_user_group_role (
 	id binary(16) not null,
 	user_group_id binary(16) not null,
 	role_id binary(16) not null,
-    primary key (id),
-    foreign key (user_group_id) references csm_user_group(id),
-    foreign key (role_id) references csm_role(id)
+    primary key (id)
 ) engine=InnoDB;
 
 drop table if exists csm_role_permission;
@@ -39,9 +36,7 @@ create table csm_role_permission (
 	id binary(16) not null,
 	role_id binary(16) not null,
 	permission_id binary(16) not null,
-    primary key (id),
-    foreign key (role_id) references csm_role(id),
-    foreign key (permission_id) references csm_permission(id)
+    primary key (id)
 ) engine=InnoDB;
 
 drop table if exists csm_user;
@@ -52,8 +47,7 @@ create table csm_user (
 	salt char(16) not null,
 	active bit not null,
 	user_group_id binary(16) not null,
-    primary key (id),
-    foreign key (user_group_id) references csm_user_group(id)
+    primary key (id)
 ) engine=InnoDB;
 
 drop table if exists csm_faq_category;
@@ -81,8 +75,7 @@ create table csm_faq (
 	create_date_time timestamp not null,
 	modify_account_id binary(16) not null,
 	modify_date_time timestamp not null,
-    primary key (id),
-    foreign key (category_id) references csm_faq_category(id)
+    primary key (id)
 ) engine=InnoDB;
 
 drop table if exists csm_chat_message;
@@ -93,9 +86,7 @@ create table csm_chat_message (
 	create_date_time timestamp not null,
 	from_admin bit not null,
 	message varchar(500) not null,
-    primary key (id),
-    foreign key (room_id) references csm_user(id),
-    foreign key (sender_id) references csm_user(id)
+    primary key (id)
 ) engine=InnoDB;
 
 drop table if exists csm_chat_customer_user_group;
@@ -104,10 +95,7 @@ create table csm_chat_customer_user_group (
 	customer_user_id binary(16) not null,
 	user_group_id binary(16) not null,
 	operator_user_id binary(16) not null,
-    primary key (id),
-    foreign key (customer_user_id) references csm_user(id),
-    foreign key (user_group_id) references csm_user_group(id),
-    foreign key (operator_user_id) references csm_user(id)
+    primary key (id)
 ) engine=InnoDB;
 
 drop table if exists csm_chat_unhandled_customer;
@@ -115,6 +103,5 @@ create table csm_chat_unhandled_customer (
 	id binary(16) not null,
 	user_id binary(16) not null,
 	create_date_time timestamp not null,
-    primary key (id),
-    foreign key (user_id) references csm_user(id)
+    primary key (id)
 ) engine=InnoDB;
