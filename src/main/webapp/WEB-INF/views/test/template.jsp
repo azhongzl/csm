@@ -1,81 +1,59 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}" />
+
 <!DOCTYPE html>
 <html>
 <head>
 <title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
-<script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
-<script type="text/javascript" src="${ctx}/static/js/lib/polyfill.js"></script>
 
-
-<link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
 <link href="${ctx}/static/css/adminChat.css" rel="stylesheet">
 <script src="${ctx}/static/js/lib/sockjs.js"></script>
 <script src="${ctx}/static/js/lib/stomp.js"></script>
 </head>
 <body>
-	<div id="main" class="container">
-		<div class="row clearfix">
-			<div class="col-md-12 column" style="background-color: #82c0ff">
-				<nav class="navbar navbar-default " role="navigation" style="background-color: #82c0ff">
-					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-						<h2>KUZCOLIGHTING</h2>
-						<ul class="nav navbar-nav navbar-right" style="font-size: 15px">
-							<li class="dropdown"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"
-								style="background-color: #82c0ff">PROFILE<strong class="caret"></strong></a>
-								<ul class="dropdown-menu">
-									<li><a href="javascript:void(0)">OPTION1</a></li>
-									<li class="divider"></li>
-									<li><a href="javascript:void(0)">OPTION2</a></li>
-									<li class="divider"></li>
-									<li><a href="javascript:void(0)">OPTION3</a></li>
-								</ul></li>
-							<li class="dropdown"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"
-								style="background-color: #82c0ff">MENU<strong class="caret"></strong></a>
-								<ul class="dropdown-menu">
+	<template id="chatMainPage">
+	<div>
+		<div class="row">
+			<div class="col-lg-12">
+				<h3 class="page-header">Chat</h3>
+			</div>
+			<!-- /.col-lg-12 -->
+		</div>
+		<!-- /.row -->
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
 
-									<li><router-link :to="{name:'user'}">User</router-link></li>
-									<li class="divider"></li>
-									<li><router-link :to="{name:'group'}">Group</router-link></li>
-									<li class="divider"></li>
-									<li><router-link :to="{name:'role'}">Role</router-link></li>
-									<li class="divider"></li>
-									<li><router-link :to="{name:'permission'}">Permission</router-link></li>
-									<li class="divider"></li>
-									<li><a href="javascript:void(0)">Logout</a></li>
-								</ul></li>
-						</ul>
+						<!-- /.row (nested) -->
+
+						<div class="row clearfix">
+							<div class="col-md-2 column " style="height: 650px">
+								<router-view name="customer"></router-view>
+								<router-view name="service"></router-view>
+							</div>
+							<div class="col-md-10 column">
+								<router-view name="content"></router-view>
+							</div>
+						</div>
 					</div>
-				</nav>
+					<!-- /.panel-body -->
+				</div>
+				<!-- /.panel -->
 			</div>
+			<!-- /.col-lg-12 -->
 		</div>
-		<div class="row clearfix">
-			<div class="col-md-3 column " style="background-color: #d5eaff; height: 800px">
-				<router-view name="customer"></router-view>
-				<router-view name="service"></router-view>
-			</div>
-			<div class="col-md-9 column">
-				<router-view name="content"></router-view>
-			</div>
-		</div>
-
 	</div>
-
+	<!-- /.row --> </template>
 
 	<!------------------ template------------------- -->
 	<template id="customer">
 	<div>
-		<h3>Customer</h3>
+		<h4>Customer</h4>
 		<div class="list-group" style="height: 250px; overflow: auto">
 			<ul class="list-group">
 				<li class="list-group-item" v-for="(customer,index) in customers"><router-link
-						:to="{name:'content',params :{id:customer.userId},query:{name:customer.username}}" :id="customer.userId"
-						style="color:#838383">{{customer.username}}</router-link></li>
+						:to="{path:'/admin/chat/content',query:{name:customer.username,id:customer.userId}}" :id="customer.userId">{{customer.username}}</router-link></li>
 			</ul>
 		</div>
 	</div>
@@ -83,8 +61,8 @@
 
 	<template id="service">
 	<div>
-		<h3>Customer Service</h3>
-		<div class="list-group" style="height: 360px; overflow-y: auto">
+		<h4>Customer Service</h4>
+		<div class="list-group" style="height: 250px; overflow-y: auto">
 			<ul class="list-group">
 				<li class="list-group-item" v-for="(user,index) in service"><span class="badge" style="background-color: blue;">online</span><a
 					href="javascript:void(0)" v-on:click="showUser(user.name,index)">{{user.name}}</a></li>
@@ -97,13 +75,39 @@
 	</div>
 	</template>
 
+	<template id="content">
+	<div>
+		<div class="row clearfix">
+			<div id="sentence"
+				style="background-color: #f7f7f7; max-width: 1000px; height: 600px; padding-top: 10px; overflow-y: auto; overflow-x: hidden; padding-left: 20px; padding-right: 20px"></div>
+		</div>
+		<div class="row clearfix">
+			<div style="max-width: 1000px; height: 60px; margin-top: 2px; margin-left: 50px">
+				<p>
+				<h3>Talk to : {{userName}}</h3>
+				</p>
+				<div class="form-group input-group" style="max-width: 900px; margin-left: 10px">
+					<input type="text" class="form-control" v-on:keyup.enter="send" v-model="sentence"> <span
+						class="input-group-btn">
+						<button class="btn btn-default" type="button" v-on:click="send(sentence)">
+							<i class="fa fa-share">send</i>
+						</button>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	</template>
+
+
+
 	<template id="permission">
 	<div>
 		<h3>Permission</h3>
 		<div class="list-group">
-			<a href="javascript:viod(0)" class="list-group-item " v-on:click="addNew">ADD NEW PERMISSION</a>
-			
-					<div class="modal fade" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+			<a href="javascript:viod(0)" class="list-group-item active" v-on:click="addNew">ADD NEW PERMISSION</a>
+
+			<div class="modal fade" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -136,9 +140,9 @@
 				</div>
 				<!-- /.modal -->
 			</div>
-			
-			
-			
+
+
+
 			<template v-for="permission in permissions">
 			<div class="list-group-item">
 				<span>{{permission.name}}</span>
@@ -156,10 +160,10 @@
 	<div>
 		<h3>Role</h3>
 		<div class="list-group">
-			<a href="javascript:viod(0)" class="list-group-item " v-on:click="addNew">ADD NEW ROLE</a>
+			<a href="javascript:viod(0)" class="list-group-item active" v-on:click="addNew">ADD NEW ROLE</a>
 			<template v-for="role in roles">
 			<div class="list-group-item">
-				<span><router-link :to="{name:'role_permission',query:{id:role.id,name:role.name}}">{{role.name}}</router-link></span>
+				<span><router-link :to="{path:'/role_permission',query:{id:role.id,name:role.name}}">{{role.name}}</router-link></span>
 				<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
 					v-on:click="del(role.id)">delete</button>
 				<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
@@ -207,7 +211,7 @@
 	<div>
 		<h3>Group</h3>
 		<div class="list-group">
-			<a href="javascript:viod(0)" class="list-group-item " v-on:click="addNew">ADD NEW GROUP</a>
+			<a href="javascript:viod(0)" class="list-group-item  active" v-on:click="addNew">ADD NEW GROUP</a>
 
 			<div class="modal fade" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -252,7 +256,7 @@
 			</div>
 			<template v-for="group in groups">
 			<div class="list-group-item">
-				<span><router-link :to="{name:'group_role',query:{id:group.id,name:group.name}}">{{group.name}}</router-link><span>
+				<span><router-link :to="{path:'/group_role',query:{id:group.id,name:group.name}}">{{group.name}}</router-link></span>
 						<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
 							v-on:click="del(group.id,group.name)">delete</button>
 						<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
@@ -300,7 +304,7 @@
 	<div>
 		<h3>User</h3>
 		<div class="list-group">
-			<a href="javascript:viod(0)" class="list-group-item " v-on:click="addNew">ADD NEW USER</a>
+			<a href="javascript:viod(0)" class="list-group-item active " v-on:click="addNew">ADD NEW USER</a>
 
 			<div class="modal fade" id="myModal1" style="margin-top: 200px" tabindex="-1" role="dialog"
 				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -359,33 +363,175 @@
 	</div>
 	</template>
 
-	<template id="content">
+	<template id="faqMain">
 	<div>
-		<div class="row clearfix">
-			<div id="sentence"
-				style="background-color: #f7f7f7; height: 600px; padding-top: 10px; overflow-y: auto; overflow-x: hidden;"></div>
+		<div class="row">
+			<div class="col-lg-12">
+				<h3 class="page-header">FAQ</h3>
+			</div>
 		</div>
-		<div class="row clearfix">
-			<div style="border: 1px solid #c0c0c0; background-color: #95caff; height: 190px; margin-top: 10px">
-				<p>Talk to : {{userName}}</p>
-				<div class="form-inline" style="margin-top: 20px">
-					<input type="text" size="100" v-on:keyup.enter="send" v-model="sentence" />
-					<button type="button" class="btn btn-default" v-on:click="send(sentence)">Send</button>
+		<!-- /.row -->
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="row clearfix">
+							<div class="col-md-3 column ">
+								<router-view></router-view>
+							</div>
+							<div class="col-md-9 column">
+								<div id="content" class="col-lg-12">
+									<router-view name="content"></router-view>
+								</div>
+								<div class="col-md-5 column"></div>
+								<div id="pagecount" class="col-md-2 column">
+									<router-view name="pagecount"></router-view>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	</template>
 
+	<template id="FaqCategory">
+	<div class="list-group" style="max-height: 650px; overflow: auto">
+		<a class="list-group-item  active">Categories</a>
+		<ul class="list-group-item">
+			<li v-for="n in list" class="list-group-item" ><router-link :to="{path: '/faq/showFaqList', query: { id: n.id }}" >
+				{{n.name}} </router-link></li>
+		</ul>
+	</div>
+	</template>
+
+	<template id="FaqDetail">
+	<div class="list-group">
+		<a href="javascript:void(0)" class="list-group-item  active" v-on:click="faqAddNewUi()">ADD NEW FAQ</a>
+
+		<div v-for="n in list1" class="list-group-item">
+			<span><router-link :to="{path: '/faq/faqModify', query: { id: n.id }}">{{n.question}}</router-link></span>
+		</div>
+
+	</div>
+	</template>
+
+	<template id="FaqAddNewUi">
+	<div class=" form-group">
+		<div class=" form-group">
+
+			<label>QUESTION:</label>
+			<textarea name='question' class="form-control" rows="3" v-model='question'></textarea>
+		</div>
+		<div class=" form-group">
+			<label>ANSWER:</label>
+			<textarea name='answer' class="form-control" rows="5" v-model='answer'></textarea>
+		</div>
+		<div class=" form-group">
+			<label>Upload File:</label> <input type='file' name='uploadFile' multiple='multiple' v-on:change='showUploadFile()' />
+		</div>
+		<div class=" form-group">
+			<label>Uploaded files:</label>
+			<textarea name='attachments' rows='3' class="form-control" disabled='disabled' v-model='attachements'></textarea>
+		</div>
+		<button class="btn btn-default" v-on:click='faqAddNew()' style="width: 160px;">Submit</button>
+		<button class="btn btn-default" v-on:click='faqCancel()' style="width: 160px;">Cancel</button>
+	</div>
+	</template>
+
+	<template id="FaqModifyUi">
+
+	<div>
+		<div class=" form-group">
+			<label>QUESTION:</label>
+			<textarea name='question' class="form-control" rows="3" v-model='question'></textarea>
+		</div>
+		<div class=" form-group">
+			<label>ANSWER:</label>
+			<textarea name='answer' class="form-control" rows="5" v-model='answer'></textarea>
+		</div>
+		<div class=" form-group">
+			<lable v-show="attachments.length === 0?false:true">Attachments:</lable>
+			<template v-for='attachment in attachments'> <lable> <input type='checkbox' checked='checked'
+				v-bind:value='attachment' v-model='attach' v-show='attachments.length === 0?false:true' />{{attachment}} </lable> </template>
+		</div>
+		<div class=" form-group">
+			<label>Upload File:</label> <input type='file' name='uploadFile' multiple='multiple' v-on:change='showUploadFile()' />
+		</div>
+		<div class=" form-group">
+			<label>Uploaded files:</label>
+			<textarea name='attachments1' rows='3' class="form-control" disabled='disabled' v-model='attachements1'></textarea>
+		</div>
+		<button class="btn btn-default" v-on:click='adminFaqPut()' style="width: 160px;">Submit</button>
+		<button class="btn btn-default" v-on:click='adminFaqDelete()' style="width: 160px;">Delete</button>
+		<button class="btn btn-default" v-on:click='faqCancel()' style="width: 160px;">Cancel</button>
+	</div>
+	</template>
+
+	<template id="category">
+	<div>
+		<h3>Categories</h3>
+		<div class="list-group">
+			<a href="javascript:viod(0)" class="list-group-item  active" v-on:click="addNew">ADD NEW CATEGORY</a>
+
+			<div class="modal fade" id="categoryModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" id="myModalLabel">ADD NEW CATEGORY</h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<label for="input1" class="col-sm-2 control-label">Name</label>
+									<div class="col-sm-10">
+										<input class="form-control" id="input1" type="text" v-model="name" />
+									</div>
+									<label for="input2" class="col-sm-2 control-label"> Description</label>
+									<div class="col-sm-10" style="margin-top: 10px">
+										<input class="form-control" id="input2" type="text" v-model="description" />
+									</div>
+
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" v-on:click="addNewSubmit">submit</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
+
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal -->
+			</div>
+			<template v-for="n in list">
+			<div class="list-group-item">
+				<span>{{n.name}}</span>
+						<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
+							v-on:click="del(n.id)">delete</button>
+						<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
+							v-on:click="mod(n.id,n.name,n.description)">modify</button>
+			</div>
+			</template>
+		</div>
+	</div>
+	</template>
+
+
+	<template id="pageChange">
+	<div v-show="showKey">
+		<span><a href="javascript:void(0)" v-on:click="changePage(1)"> &laquo; </a></span> <span><a
+			href="javascript:void(0)" v-on:click="changePage(curPage - 1)"> &lsaquo; </a></span> <span v-for="n in totalPage"
+			:class="curPage === n ? 'current' : ''"> <a href="javascript:void(0)" v-on:click="changePage(n)">{{ n }}</a>
+		</span> <span><a href="javascript:void(0)" v-on:click="changePage(curPage + 1)"> &rsaquo; </a></span> <span><a
+			href="javascript:void(0)" v-on:click="changePage(totalPage)"> &raquo; </a></span>
+	</div>
+	</template>
+
 	<!------------------ template------------------- -->
-	<script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
-	<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
-	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
-	<script type="text/javascript" src="${ctx}/static/js/chatAdminFunction.js"></script>
-	<script type=text/javascript>
-		userId = "<shiro:principal property="id" />";
-		username = "<shiro:principal property="username" />";
-		ctx = "${ctx}";
-	</script>
 </body>
 </html>

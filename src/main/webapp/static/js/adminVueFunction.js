@@ -246,9 +246,9 @@ const faqModify = {
 			var url1 = url + "CsmFaq" + "/get/" + id;
 
 			var checkResult1 = ajaxGet(url1);
-			if (checkResult1.attachments !== undefined) {
+			if (checkResult1.attachments != undefined) {
             	this.attachments = checkResult1.attachments.split(",");
-			}
+   			}
 			this.attach = this.attachments;
 			this.question = checkResult1.question;
 			this.answer = checkResult1.answer;
@@ -285,6 +285,7 @@ const faqModify = {
 	    				var putdata = {
 	    					question : this.question,
 	    					answer : this.answer,
+	    					attachments : "",
 	    					modifyAccountId : userId,
 	    					modifyDateTime : getNowFormatDate(),
 	    				}

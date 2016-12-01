@@ -71,7 +71,7 @@ const store = new Vuex.Store({
 				    	$.each(temp,function(i,n){
 							url= ctx + "/e/CsmPermission/get/" + n.permissionId;
 							var result = ajaxGet(url);
-							n.permissionName=result.permission;
+							n.permissionName=result.name;
 				    	});
 				    	state.role_permissions = temp;
 			    	}
@@ -207,11 +207,18 @@ const content={
 
 const permission={
 		  template:'#permission',
+		  data:function(){
+			  return{
+				  permissionName:"",
+				  permissionValue:"",
+				  permissionId:"",
+			  }
+		  },
 
 		  created:function(){
 			  store.commit('permission');
-			  
 		  },
+
 		  computed:{
 			  permissions:function(){
 				  return this.$store.state.permissions;
@@ -220,16 +227,42 @@ const permission={
 		  },
 		methods:{
 			addNew:function(){
-				var name=prompt("please enter a permission:"," ");
-				if (name.trim().length>0){
+				$("#myPermissionModal").modal('show');
+			},
+			addNewSubmit:function(){
+               if(this.permissionId.trim().length==0){
+				if (this.permissionName.trim().length>0){
 					var url=ctx+"/e/CsmPermission/post"
 					var savedata = {
-							permission:name
+							name : this.permissionName,
+							permission : this.permissionValue,
 	  				};
-
 	  				ajaxcreate(savedata, url);
 	  				  store.commit('permission');
-				}
+	  				  this.permissionName="";
+	  				  this.permissionValue="";
+	  				$("#myPermissionModal").modal('hide');
+				}else{
+					alert("Please enter permission name ");
+				};
+               }else{
+            	   if(this.permissionName.trim().length>0){
+      				var url = ctx + "/e/CsmPermission/put/" + this.permissionId;
+    				var putdata = {
+    					name : this.permissionName,
+    					permission : this.permissionValue,
+    			    				}
+    				ajaxPut(putdata, url);
+					store.commit('permission');
+	  				  this.permissionName="";
+	  				  this.permissionValue="";
+	  				  this.permissionId="";
+	  				$("#myPermissionModal").modal('hide');
+            	   }else{
+            		   alert("Please enter permission name ");  
+            	   }
+            	   
+               }
 			},
 			del:function(id){
 				let url = ctx+ "/e/CsmRolePermission/find";
@@ -255,18 +288,13 @@ const permission={
 					});
 					store.commit('permission');
 				}
-		    	}
+		      }
 			},
-			mod:function(id,per){
-				var name=prompt("input:",per);
-					if (name.trim().length>0){
-    				var url = ctx + "/e/CsmPermission/put/" + id;
-    				var putdata = {
-    					permission : name,
-    			    				}
-    				ajaxPut(putdata, url);
-					store.commit('permission');
-					}
+			mod:function(id,name,per){
+				this.permissionName=name;
+				this.permissionValue=per;
+				this.permissionId=id;
+				$("#myPermissionModal").modal('show');
 					
 			},
 			}
