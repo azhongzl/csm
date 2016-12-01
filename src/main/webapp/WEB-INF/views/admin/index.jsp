@@ -36,10 +36,7 @@
 		</header>
 		<div id="site_content">
 			<div id="sidebar_container">
-
 				<router-view></router-view>
-
-
 			</div>
 			<div id="content">
 				<router-view name="content"></router-view>
@@ -147,7 +144,7 @@
 		Attachments: 
 		</p>		
 		<template v-for='attachment in attachments'  >
-			<input type='checkbox' :checked='checked' name='attach' :value='attachment' 
+			<input type='checkbox' checked='checked' name='attach' :value='attachment' 
 			v-model='attach' v-show="attachments.length === 0?false:true"/>{{attachment}}   
 		</template>
 		 <br><br>
