@@ -12,7 +12,7 @@ import com.itdoes.common.business.entity.BaseEntity;
 import com.itdoes.common.business.entity.EntityPerm;
 import com.itdoes.common.business.entity.EntityPermCommand;
 import com.itdoes.common.business.entity.EntityPermFilter;
-import com.itdoes.common.business.entity.EntityPermType;
+import com.itdoes.common.business.entity.EntityPerms;
 import com.itdoes.common.business.entity.FieldConstraint;
 import com.itdoes.common.business.entity.FieldConstraintStrategy;
 
@@ -24,8 +24,8 @@ import com.itdoes.common.business.entity.FieldConstraintStrategy;
 @Entity
 @Table(name = "csm_faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerm({ @EntityPermType(command = EntityPermCommand.WRITE, filter = EntityPermFilter.PERMS),
-		@EntityPermType(command = EntityPermCommand.READ, filter = EntityPermFilter.ANON) })
+@EntityPerms({ @EntityPerm(command = EntityPermCommand.WRITE, filter = EntityPermFilter.PERMS),
+		@EntityPerm(command = EntityPermCommand.READ, filter = EntityPermFilter.ANON) })
 @org.hibernate.search.annotations.Indexed
 public class CsmFaq extends BaseEntity {
 	private static final long serialVersionUID = 2027675641L;

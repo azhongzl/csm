@@ -12,7 +12,7 @@ import com.itdoes.common.business.entity.BaseEntity;
 import com.itdoes.common.business.entity.EntityPerm;
 import com.itdoes.common.business.entity.EntityPermCommand;
 import com.itdoes.common.business.entity.EntityPermFilter;
-import com.itdoes.common.business.entity.EntityPermType;
+import com.itdoes.common.business.entity.EntityPerms;
 
 /**
  * This code is auto-generated.
@@ -22,7 +22,7 @@ import com.itdoes.common.business.entity.EntityPermType;
 @Entity
 @Table(name = "csm_role")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerm({ @EntityPermType(command = EntityPermCommand.ALL, filter = EntityPermFilter.PERMS) })
+@EntityPerms({ @EntityPerm(command = EntityPermCommand.ALL, filter = EntityPermFilter.PERMS) })
 public class CsmRole extends BaseEntity {
 	private static final long serialVersionUID = -1566193677L;
 
