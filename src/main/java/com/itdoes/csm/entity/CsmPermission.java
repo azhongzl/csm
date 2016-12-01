@@ -9,10 +9,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.itdoes.common.business.entity.BaseEntity;
-import com.itdoes.common.business.entity.EntityPerm;
-import com.itdoes.common.business.entity.EntityPermCommand;
-import com.itdoes.common.business.entity.EntityPermFilter;
-import com.itdoes.common.business.entity.EntityPerms;
 
 /**
  * This code is auto-generated.
@@ -22,7 +18,7 @@ import com.itdoes.common.business.entity.EntityPerms;
 @Entity
 @Table(name = "csm_permission")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerms({ @EntityPerm(command = EntityPermCommand.ALL, filter = EntityPermFilter.PERMS) })
+@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.ALL, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS) })
 public class CsmPermission extends BaseEntity {
 	private static final long serialVersionUID = -1636844660L;
 

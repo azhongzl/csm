@@ -9,10 +9,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.itdoes.common.business.entity.BaseEntity;
-import com.itdoes.common.business.entity.EntityPerm;
-import com.itdoes.common.business.entity.EntityPermCommand;
-import com.itdoes.common.business.entity.EntityPermFilter;
-import com.itdoes.common.business.entity.EntityPerms;
 
 /**
  * This code is auto-generated.
@@ -22,8 +18,7 @@ import com.itdoes.common.business.entity.EntityPerms;
 @Entity
 @Table(name = "csm_faq_category")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerms({ @EntityPerm(command = EntityPermCommand.WRITE, filter = EntityPermFilter.PERMS),
-		@EntityPerm(command = EntityPermCommand.READ, filter = EntityPermFilter.ANON) })
+@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.WRITE, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS), @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.READ, filter = com.itdoes.common.business.entity.EntityPermFilter.ANON) })
 public class CsmFaqCategory extends BaseEntity {
 	private static final long serialVersionUID = 1207564311L;
 

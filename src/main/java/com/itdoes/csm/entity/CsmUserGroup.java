@@ -9,12 +9,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.itdoes.common.business.entity.BaseEntity;
-import com.itdoes.common.business.entity.EntityPerm;
-import com.itdoes.common.business.entity.EntityPermCommand;
-import com.itdoes.common.business.entity.EntityPermFilter;
-import com.itdoes.common.business.entity.EntityPerms;
-import com.itdoes.common.business.entity.FieldConstraint;
-import com.itdoes.common.business.entity.FieldConstraintStrategy;
 
 /**
  * This code is auto-generated.
@@ -24,7 +18,7 @@ import com.itdoes.common.business.entity.FieldConstraintStrategy;
 @Entity
 @Table(name = "csm_user_group")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerms({ @EntityPerm(command = EntityPermCommand.ALL, filter = EntityPermFilter.PERMS) })
+@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.ALL, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS) })
 public class CsmUserGroup extends BaseEntity {
 	private static final long serialVersionUID = 1943773207L;
 
@@ -38,8 +32,8 @@ public class CsmUserGroup extends BaseEntity {
 	private Boolean admin;
 	@Column(name = "chat")
 	private Boolean chat;
+	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUserGroup.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
 	@Column(name = "super_id")
-	@FieldConstraint(entity = CsmUserGroup.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	private java.util.UUID superId;
 
 	public java.util.UUID getId() {

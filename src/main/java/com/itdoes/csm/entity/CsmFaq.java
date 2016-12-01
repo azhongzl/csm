@@ -9,12 +9,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.itdoes.common.business.entity.BaseEntity;
-import com.itdoes.common.business.entity.EntityPerm;
-import com.itdoes.common.business.entity.EntityPermCommand;
-import com.itdoes.common.business.entity.EntityPermFilter;
-import com.itdoes.common.business.entity.EntityPerms;
-import com.itdoes.common.business.entity.FieldConstraint;
-import com.itdoes.common.business.entity.FieldConstraintStrategy;
 
 /**
  * This code is auto-generated.
@@ -24,8 +18,7 @@ import com.itdoes.common.business.entity.FieldConstraintStrategy;
 @Entity
 @Table(name = "csm_faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerms({ @EntityPerm(command = EntityPermCommand.WRITE, filter = EntityPermFilter.PERMS),
-		@EntityPerm(command = EntityPermCommand.READ, filter = EntityPermFilter.ANON) })
+@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.WRITE, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS), @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.READ, filter = com.itdoes.common.business.entity.EntityPermFilter.ANON) })
 @org.hibernate.search.annotations.Indexed
 public class CsmFaq extends BaseEntity {
 	private static final long serialVersionUID = 2027675641L;
@@ -34,9 +27,9 @@ public class CsmFaq extends BaseEntity {
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
+	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmFaqCategory.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
 	@Column(name = "category_id")
 	private java.util.UUID categoryId;
-	@FieldConstraint(entity = CsmFaqCategory.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	@org.hibernate.search.annotations.Field
 	@Column(name = "question")
 	private String question;

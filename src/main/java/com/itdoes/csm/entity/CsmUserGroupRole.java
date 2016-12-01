@@ -9,12 +9,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.itdoes.common.business.entity.BaseEntity;
-import com.itdoes.common.business.entity.EntityPerm;
-import com.itdoes.common.business.entity.EntityPermCommand;
-import com.itdoes.common.business.entity.EntityPermFilter;
-import com.itdoes.common.business.entity.EntityPerms;
-import com.itdoes.common.business.entity.FieldConstraint;
-import com.itdoes.common.business.entity.FieldConstraintStrategy;
 
 /**
  * This code is auto-generated.
@@ -24,7 +18,7 @@ import com.itdoes.common.business.entity.FieldConstraintStrategy;
 @Entity
 @Table(name = "csm_user_group_role")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerms({ @EntityPerm(command = EntityPermCommand.ALL, filter = EntityPermFilter.PERMS) })
+@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.ALL, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS) })
 public class CsmUserGroupRole extends BaseEntity {
 	private static final long serialVersionUID = -562646739L;
 
@@ -32,11 +26,11 @@ public class CsmUserGroupRole extends BaseEntity {
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
+	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUserGroup.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
 	@Column(name = "user_group_id")
-	@FieldConstraint(entity = CsmUserGroup.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	private java.util.UUID userGroupId;
+	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmRole.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
 	@Column(name = "role_id")
-	@FieldConstraint(entity = CsmRole.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	private java.util.UUID roleId;
 
 	public java.util.UUID getId() {

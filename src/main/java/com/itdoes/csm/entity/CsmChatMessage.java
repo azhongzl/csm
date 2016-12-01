@@ -9,12 +9,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.itdoes.common.business.entity.BaseEntity;
-import com.itdoes.common.business.entity.EntityPerm;
-import com.itdoes.common.business.entity.EntityPermCommand;
-import com.itdoes.common.business.entity.EntityPermFilter;
-import com.itdoes.common.business.entity.EntityPerms;
-import com.itdoes.common.business.entity.FieldConstraint;
-import com.itdoes.common.business.entity.FieldConstraintStrategy;
 
 /**
  * This code is auto-generated.
@@ -24,7 +18,7 @@ import com.itdoes.common.business.entity.FieldConstraintStrategy;
 @Entity
 @Table(name = "csm_chat_message")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@EntityPerms({ @EntityPerm(command = EntityPermCommand.ALL, filter = EntityPermFilter.USER) })
+@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.ALL, filter = com.itdoes.common.business.entity.EntityPermFilter.USER) })
 public class CsmChatMessage extends BaseEntity {
 	private static final long serialVersionUID = -1705651342L;
 
@@ -32,11 +26,11 @@ public class CsmChatMessage extends BaseEntity {
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
+	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
 	@Column(name = "room_id")
-	@FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	private java.util.UUID roomId;
+	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
 	@Column(name = "sender_id")
-	@FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = FieldConstraintStrategy.RESTRICT, deleteStrategy = FieldConstraintStrategy.RESTRICT)
 	private java.util.UUID senderId;
 	@Column(name = "create_date_time")
 	private java.time.LocalDateTime createDateTime;
