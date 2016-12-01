@@ -43,7 +43,7 @@ public class CsmFaq extends BaseEntity {
 	@org.hibernate.search.annotations.Field
 	@Column(name = "answer")
 	private String answer;
-	@com.itdoes.common.business.entity.UploadField
+	@com.itdoes.common.business.entity.FieldUpload
 	@Column(name = "attachments")
 	private String attachments;
 	@Column(name = "active")
