@@ -75,7 +75,7 @@
 				</tr>
 				<tr>
 					<td><input type="submit" value="Update"
-						onclick="this.form.action='${ctx}/e/Category/put/' document.getElementById('categoryId').value" /></td>
+						onclick="this.form.action='${ctx}/e/Category/put/' + document.getElementById('categoryId').value" /></td>
 				</tr>
 			</table>
 		</fieldset>
