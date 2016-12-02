@@ -29,7 +29,7 @@ public class CsmUserService extends EntityService {
 
 		Validate.isTrue(!ROOT.isRootByName(user.getUsername()), "Cannot create root user");
 		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
-
+		Validate.isTrue(userCacheService.getUserId(user.getUsername()) == null, "User [%s] exists", user.getUsername());
 		Validate.isTrue(StringUtils.isNotBlank(user.getPlainPassword()), "Password should not be null");
 		user.populatePassword();
 
