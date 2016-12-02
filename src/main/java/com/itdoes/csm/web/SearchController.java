@@ -34,11 +34,11 @@ public class SearchController extends BaseController {
 
 	@RequestMapping(value = "/search/CsmFaq", method = RequestMethod.GET, produces = MediaTypes.APPLICATION_JSON_UTF_8)
 	public Result searchFaq(@RequestParam(value = "ss") String searchString,
-			@RequestParam(value = "page_no", defaultValue = "1") int pageNo,
-			@RequestParam(value = "page_size", defaultValue = "-1") int pageSize,
-			@RequestParam(value = "page_sort", required = false) String pageSort, ServletRequest request) {
+			@RequestParam(value = BaseController.OO_SORT, required = false) String ooSort,
+			@RequestParam(value = BaseController.PAGE_NO, defaultValue = "1") int pageNo,
+			@RequestParam(value = BaseController.PAGE_SIZE, defaultValue = "-1") int pageSize, ServletRequest request) {
 		final Page<?> page = searchService.searchDefault(searchString, CsmFaq.class, FAQ_FIELDS,
-				buildPageRequest(pageNo, pageSize, pageSort));
+				buildPageRequest(ooSort, pageNo, pageSize));
 		return HttpResults.success(page);
 	}
 }
