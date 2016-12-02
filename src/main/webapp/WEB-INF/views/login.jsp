@@ -3,64 +3,77 @@
 <%@ page import="com.itdoes.common.core.shiro.Shiros"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>登录页</title>
-<script src="${ctx}/static/js/jquery.js" type="text/javascript"></script>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap Core CSS -->
+<link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
 </head>
 
 <body>
-	<h1>登录页</h1>
-	<form id="loginForm" action="${ctx}/login" method="post">
-		<%
-			String successUrl = (String) request.getAttribute(Shiros.SUCCESS_URL_KEY);
-			if (successUrl != null) {
-		%>
-		<input type="hidden" id="successUrl" name="successUrl" value="${successUrl}" />
-		<%
-			}
-		%>
-		<%
-			String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
-			if (error != null) {
-		%>
-		<div class="alert alert-error controls input-large">
-			<button class="close" data-dismiss="alert">×</button>
-			<%
-				if (error.contains("DisabledAccountException")) {
-						out.print("用户已被屏蔽,请登录其他用户.");
-					} else {
-						out.print("登录失败，请重试.");
-					}
-			%>
-		</div>
-		<%
-			}
-		%>
-		<div class="control-group">
-			<label for="username" class="control-label">名称:</label>
-			<div class="controls">
-				<input type="text" id="username" name="username" value="${username}" class="input-medium required" />
-			</div>
-		</div>
-		<div class="control-group">
-			<label for="password" class="control-label">密码:</label>
-			<div class="controls">
-				<input type="password" id="password" name="password" class="input-medium required" />
-			</div>
-		</div>
-		<div class="control-group">
-			<div class="controls">
-				<label class="checkbox inline" for="rememberMe"> <input type="checkbox" id="rememberMe" name="rememberMe"
-					checked /> 记住我
-				</label> <input id="submit_btn" class="btn" type="submit" value="登录" />
-				<p class="help-block">
-					(管理员：<b>admin/admin</b>, 普通用户：<b>user/user</b>)
-				</p>
-			</div>
-		</div>
-	</form>
+	<div class="container" style="margin-top: 140px">
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="login-panel panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Please Sign In</h3>
+					</div>
+					<div class="panel-body">
+						<form role="form" id="loginForm" action="${ctx}/login" method="post">
 
+							<%
+								String successUrl = (String) request.getAttribute(Shiros.SUCCESS_URL_KEY);
+								if (successUrl != null) {
+							%>
+							<input type="hidden" id="successUrl" name="successUrl" value="${successUrl}" />
+							<%
+								}
+							%>
+							<%
+								String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+								if (error != null) {
+							%>
+							<div class="alert alert-error controls input-large">
+								<button class="close" data-dismiss="alert">×</button>
+								<%
+									if (error.contains("DisabledAccountException")) {
+											out.print("用户已被屏蔽,请登录其他用户.");
+										} else {
+											out.print("登录失败，请重试.");
+										}
+								%>
+							</div>
+							<%
+								}
+							%>
+
+							<fieldset>
+								<div class="form-group">
+									<input class="form-control input-medium required" placeholder="username" name="username" type="text"
+										value="${username}" autofocus>
+								</div>
+								<div class="form-group">
+									<input class="form-control input-medium required" placeholder="password" name="password" type="password"
+										value="">
+								</div>
+								<div class="checkbox">
+									<label> <input name="remember" type="checkbox" value="Remember Me" checked>Remember Me
+									</label>
+								</div>
+								<input id="submit_btn" class="btn btn-lg btn-success btn-block" type="submit" value="Login" />
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="${ctx}/static/js/lib/jquery.js"></script>
+	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
 	<script>
 		$(document).ready(function() {
 			$("#loginForm").validate();
