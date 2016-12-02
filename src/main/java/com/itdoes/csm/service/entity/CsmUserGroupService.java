@@ -1,6 +1,7 @@
 package com.itdoes.csm.service.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.EntityService;
+import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmUserGroup;
 import com.itdoes.csm.service.UserCacheService;
@@ -27,7 +29,7 @@ public class CsmUserGroupService extends EntityService {
 		final CsmUserGroup userGroup = (CsmUserGroup) entity;
 
 		Validate.isTrue(!ROOT.isRootByName(userGroup.getName()), "Cannot create root UserGroup");
-		Validate.isTrue(!ROOT.isRootById(userGroup.getSuperId()), "Cannot use root UserGroup as super");
+		Validate.isTrue(!ROOT.isRootById(userGroup.getSuperId()), "Cannot use root as super UserGroup");
 
 		final ID id = super.post(pair, entity);
 
@@ -42,7 +44,14 @@ public class CsmUserGroupService extends EntityService {
 
 		Validate.isTrue(!ROOT.isRootByName(userGroup.getName()) && !ROOT.isRootById(userGroup.getId()),
 				"Cannot modify root UserGroup");
-		Validate.isTrue(!ROOT.isRootById(userGroup.getSuperId()), "Cannot use root UserGroup as super");
+		Validate.isTrue(!ROOT.isRootById(userGroup.getSuperId()), "Cannot use root as super UserGroup");
+		final Set<CsmUserGroup> subUserGroupSet = userCacheService.getSubUserGroupSet(userGroup.getId().toString());
+		if (!Collections3.isEmpty(subUserGroupSet)) {
+			for (CsmUserGroup subUserGroup : subUserGroupSet) {
+				Validate.isTrue(!subUserGroup.getId().equals(userGroup.getSuperId()),
+						"Cannot use descendant [%s] as your super UserGroup", subUserGroup.getName());
+			}
+		}
 
 		super.put(pair, entity, oldEntity);
 
