@@ -75,7 +75,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 		return !Collections3.isEmpty(unhandledCustomerMap);
 	}
 
-	public boolean hasUnhandledCustomer(String userId) {
+	public boolean isUnhandledCustomer(String userId) {
 		return unhandledCustomerMap.containsKey(userId);
 	}
 

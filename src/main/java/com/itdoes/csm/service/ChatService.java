@@ -114,9 +114,8 @@ public class ChatService extends BaseService {
 				if (!userGroup.isAdmin()) {
 					final ChatUser chatUser = new ChatUser(user.getId().toString(), user.getUsername());
 					chatUser.setOnline(onlineService.isOnlineUser(chatUser.getUserId()));
-					chatUser.setUnhandled(unhandledCustomerService.hasUnhandledCustomer(chatUser.getUserId())
-							&& (adminUserGroup.isChat()
-									|| isIncludedInChat(adminUserGroupIdString, chatUser.getUserId())));
+					chatUser.setUnhandled(
+							isUnhandledCustomer(adminUserGroup, adminUserGroupIdString, chatUser.getUserId()));
 					customerList.add(chatUser);
 				}
 			}
@@ -153,24 +152,24 @@ public class ChatService extends BaseService {
 			return false;
 		}
 
-		final CsmUser user = userCacheService.getUser(shiroUser.getId());
-		final String userGroupIdString = user.getUserGroupId().toString();
-		final CsmUserGroup userGroup = userCacheService.getUserGroup(userGroupIdString);
-		if (userGroup.isChat()) {
+		final CsmUser adminUser = userCacheService.getUser(shiroUser.getId());
+		final String adminUserGroupIdString = adminUser.getUserGroupId().toString();
+		final CsmUserGroup adminUserGroup = userCacheService.getUserGroup(adminUserGroupIdString);
+		if (adminUserGroup.isChat()) {
 			return true;
 		} else {
-			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService
-					.findAll(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
-							Specifications.build(CsmChatCustomerUserGroup.class,
-									Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, userGroupIdString))),
-							null);
+			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService.findAll(
+					env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+					Specifications.build(CsmChatCustomerUserGroup.class,
+							Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, adminUserGroupIdString))),
+					null);
 			if (Collections3.isEmpty(chatCustomerUserGroupList)) {
 				return false;
 			}
 
 			for (CsmChatCustomerUserGroup chatCustomerUserGroup : chatCustomerUserGroupList) {
 				if (unhandledCustomerService
-						.hasUnhandledCustomer(chatCustomerUserGroup.getCustomerUserId().toString())) {
+						.isUnhandledCustomer(chatCustomerUserGroup.getCustomerUserId().toString())) {
 					return true;
 				}
 			}
@@ -179,11 +178,19 @@ public class ChatService extends BaseService {
 		}
 	}
 
-	private boolean isIncludedInChat(String userGroupId, String customerId) {
-		return entityDbService.count(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
-				Specifications.build(CsmChatCustomerUserGroup.class,
-						Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, userGroupId),
-								new FindFilter("customerUserId", Operator.EQ, customerId)))) > 0;
+	private boolean isUnhandledCustomer(CsmUserGroup adminUserGroup, String adminUserGroupIdString, String customerId) {
+		if (!unhandledCustomerService.isUnhandledCustomer(customerId)) {
+			return false;
+		}
+
+		if (adminUserGroup.isChat()) {
+			return true;
+		} else {
+			return entityDbService.count(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+					Specifications.build(CsmChatCustomerUserGroup.class,
+							Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, adminUserGroupIdString),
+									new FindFilter("customerUserId", Operator.EQ, customerId)))) > 0;
+		}
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {
