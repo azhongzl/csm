@@ -112,7 +112,7 @@ public class ChatService extends BaseService {
 			final CsmUserGroup userGroup = userCacheService.getUserGroup(user.getUserGroupId().toString());
 			if (userGroup != null) {
 				if (!userGroup.isAdmin()) {
-					final ChatUser chatUser = ChatUser.valueOf(user);
+					final ChatUser chatUser = new ChatUser(user.getId().toString(), user.getUsername());
 					chatUser.setOnline(onlineService.isOnlineUser(chatUser.getUserId()));
 					chatUser.setUnhandled(unhandledCustomerService.hasUnhandledCustomer(chatUser.getUserId())
 							&& (adminUserGroup.isChat()

@@ -1,15 +1,9 @@
 package com.itdoes.csm.dto;
 
-import com.itdoes.csm.entity.CsmUser;
-
 /**
  * @author Jalen Zhong
  */
 public class ChatUser {
-	public static ChatUser valueOf(CsmUser user) {
-		return new ChatUser(user.getId().toString(), user.getUsername());
-	}
-
 	private final String userId;
 	private final String username;
 	private boolean online;
