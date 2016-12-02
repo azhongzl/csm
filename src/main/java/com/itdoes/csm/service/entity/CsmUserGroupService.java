@@ -49,7 +49,7 @@ public class CsmUserGroupService extends EntityService {
 		if (!Collections3.isEmpty(subUserGroupSet)) {
 			for (CsmUserGroup subUserGroup : subUserGroupSet) {
 				Validate.isTrue(!subUserGroup.getId().equals(userGroup.getSuperId()),
-						"Cannot use descendant [%s] as your super UserGroup", subUserGroup.getName());
+						"Cannot use descendant [%s] as super UserGroup", subUserGroup.getName());
 			}
 		}
 
