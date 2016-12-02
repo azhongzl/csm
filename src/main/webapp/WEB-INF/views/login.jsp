@@ -24,7 +24,6 @@
 					</div>
 					<div class="panel-body">
 						<form role="form" id="loginForm" action="${ctx}/login" method="post">
-
 							<%
 								String successUrl = (String) request.getAttribute(Shiros.SUCCESS_URL_KEY);
 								if (successUrl != null) {
@@ -32,8 +31,7 @@
 							<input type="hidden" id="successUrl" name="successUrl" value="${successUrl}" />
 							<%
 								}
-							%>
-							<%
+
 								String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
 								if (error != null) {
 							%>
@@ -41,9 +39,9 @@
 								<button class="close" data-dismiss="alert">×</button>
 								<%
 									if (error.contains("DisabledAccountException")) {
-											out.print("用户已被屏蔽,请登录其他用户.");
+											out.print("Inactive user");
 										} else {
-											out.print("登录失败，请重试.");
+											out.print("Login failed");
 										}
 								%>
 							</div>
@@ -57,11 +55,10 @@
 										value="${username}" autofocus>
 								</div>
 								<div class="form-group">
-									<input class="form-control input-medium required" placeholder="password" name="password" type="password"
-										value="">
+									<input class="form-control input-medium required" placeholder="password" name="password" type="password">
 								</div>
 								<div class="checkbox">
-									<label> <input name="remember" type="checkbox" value="Remember Me" checked>Remember Me
+									<label> <input name="rememberMe" type="checkbox" checked>Remember Me
 									</label>
 								</div>
 								<input id="submit_btn" class="btn btn-lg btn-success btn-block" type="submit" value="Login" />
