@@ -12,6 +12,7 @@ import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -55,14 +56,31 @@ public class ChatController {
 	}
 
 	@RequestMapping("/admin/chat")
-	public String adminChat() {
+	public String adminChat(Principal principal, Model model) {
+		model.addAttribute("currentUserGroup", chatService.getUserGroup(getShiroUser(principal)));
 		return "admin/chat";
 	}
 
 	@RequestMapping("/admin/chat/hasUnhandledCustomers")
 	@ResponseBody
-	public Result hasUnhandledCustomers(Principal principal) {
+	public Result adminHasUnhandledCustomers(Principal principal) {
 		return HttpResults.success(chatService.hasUnhandledCustomers(getShiroUser(principal)));
+	}
+
+	@RequestMapping(value = "/admin/chat/addCustomerUserGroup", method = RequestMethod.POST)
+	@ResponseBody
+	public Result adminAddCustomerUserGroup(@RequestParam("customerId") String customerId,
+			@RequestParam("userGroupId") String userGroupId, Principal principal) {
+		return HttpResults
+				.success(chatService.addCustomerUserGroup(customerId, userGroupId, getShiroUser(principal), template));
+	}
+
+	@RequestMapping(value = "/admin/chat/removeCustomerUserGroup", method = RequestMethod.POST)
+	@ResponseBody
+	public Result adminRemoveCustomerUserGroup(@RequestParam("customerUserGroupId") String id,
+			@RequestParam("customerId") String customerId, @RequestParam("userGroupId") String userGroupId) {
+		chatService.removeCustomerUserGroup(id, customerId, userGroupId, template);
+		return HttpResults.success();
 	}
 
 	@RequestMapping("/jalenChat")

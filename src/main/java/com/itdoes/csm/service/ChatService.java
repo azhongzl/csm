@@ -1,5 +1,6 @@
 package com.itdoes.csm.service;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
@@ -68,6 +69,14 @@ public class ChatService extends BaseService {
 	@Autowired
 	private EntityDbService entityDbService;
 
+	public CsmUser getUser(ShiroUser shiroUser) {
+		return userCacheService.getUser(shiroUser.getId());
+	}
+
+	public CsmUserGroup getUserGroup(ShiroUser shiroUser) {
+		return userCacheService.getUserGroup(getUser(shiroUser).getUserGroupId().toString());
+	}
+
 	public List<CsmChatMessage> customerInitMessage(ShiroUser shiroUser) {
 		final String userIdString = shiroUser.getId();
 		List<CsmChatMessage> messageList = initMessage(userIdString, shiroUser, false);
@@ -93,13 +102,12 @@ public class ChatService extends BaseService {
 		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(false);
+		saveChatMessage(message);
 		template.convertAndSend("/topic/chat/message/" + userIdString, message);
 
 		final ChatEvent messageEvent = new ChatEvent(userIdString);
-		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
 		unhandledCustomerService.addUnhandledCustomer(messageEvent);
-
-		saveChatMessage(message);
+		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
 	}
 
 	public List<ChatUser> adminInit(ShiroUser shiroUser) {
@@ -115,7 +123,7 @@ public class ChatService extends BaseService {
 					final ChatUser chatUser = new ChatUser(user.getId().toString(), user.getUsername());
 					chatUser.setOnline(onlineService.isOnlineUser(chatUser.getUserId()));
 					chatUser.setUnhandled(
-							isUnhandledCustomer(adminUserGroup, adminUserGroupIdString, chatUser.getUserId()));
+							isUnhandledCustomer(chatUser.getUserId(), adminUserGroup, adminUserGroupIdString));
 					customerList.add(chatUser);
 				}
 			}
@@ -138,13 +146,12 @@ public class ChatService extends BaseService {
 		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(true);
+		saveChatMessage(message);
 		template.convertAndSend("/topic/chat/message/" + roomIdUuid, message);
 
 		final ChatEvent messageEvent = new ChatEvent(roomIdUuid.toString());
-		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
 		unhandledCustomerService.removeUnhandledCustomer(messageEvent.getUserId());
-
-		saveChatMessage(message);
+		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
 	}
 
 	public boolean hasUnhandledCustomers(ShiroUser shiroUser) {
@@ -178,7 +185,7 @@ public class ChatService extends BaseService {
 		}
 	}
 
-	private boolean isUnhandledCustomer(CsmUserGroup adminUserGroup, String adminUserGroupIdString, String customerId) {
+	private boolean isUnhandledCustomer(String customerId, CsmUserGroup adminUserGroup, String adminUserGroupIdString) {
 		if (!unhandledCustomerService.isUnhandledCustomer(customerId)) {
 			return false;
 		}
@@ -186,11 +193,42 @@ public class ChatService extends BaseService {
 		if (adminUserGroup.isChat()) {
 			return true;
 		} else {
-			return entityDbService.count(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
-					Specifications.build(CsmChatCustomerUserGroup.class,
-							Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, adminUserGroupIdString),
-									new FindFilter("customerUserId", Operator.EQ, customerId)))) > 0;
+			return isCustomerUserGroupExist(customerId, adminUserGroupIdString);
 		}
+	}
+
+	private boolean isCustomerUserGroupExist(String customerId, String userGroupId) {
+		return entityDbService.count(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+				Specifications.build(CsmChatCustomerUserGroup.class,
+						Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerId),
+								new FindFilter("userGroupId", Operator.EQ, userGroupId)))) > 0;
+	}
+
+	public Serializable addCustomerUserGroup(String customerId, String userGroupId, ShiroUser shiroUser,
+			SimpMessagingTemplate template) {
+		if (isCustomerUserGroupExist(customerId, userGroupId)) {
+			return false;
+		}
+
+		final CsmChatCustomerUserGroup chatCustomerUserGroup = new CsmChatCustomerUserGroup();
+		chatCustomerUserGroup.setCustomerUserId(UUID.fromString(customerId));
+		chatCustomerUserGroup.setUserGroupId(UUID.fromString(userGroupId));
+		chatCustomerUserGroup.setOperatorUserId(UUID.fromString(shiroUser.getId()));
+		final Serializable id = entityDbService.post(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+				chatCustomerUserGroup);
+
+		final ChatEvent messageEvent = new ChatEvent(customerId);
+		template.convertAndSend("/topic/chat/addCustomerUserGroup/" + userGroupId, messageEvent);
+
+		return id;
+	}
+
+	public void removeCustomerUserGroup(String id, String customerId, String userGroupId,
+			SimpMessagingTemplate template) {
+		entityDbService.delete(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()), UUID.fromString(id));
+
+		final ChatEvent messageEvent = new ChatEvent(customerId);
+		template.convertAndSend("/topic/chat/removeCustomerUserGroup/" + userGroupId, messageEvent);
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {
