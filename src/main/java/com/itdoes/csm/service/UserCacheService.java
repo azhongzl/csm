@@ -76,7 +76,7 @@ public class UserCacheService extends BaseService {
 	}
 
 	public Set<String> getPermissionSetByUser(String userId) {
-		final CsmUser user = userMap.get(userId);
+		final CsmUser user = getUser(userId);
 		if (user == null) {
 			return Collections.emptySet();
 		}
@@ -122,6 +122,10 @@ public class UserCacheService extends BaseService {
 	}
 
 	public Set<CsmUserGroup> getSubUserGroupSet(String userGroupId) {
+		if (StringUtils.isBlank(userGroupId)) {
+			return Collections.emptySet();
+		}
+
 		final Set<CsmUserGroup> userGroupSet = Sets.newHashSet();
 		recurseSubUserGroup(getUserGroup(userGroupId), userGroupSet);
 		return userGroupSet;
@@ -220,10 +224,18 @@ public class UserCacheService extends BaseService {
 	}
 
 	public CsmUser getUser(String userId) {
+		if (StringUtils.isBlank(userId)) {
+			return null;
+		}
+
 		return userMap.get(userId);
 	}
 
 	public String getUserId(String username) {
+		if (StringUtils.isBlank(username)) {
+			return null;
+		}
+
 		return usernameIdMap.get(username);
 	}
 }
