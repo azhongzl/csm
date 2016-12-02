@@ -38,7 +38,7 @@ public class UserCacheService extends BaseService {
 	private final Map<String, CsmUserGroup> userGroupMap = Maps.newConcurrentMap();
 	private final Map<String, CsmUserGroupRole> userGroupRoleMap = Maps.newConcurrentMap();
 	private final Map<String, CsmRolePermission> rolePermissionMap = Maps.newConcurrentMap();
-	private final Map<String, Set<String>> permissionMap = Maps.newConcurrentMap();
+	private final Map<String, Set<String>> permissionSetMap = Maps.newConcurrentMap();
 	private final Map<String, CsmUser> userMap = Maps.newConcurrentMap();
 	private final Map<String, String> usernameIdMap = Maps.newConcurrentMap();
 
@@ -92,7 +92,7 @@ public class UserCacheService extends BaseService {
 				if (userGroupRole.getUserGroupId().equals(userGroup.getId())) {
 					for (CsmRolePermission rolePermission : rolePermissionMap.values()) {
 						if (rolePermission.getRoleId().equals(userGroupRole.getRoleId())) {
-							final Set<String> permissionSet = permissionMap
+							final Set<String> permissionSet = permissionSetMap
 									.get(rolePermission.getPermissionId().toString());
 							if (!Collections3.isEmpty(permissionSet)) {
 								result.addAll(permissionSet);
@@ -165,15 +165,15 @@ public class UserCacheService extends BaseService {
 	}
 
 	public void addPermission(CsmPermission permission) {
-		permissionMap.put(permission.getId().toString(), getPermissionSet(permission));
+		permissionSetMap.put(permission.getId().toString(), getPermissionSet(permission));
 	}
 
 	public void modifyPermission(CsmPermission permission) {
-		permissionMap.put(permission.getId().toString(), getPermissionSet(permission));
+		permissionSetMap.put(permission.getId().toString(), getPermissionSet(permission));
 	}
 
 	public void removePermission(String id) {
-		permissionMap.remove(id);
+		permissionSetMap.remove(id);
 	}
 
 	private Set<String> getPermissionSet(CsmPermission permission) {
