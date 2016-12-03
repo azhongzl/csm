@@ -75,36 +75,6 @@ public class UserCacheService extends BaseService {
 		}
 	}
 
-	public Set<String> getPermissionSetByUser(String userId) {
-		final CsmUser user = getUser(userId);
-		if (user == null) {
-			return Collections.emptySet();
-		}
-
-		return getPermissionSetByUserGroup(user.getUserGroupId().toString());
-	}
-
-	private Set<String> getPermissionSetByUserGroup(String userGroupId) {
-		final Set<String> result = Sets.newHashSet();
-		final Set<CsmUserGroup> userGroupSet = getSubUserGroupSet(userGroupId);
-		for (CsmUserGroup userGroup : userGroupSet) {
-			for (CsmUserGroupRole userGroupRole : userGroupRoleMap.values()) {
-				if (userGroupRole.getUserGroupId().equals(userGroup.getId())) {
-					for (CsmRolePermission rolePermission : rolePermissionMap.values()) {
-						if (rolePermission.getRoleId().equals(userGroupRole.getRoleId())) {
-							final Set<String> permissionSet = permissionSetMap
-									.get(rolePermission.getPermissionId().toString());
-							if (!Collections3.isEmpty(permissionSet)) {
-								result.addAll(permissionSet);
-							}
-						}
-					}
-				}
-			}
-		}
-		return result;
-	}
-
 	public void addUserGroup(CsmUserGroup userGroup) {
 		userGroupMap.put(userGroup.getId().toString(), userGroup);
 	}
@@ -118,7 +88,20 @@ public class UserCacheService extends BaseService {
 	}
 
 	public CsmUserGroup getUserGroup(String userGroupId) {
+		if (StringUtils.isBlank(userGroupId)) {
+			return null;
+		}
+
 		return userGroupMap.get(userGroupId);
+	}
+
+	public CsmUserGroup getUserGroupByUser(String userId) {
+		final CsmUser user = getUser(userId);
+		if (user == null) {
+			return null;
+		}
+
+		return getUserGroup(user.getUserGroupId().toString());
 	}
 
 	public Set<CsmUserGroup> getSubUserGroupSet(String userGroupId) {
@@ -178,6 +161,36 @@ public class UserCacheService extends BaseService {
 
 	public void removePermission(String id) {
 		permissionSetMap.remove(id);
+	}
+
+	public Set<String> getPermissionSetByUser(String userId) {
+		final CsmUser user = getUser(userId);
+		if (user == null) {
+			return Collections.emptySet();
+		}
+
+		return getPermissionSetByUserGroup(user.getUserGroupId().toString());
+	}
+
+	private Set<String> getPermissionSetByUserGroup(String userGroupId) {
+		final Set<String> result = Sets.newHashSet();
+		final Set<CsmUserGroup> userGroupSet = getSubUserGroupSet(userGroupId);
+		for (CsmUserGroup userGroup : userGroupSet) {
+			for (CsmUserGroupRole userGroupRole : userGroupRoleMap.values()) {
+				if (userGroupRole.getUserGroupId().equals(userGroup.getId())) {
+					for (CsmRolePermission rolePermission : rolePermissionMap.values()) {
+						if (rolePermission.getRoleId().equals(userGroupRole.getRoleId())) {
+							final Set<String> permissionSet = permissionSetMap
+									.get(rolePermission.getPermissionId().toString());
+							if (!Collections3.isEmpty(permissionSet)) {
+								result.addAll(permissionSet);
+							}
+						}
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	private Set<String> getPermissionSet(CsmPermission permission) {

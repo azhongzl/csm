@@ -74,7 +74,7 @@ public class ChatService extends BaseService {
 	}
 
 	public CsmUserGroup getUserGroup(ShiroUser shiroUser) {
-		return userCacheService.getUserGroup(getUser(shiroUser).getUserGroupId().toString());
+		return userCacheService.getUserGroupByUser(shiroUser.getId());
 	}
 
 	public List<CsmChatMessage> customerInitMessage(ShiroUser shiroUser) {
