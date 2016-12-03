@@ -137,8 +137,9 @@ public class ChatService extends BaseService {
 	}
 
 	public void adminSendMessage(CsmChatMessage message, ShiroUser shiroUser, SimpMessagingTemplate template) {
-		final UUID roomIdUuid = message.getRoomId();
-		Validate.notNull(roomIdUuid, "RoomId should not be null");
+		final UUID roomId = message.getRoomId();
+		Validate.notNull(roomId, "RoomId should not be null");
+		final String roomIdString = roomId.toString();
 
 		final String userIdString = shiroUser.getId();
 		final UUID userId = UUID.fromString(userIdString);
@@ -147,9 +148,9 @@ public class ChatService extends BaseService {
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(true);
 		saveChatMessage(message);
-		template.convertAndSend("/topic/chat/message/" + roomIdUuid, message);
+		template.convertAndSend("/topic/chat/message/" + roomIdString, message);
 
-		final ChatEvent messageEvent = new ChatEvent(roomIdUuid.toString());
+		final ChatEvent messageEvent = new ChatEvent(roomIdString);
 		unhandledCustomerService.removeUnhandledCustomer(messageEvent.getUserId());
 		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
 	}
