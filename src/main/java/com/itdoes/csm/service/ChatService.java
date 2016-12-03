@@ -78,8 +78,7 @@ public class ChatService extends BaseService {
 	}
 
 	public List<CsmChatMessage> customerInitMessage(ShiroUser shiroUser) {
-		final String userIdString = shiroUser.getId();
-		List<CsmChatMessage> messageList = initMessage(userIdString, shiroUser, false);
+		List<CsmChatMessage> messageList = initMessage(shiroUser.getId(), shiroUser, false);
 		if (Collections3.isEmpty(messageList)) {
 			messageList = Lists.newArrayListWithCapacity(1);
 		}
@@ -95,25 +94,25 @@ public class ChatService extends BaseService {
 	}
 
 	public void customerSendMessage(CsmChatMessage message, ShiroUser shiroUser, SimpMessagingTemplate template) {
-		final String userIdString = shiroUser.getId();
-		final UUID userId = UUID.fromString(userIdString);
-		message.setRoomId(userId);
-		message.setSenderId(userId);
+		final String curUserIdString = shiroUser.getId();
+		final UUID curUserId = UUID.fromString(curUserIdString);
+		message.setRoomId(curUserId);
+		message.setSenderId(curUserId);
 		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(false);
 		saveChatMessage(message);
-		template.convertAndSend("/topic/chat/message/" + userIdString, message);
+		template.convertAndSend("/topic/chat/message/" + curUserIdString, message);
 
-		final ChatEvent messageEvent = new ChatEvent(userIdString);
+		final ChatEvent messageEvent = new ChatEvent(curUserIdString);
 		unhandledCustomerService.addUnhandledCustomer(messageEvent);
 		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
 	}
 
 	public List<ChatUser> adminInit(ShiroUser shiroUser) {
-		final CsmUser adminUser = userCacheService.getUser(shiroUser.getId());
-		final String adminUserGroupIdString = adminUser.getUserGroupId().toString();
-		final CsmUserGroup adminUserGroup = userCacheService.getUserGroup(adminUserGroupIdString);
+		final CsmUser curAdminUser = userCacheService.getUser(shiroUser.getId());
+		final String curAdminUserGroupIdString = curAdminUser.getUserGroupId().toString();
+		final CsmUserGroup curAdminUserGroup = userCacheService.getUserGroup(curAdminUserGroupIdString);
 
 		final List<ChatUser> customerList = Lists.newArrayList();
 		for (CsmUser user : userCacheService.getUserMap().values()) {
@@ -123,7 +122,7 @@ public class ChatService extends BaseService {
 					final ChatUser chatUser = new ChatUser(user.getId().toString(), user.getUsername());
 					chatUser.setOnline(onlineService.isOnlineUser(chatUser.getUserId()));
 					chatUser.setUnhandled(
-							isUnhandledCustomer(chatUser.getUserId(), adminUserGroup, adminUserGroupIdString));
+							isUnhandledCustomer(chatUser.getUserId(), curAdminUserGroup, curAdminUserGroupIdString));
 					customerList.add(chatUser);
 				}
 			}
@@ -141,9 +140,9 @@ public class ChatService extends BaseService {
 		Validate.notNull(roomId, "RoomId should not be null");
 		final String roomIdString = roomId.toString();
 
-		final String userIdString = shiroUser.getId();
-		final UUID userId = UUID.fromString(userIdString);
-		message.setSenderId(userId);
+		final String curUserIdString = shiroUser.getId();
+		final UUID curUserId = UUID.fromString(curUserIdString);
+		message.setSenderId(curUserId);
 		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(true);
@@ -160,16 +159,16 @@ public class ChatService extends BaseService {
 			return false;
 		}
 
-		final CsmUser adminUser = userCacheService.getUser(shiroUser.getId());
-		final String adminUserGroupIdString = adminUser.getUserGroupId().toString();
-		final CsmUserGroup adminUserGroup = userCacheService.getUserGroup(adminUserGroupIdString);
-		if (adminUserGroup.isChat()) {
+		final CsmUser curAdminUser = userCacheService.getUser(shiroUser.getId());
+		final String curAdminUserGroupIdString = curAdminUser.getUserGroupId().toString();
+		final CsmUserGroup curAdminUserGroup = userCacheService.getUserGroup(curAdminUserGroupIdString);
+		if (curAdminUserGroup.isChat()) {
 			return true;
 		} else {
 			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService.findAll(
 					env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
 					Specifications.build(CsmChatCustomerUserGroup.class,
-							Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, adminUserGroupIdString))),
+							Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, curAdminUserGroupIdString))),
 					null);
 			if (Collections3.isEmpty(chatCustomerUserGroupList)) {
 				return false;
