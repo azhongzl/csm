@@ -1,4 +1,4 @@
-package com.itdoes.csm.service.entity;
+package com.itdoes.csm.service.entity.internal;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Service;
 
 import com.itdoes.common.business.EntityPair;
-import com.itdoes.common.business.service.EntityService;
+import com.itdoes.common.business.service.entity.internal.EntityInternalService;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmRole;
 
@@ -14,7 +14,7 @@ import com.itdoes.csm.entity.CsmRole;
  * @author Jalen Zhong
  */
 @Service
-public class CsmRoleService extends EntityService {
+public class CsmRoleInternalService extends EntityInternalService {
 	private static final Root ROOT = Root.getInstance();
 
 	@Override
@@ -38,10 +38,9 @@ public class CsmRoleService extends EntityService {
 	}
 
 	@Override
-	public <T, ID extends Serializable> void delete(EntityPair<T, ID> pair, ID id, String realRootPath,
-			boolean uploadDeleteOrphanFiles) {
+	public <T, ID extends Serializable> void delete(EntityPair<T, ID> pair, ID id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root Role");
 
-		super.delete(pair, id, realRootPath, uploadDeleteOrphanFiles);
+		super.delete(pair, id);
 	}
 }

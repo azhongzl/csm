@@ -15,7 +15,6 @@ import com.google.common.collect.Maps;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
-import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.entity.CsmChatUnhandledCustomer;
@@ -26,20 +25,18 @@ import com.itdoes.csm.entity.CsmChatUnhandledCustomer;
 @Service
 public class ChatUnhandledCustomerService extends BaseService {
 	@Autowired
-	private EntityEnv env;
+	private EntityEnv entityEnv;
 
-	@Autowired
-	private EntityDbService entityDbService;
-
-	private EntityPair<CsmChatUnhandledCustomer, UUID> pair;
+	private EntityPair<CsmChatUnhandledCustomer, UUID> chatUnhandledCustomerPair;
 
 	private final Map<String, ChatEvent> unhandledCustomerMap = Maps.newConcurrentMap();
 
 	@PostConstruct
 	public void myInit() {
-		pair = env.getPair(CsmChatUnhandledCustomer.class.getSimpleName());
+		chatUnhandledCustomerPair = entityEnv.getPair(CsmChatUnhandledCustomer.class.getSimpleName());
 
-		final List<CsmChatUnhandledCustomer> unhandledCustomerList = entityDbService.findAll(pair, null, null);
+		final List<CsmChatUnhandledCustomer> unhandledCustomerList = chatUnhandledCustomerPair.getInternalService()
+				.findAll(chatUnhandledCustomerPair, null, null);
 		if (Collections3.isEmpty(unhandledCustomerList)) {
 			return;
 		}
@@ -50,7 +47,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 			addUnhandledCustomer(event);
 		}
 
-		entityDbService.deleteIterable(pair, unhandledCustomerList);
+		chatUnhandledCustomerPair.getInternalService().deleteIterable(chatUnhandledCustomerPair, unhandledCustomerList);
 	}
 
 	@PreDestroy
@@ -68,7 +65,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 			unhandledCustomerList.add(unhandledCustomer);
 		}
 
-		entityDbService.postIterable(pair, unhandledCustomerList);
+		chatUnhandledCustomerPair.getInternalService().postIterable(chatUnhandledCustomerPair, unhandledCustomerList);
 	}
 
 	public boolean hasUnhandledCustomers() {

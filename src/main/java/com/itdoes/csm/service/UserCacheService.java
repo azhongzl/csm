@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.itdoes.common.business.EntityEnv;
+import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.Perms;
 import com.itdoes.common.business.service.BaseService;
-import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.entity.CsmPermission;
 import com.itdoes.csm.entity.CsmRolePermission;
@@ -32,9 +33,6 @@ public class UserCacheService extends BaseService {
 	@Autowired
 	private EntityEnv entityEnv;
 
-	@Autowired
-	private EntityDbService entityDbService;
-
 	private final Map<String, CsmUserGroup> userGroupMap = Maps.newConcurrentMap();
 	private final Map<String, CsmUserGroupRole> userGroupRoleMap = Maps.newConcurrentMap();
 	private final Map<String, CsmRolePermission> rolePermissionMap = Maps.newConcurrentMap();
@@ -44,32 +42,37 @@ public class UserCacheService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		final List<CsmUserGroup> userGroupList = entityDbService
-				.findAll(entityEnv.getPair(CsmUserGroup.class.getSimpleName()), null, null);
+		final EntityPair<CsmUserGroup, UUID> userGroupPair = entityEnv.getPair(CsmUserGroup.class.getSimpleName());
+		final List<CsmUserGroup> userGroupList = userGroupPair.getInternalService().findAll(userGroupPair, null, null);
 		for (CsmUserGroup userGroup : userGroupList) {
 			addUserGroup(userGroup);
 		}
 
-		final List<CsmUserGroupRole> userGroupRoleList = entityDbService
-				.findAll(entityEnv.getPair(CsmUserGroupRole.class.getSimpleName()), null, null);
+		final EntityPair<CsmUserGroupRole, UUID> userGroupRolePair = entityEnv
+				.getPair(CsmUserGroupRole.class.getSimpleName());
+		final List<CsmUserGroupRole> userGroupRoleList = userGroupRolePair.getInternalService()
+				.findAll(userGroupRolePair, null, null);
 		for (CsmUserGroupRole userGroupRole : userGroupRoleList) {
 			addUserGroupRole(userGroupRole);
 		}
 
-		final List<CsmRolePermission> rolePermissionList = entityDbService
-				.findAll(entityEnv.getPair(CsmRolePermission.class.getSimpleName()), null, null);
+		final EntityPair<CsmRolePermission, UUID> rolePermissionPair = entityEnv
+				.getPair(CsmRolePermission.class.getSimpleName());
+		final List<CsmRolePermission> rolePermissionList = rolePermissionPair.getInternalService()
+				.findAll(rolePermissionPair, null, null);
 		for (CsmRolePermission rolePermission : rolePermissionList) {
 			addRolePermission(rolePermission);
 		}
 
-		final List<CsmPermission> permissionList = entityDbService
-				.findAll(entityEnv.getPair(CsmPermission.class.getSimpleName()), null, null);
+		final EntityPair<CsmPermission, UUID> permissionPair = entityEnv.getPair(CsmPermission.class.getSimpleName());
+		final List<CsmPermission> permissionList = permissionPair.getInternalService().findAll(permissionPair, null,
+				null);
 		for (CsmPermission permission : permissionList) {
 			addPermission(permission);
 		}
 
-		final List<CsmUser> userList = entityDbService.findAll(entityEnv.getPair(CsmUser.class.getSimpleName()), null,
-				null);
+		final EntityPair<CsmUser, UUID> userPair = entityEnv.getPair(CsmUser.class.getSimpleName());
+		final List<CsmUser> userList = userPair.getInternalService().findAll(userPair, null, null);
 		for (CsmUser user : userList) {
 			addUser(user);
 		}

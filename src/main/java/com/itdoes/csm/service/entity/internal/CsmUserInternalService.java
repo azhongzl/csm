@@ -1,4 +1,4 @@
-package com.itdoes.csm.service.entity;
+package com.itdoes.csm.service.entity.internal;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itdoes.common.business.EntityPair;
-import com.itdoes.common.business.service.EntityService;
+import com.itdoes.common.business.service.entity.internal.EntityInternalService;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmUser;
 import com.itdoes.csm.service.UserCacheService;
@@ -17,7 +17,7 @@ import com.itdoes.csm.service.UserCacheService;
  * @author Jalen Zhong
  */
 @Service
-public class CsmUserService extends EntityService {
+public class CsmUserInternalService extends EntityInternalService {
 	private static final Root ROOT = Root.getInstance();
 
 	@Autowired
@@ -60,11 +60,10 @@ public class CsmUserService extends EntityService {
 	}
 
 	@Override
-	public <T, ID extends Serializable> void delete(EntityPair<T, ID> pair, ID id, String realRootPath,
-			boolean uploadDeleteOrphanFiles) {
+	public <T, ID extends Serializable> void delete(EntityPair<T, ID> pair, ID id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root user");
 
-		super.delete(pair, id, realRootPath, uploadDeleteOrphanFiles);
+		super.delete(pair, id);
 
 		userCacheService.removeUser(id.toString());
 	}

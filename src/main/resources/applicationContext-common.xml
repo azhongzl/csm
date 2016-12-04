@@ -19,7 +19,7 @@
 	</context:component-scan>
 
 	<bean class="com.itdoes.common.business.EntityEnv">
-		<property name="entityPackage" value="com.itdoes.csm.entity" />
+		<property name="basePackage" value="com.itdoes.csm" />
 	</bean>
 
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

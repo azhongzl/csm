@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
@@ -28,7 +29,7 @@ import com.itdoes.csm.service.ChatService;
  * @author Jalen Zhong
  */
 @Controller
-public class ChatController {
+public class ChatController extends BaseController {
 	@Autowired
 	private ChatService chatService;
 

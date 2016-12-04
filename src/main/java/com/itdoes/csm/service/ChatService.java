@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +22,6 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
-import com.itdoes.common.business.service.EntityDbService;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
@@ -55,7 +56,7 @@ public class ChatService extends BaseService {
 	}
 
 	@Autowired
-	private EntityEnv env;
+	private EntityEnv entityEnv;
 
 	@Autowired
 	private UserCacheService userCacheService;
@@ -66,8 +67,14 @@ public class ChatService extends BaseService {
 	@Autowired
 	private ChatUnhandledCustomerService unhandledCustomerService;
 
-	@Autowired
-	private EntityDbService entityDbService;
+	private EntityPair<CsmChatMessage, UUID> chatMessagePair;
+	private EntityPair<CsmChatCustomerUserGroup, UUID> chatCustomerUserGroupPair;
+
+	@PostConstruct
+	public void myInit() {
+		chatMessagePair = entityEnv.getPair(CsmChatMessage.class.getSimpleName());
+		chatCustomerUserGroupPair = entityEnv.getPair(CsmChatCustomerUserGroup.class.getSimpleName());
+	}
 
 	public CsmUser getUser(ShiroUser shiroUser) {
 		return userCacheService.getUser(shiroUser.getId());
@@ -165,11 +172,12 @@ public class ChatService extends BaseService {
 		if (curAdminUserGroup.isChat()) {
 			return true;
 		} else {
-			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = entityDbService.findAll(
-					env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
-					Specifications.build(CsmChatCustomerUserGroup.class,
-							Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, curAdminUserGroupIdString))),
-					null);
+			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = chatCustomerUserGroupPair
+					.getInternalService().findAll(chatCustomerUserGroupPair,
+							Specifications.build(CsmChatCustomerUserGroup.class,
+									Lists.newArrayList(
+											new FindFilter("userGroupId", Operator.EQ, curAdminUserGroupIdString))),
+							null);
 			if (Collections3.isEmpty(chatCustomerUserGroupList)) {
 				return false;
 			}
@@ -198,7 +206,7 @@ public class ChatService extends BaseService {
 	}
 
 	private boolean isCustomerUserGroupExist(String customerId, String userGroupId) {
-		return entityDbService.count(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+		return chatCustomerUserGroupPair.getInternalService().count(chatCustomerUserGroupPair,
 				Specifications.build(CsmChatCustomerUserGroup.class,
 						Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerId),
 								new FindFilter("userGroupId", Operator.EQ, userGroupId)))) > 0;
@@ -214,7 +222,7 @@ public class ChatService extends BaseService {
 		chatCustomerUserGroup.setCustomerUserId(UUID.fromString(customerId));
 		chatCustomerUserGroup.setUserGroupId(UUID.fromString(userGroupId));
 		chatCustomerUserGroup.setOperatorUserId(UUID.fromString(shiroUser.getId()));
-		final Serializable id = entityDbService.post(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()),
+		final Serializable id = chatCustomerUserGroupPair.getInternalService().post(chatCustomerUserGroupPair,
 				chatCustomerUserGroup);
 
 		final ChatEvent messageEvent = new ChatEvent(customerId);
@@ -225,15 +233,14 @@ public class ChatService extends BaseService {
 
 	public void removeCustomerUserGroup(String id, String customerId, String userGroupId,
 			SimpMessagingTemplate template) {
-		entityDbService.delete(env.getPair(CsmChatCustomerUserGroup.class.getSimpleName()), UUID.fromString(id));
+		chatCustomerUserGroupPair.getInternalService().delete(chatCustomerUserGroupPair, UUID.fromString(id));
 
 		final ChatEvent messageEvent = new ChatEvent(customerId);
 		template.convertAndSend("/topic/chat/removeCustomerUserGroup/" + userGroupId, messageEvent);
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {
-		final EntityPair<CsmChatMessage, UUID> messagePair = getMessagePair();
-		messagePair.getService().post(messagePair, message);
+		chatMessagePair.getInternalService().post(chatMessagePair, message);
 	}
 
 	private List<CsmChatMessage> initMessage(String roomId, ShiroUser shiroUser, boolean forAdmin) {
@@ -265,18 +272,13 @@ public class ChatService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getChatMessageListFromDb(String roomId) {
-		final EntityPair<CsmChatMessage, UUID> messagePair = getMessagePair();
-		final List<CsmChatMessage> messageList = messagePair.getService()
-				.find(messagePair, buildMessageSpecification(roomId), MESSAGE_PAGE_REQUEST).getContent();
+		final List<CsmChatMessage> messageList = chatMessagePair.getInternalService()
+				.find(chatMessagePair, buildMessageSpecification(roomId), MESSAGE_PAGE_REQUEST).getContent();
 		return messageList;
 	}
 
 	private Specification<CsmChatMessage> buildMessageSpecification(String roomId) {
 		return Specifications.build(CsmChatMessage.class,
 				Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId)));
-	}
-
-	private EntityPair<CsmChatMessage, UUID> getMessagePair() {
-		return env.getPair(CsmChatMessage.class.getSimpleName());
 	}
 }
