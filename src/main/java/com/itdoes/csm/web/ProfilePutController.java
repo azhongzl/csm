@@ -6,6 +6,7 @@ import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +35,7 @@ public class ProfilePutController extends BaseEntityPutController {
 	}
 
 	@ModelAttribute
-	public <T, ID extends Serializable> void getEntity(ServletRequest request) {
-		cacheEntity(request, profileService.getInternalUser());
+	public <T, ID extends Serializable> void getEntity(Model model, ServletRequest request) {
+		cacheEntity(model, request, profileService.getInternalUser());
 	}
 }

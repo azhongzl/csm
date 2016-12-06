@@ -30,10 +30,6 @@ public class ProfileService extends BaseService {
 		userPair = env.getPair(CsmUser.class.getSimpleName());
 	}
 
-	public CsmUser getUser() {
-		return userPair.getExternalService().get(userPair, UUID.fromString(Shiros.getShiroUser().getId()));
-	}
-
 	public CsmUser getInternalUser() {
 		return userPair.getInternalService().get(userPair, UUID.fromString(Shiros.getShiroUser().getId()));
 	}

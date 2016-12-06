@@ -4,6 +4,7 @@ import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,7 +34,7 @@ public class AdminUserGroupPutController extends BaseEntityPutController {
 	}
 
 	@ModelAttribute
-	public void getEntity(@RequestParam("id") String id, ServletRequest request) {
-		cacheEntity(request, adminUserGroupService.getInternalUserGroup(id));
+	public void getEntity(@RequestParam("id") String id, Model model, ServletRequest request) {
+		cacheEntity(model, request, adminUserGroupService.getInternalUserGroup(id));
 	}
 }
