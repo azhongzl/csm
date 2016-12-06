@@ -46,7 +46,6 @@ public class AdminUserService extends BaseService {
 	}
 
 	public Page<CsmUser> listUsers(int pageNo, int pageSize) {
-
 		return userPair.getExternalService().find(userPair,
 				Specifications.build(CsmUser.class,
 						Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
