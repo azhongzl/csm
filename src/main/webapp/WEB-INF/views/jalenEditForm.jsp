@@ -13,6 +13,45 @@
 <body>
 	<a href="${ctx}/">Go Back</a>
 	<br />
+	<form action="#" method="post">
+		<fieldset>
+			<table>
+				<tr>
+					<td>Id:</td>
+					<td><input type="text" id="userId" name="id" value="11d5f5f7-d6eb-1034-a268-c6b53a0158b7" /></td>
+				</tr>
+				<tr>
+					<td>Username:</td>
+					<td><input type="text" name="username" value="username" /></td>
+				</tr>
+				<tr>
+					<td>Password:</td>
+					<td><input type="text" name="password" value="" /></td>
+				</tr>
+				<tr>
+					<td>Salt:</td>
+					<td><input type="text" name="salt" value="" /></td>
+				</tr>
+				<tr>
+					<td>Active:</td>
+					<td><input type="radio" name="active" value="1" checked />Active <input type="radio" name="active" value="0" />Inactive</td>
+				</tr>
+				<tr>
+					<td>userGroupId:</td>
+					<td><input type="text" name="userGroupId" value="5A0452FE-D6EA-1034-A268-C6B53A0158B7" /></td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="Update"
+						onclick="this.form.action='${ctx}/profile'" /></td>
+				</tr>
+			</table>
+		</fieldset>
+	</form>
+
+	<br />
+	<hr />
+	<br />
+
 	<a href="${ctx}/e/Category/find">View Category</a>
 	<form action="${ctx}/e/Category/post" method="post">
 		<input type="hidden" name="createAccountId" value="<shiro:principal property="id" />" /> <input type="hidden"
