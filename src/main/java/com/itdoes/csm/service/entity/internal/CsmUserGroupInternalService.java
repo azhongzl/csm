@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.entity.internal.EntityInternalService;
@@ -17,7 +16,6 @@ import com.itdoes.csm.service.UserCacheService;
 /**
  * @author Jalen Zhong
  */
-@Service
 public class CsmUserGroupInternalService extends EntityInternalService {
 	private static final Root ROOT = Root.getInstance();
 

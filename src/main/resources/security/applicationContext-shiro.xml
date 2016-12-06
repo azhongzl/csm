@@ -22,12 +22,8 @@
 				</entry>
 			</map>
 		</property>
-		<property name="filterChainDefinitionMap" ref="shiroFilterChainDefinitionMap" />
-	</bean>
-
-	<bean id="shiroFilterChainDefinitionMap" class="com.itdoes.common.business.web.ShiroFilterChainDefinitionMap">
-		<property name="beforeStaticDefinitions">
-			<value>
+		<property name="filterChainDefinitions">
+            <value>
 				/static/** = anon
 				/uploads/** = user
 				/ = anon
@@ -40,13 +36,9 @@
 				/admin/** = user
 				/login = authc
 				/logout = logout
-			</value>
-		</property>
-		<property name="afterStaticDefinitions">
-			<value>
 				/** = user
-			</value>
-		</property>
+            </value>
+        </property>
 	</bean>
 
 	<bean id="shiroSecurityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">

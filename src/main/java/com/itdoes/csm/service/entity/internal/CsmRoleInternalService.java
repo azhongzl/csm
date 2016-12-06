@@ -3,7 +3,6 @@ package com.itdoes.csm.service.entity.internal;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.Validate;
-import org.springframework.stereotype.Service;
 
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.entity.internal.EntityInternalService;
@@ -13,7 +12,6 @@ import com.itdoes.csm.entity.CsmRole;
 /**
  * @author Jalen Zhong
  */
-@Service
 public class CsmRoleInternalService extends EntityInternalService {
 	private static final Root ROOT = Root.getInstance();
 
