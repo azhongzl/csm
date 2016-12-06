@@ -23,12 +23,12 @@ public class AdminUserService extends BaseService {
 	private static final Root ROOT = Root.getInstance();
 
 	@Autowired
-	private UserCacheService userCacheService;
-
-	@Autowired
 	private EntityEnv env;
 
 	private EntityPair<CsmUser, UUID> pair;
+
+	@Autowired
+	private UserCacheService userCacheService;
 
 	@PostConstruct
 	public void myInit() {
@@ -36,43 +36,41 @@ public class AdminUserService extends BaseService {
 	}
 
 	public CsmUser getUser(String id) {
-		return pair.getInternalService().get(pair, UUID.fromString(id));
+		return userCacheService.getUser(id);
 	}
 
 	public UUID postUser(CsmUser user) {
-		Validate.isTrue(!ROOT.isRootByName(user.getUsername()), "Cannot create root user");
-		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
+		Validate.isTrue(StringUtils.isNotBlank(user.getUsername()), "Username should not be blank");
+		Validate.notNull(user.isActive(), "Active should not be null");
+		Validate.notNull(user.getUserGroupId(), "UserGroup id should not be null");
 		Validate.isTrue(userCacheService.getUserId(user.getUsername()) == null, "User [%s] exists", user.getUsername());
-		Validate.isTrue(StringUtils.isNotBlank(user.getPlainPassword()), "Password should not be null");
+		Validate.isTrue(StringUtils.isNotBlank(user.getPlainPassword()), "Password should not be blank");
+		Validate.isTrue(!ROOT.isRootByName(user.getUsername()), "Cannot create root User");
+		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
+
 		user.populatePassword();
-
-		pair.getInternalService().post(pair, user);
-
+		final UUID id = pair.getInternalService().post(pair, user);
 		userCacheService.addUser(user);
-
-		return user.getId();
+		return id;
 	}
 
 	public void putUser(CsmUser user, CsmUser oldUser) {
+		Validate.isTrue(user.getUsername().equals(oldUser.getUsername()), "Cannot modify username");
 		Validate.isTrue(!ROOT.isRootByName(user.getUsername()) && !ROOT.isRootById(user.getId()),
-				"Cannot modify root user");
+				"Cannot modify root User");
 		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
-		Validate.isTrue(user.getUsername().equals(oldUser.getUsername()), "Cannot change username");
 
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
 		}
-
 		pair.getInternalService().put(pair, user, oldUser);
-
 		userCacheService.modifyUser(user);
 	}
 
 	public void deleteUser(String id) {
-		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root user");
+		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root User");
 
 		pair.getInternalService().delete(pair, UUID.fromString(id));
-
 		userCacheService.removeUser(id);
 	}
 }

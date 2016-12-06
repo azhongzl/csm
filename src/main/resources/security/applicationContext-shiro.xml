@@ -29,6 +29,7 @@
 				/ = anon
 				/search/** = anon
 				/profile = user
+				/admin/user/** = perms["itdoes:user"]
 				/chat/** = user
 				/refreshParentCloseChildWindow = anon
 				/admin/search/createIndex = perms["itdoes:search:createIndex"]

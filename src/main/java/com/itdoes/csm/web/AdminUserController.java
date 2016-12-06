@@ -24,7 +24,7 @@ public class AdminUserController extends BaseEntityController {
 	@Autowired
 	private AdminUserService adminUserService;
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "post", method = RequestMethod.POST)
 	public Result post(@Valid CsmUser user) {
 		return HttpResults.success(adminUserService.postUser(user));
 	}
