@@ -125,7 +125,7 @@ public class ChatService extends BaseService {
 		for (CsmUser user : userCacheService.getUserMap().values()) {
 			final CsmUserGroup userGroup = userCacheService.getUserGroup(user.getUserGroupId().toString());
 			if (userGroup != null) {
-				if (!userGroup.isAdmin()) {
+				if (!userGroup.getAdmin()) {
 					final ChatUser chatUser = new ChatUser(user.getId().toString(), user.getUsername());
 					chatUser.setOnline(onlineService.isOnlineUser(chatUser.getUserId()));
 					chatUser.setUnhandled(
@@ -169,7 +169,7 @@ public class ChatService extends BaseService {
 		final CsmUser curAdminUser = userCacheService.getUser(shiroUser.getId());
 		final String curAdminUserGroupIdString = curAdminUser.getUserGroupId().toString();
 		final CsmUserGroup curAdminUserGroup = userCacheService.getUserGroup(curAdminUserGroupIdString);
-		if (curAdminUserGroup.isChat()) {
+		if (curAdminUserGroup.getChat()) {
 			return true;
 		} else {
 			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = chatCustomerUserGroupPair
@@ -198,7 +198,7 @@ public class ChatService extends BaseService {
 			return false;
 		}
 
-		if (adminUserGroup.isChat()) {
+		if (adminUserGroup.getChat()) {
 			return true;
 		} else {
 			return isCustomerUserGroupExist(customerId, adminUserGroupIdString);

@@ -71,7 +71,7 @@ public class AdminUserService extends BaseService {
 
 	public UUID postUser(CsmUser user) {
 		Validate.isTrue(StringUtils.isNotBlank(user.getUsername()), "Username should not be blank");
-		Validate.notNull(user.isActive(), "Active should not be null");
+		Validate.notNull(user.getActive(), "Active should not be null");
 		Validate.notNull(user.getUserGroupId(), "UserGroup id should not be null");
 		Validate.isTrue(userCacheService.getUserId(user.getUsername()) == null, "User [%s] exists", user.getUsername());
 		Validate.isTrue(StringUtils.isNotBlank(user.getPlainPassword()), "Password should not be blank");

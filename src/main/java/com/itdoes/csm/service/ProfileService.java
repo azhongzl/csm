@@ -37,7 +37,7 @@ public class ProfileService extends BaseService {
 	public void putUser(CsmUser user, CsmUser oldUser) {
 		Validate.isTrue(user.getId().equals(oldUser.getId()), "Cannot modify other user");
 		Validate.isTrue(user.getUsername().equals(oldUser.getUsername()), "Cannot modify username");
-		Validate.isTrue(user.isActive().equals(oldUser.isActive()), "Cannot modify active");
+		Validate.isTrue(user.getActive().equals(oldUser.getActive()), "Cannot modify active");
 		Validate.isTrue(user.getUserGroupId().equals(oldUser.getUserGroupId()), "Cannot modify UserGroup");
 
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {

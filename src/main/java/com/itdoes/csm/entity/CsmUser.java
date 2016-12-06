@@ -73,7 +73,7 @@ public class CsmUser extends BaseEntity {
 		this.salt = salt;
 	}
 
-	public Boolean isActive() {
+	public Boolean getActive() {
 		return active;
 	}
 

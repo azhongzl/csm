@@ -95,7 +95,7 @@ public class CsmFaq extends BaseEntity {
 		this.attachments = attachments;
 	}
 
-	public Boolean isActive() {
+	public Boolean getActive() {
 		return active;
 	}
 

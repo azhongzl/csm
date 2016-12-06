@@ -54,7 +54,7 @@ public class CsmUserGroup extends BaseEntity {
 		this.name = name;
 	}
 
-	public Boolean isAdmin() {
+	public Boolean getAdmin() {
 		return admin;
 	}
 
@@ -62,7 +62,7 @@ public class CsmUserGroup extends BaseEntity {
 		this.admin = admin;
 	}
 
-	public Boolean isChat() {
+	public Boolean getChat() {
 		return chat;
 	}
 

@@ -30,7 +30,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 			return null;
 		}
 		final CsmUser user = userCacheService.getUser(userIdString);
-		if (user == null || !user.isActive()) {
+		if (user == null || !user.getActive()) {
 			return null;
 		}
 		return newAuthenticationInfo(user.getId().toString(), username, user.getPassword(), user.getSalt());
