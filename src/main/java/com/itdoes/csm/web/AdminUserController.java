@@ -31,7 +31,7 @@ public class AdminUserController extends BaseEntityController {
 		return HttpResults.success(adminUserService.listForm(pageNo, pageSize));
 	}
 
-	@RequestMapping(value = "postForm", method = RequestMethod.POST)
+	@RequestMapping(value = "postForm", method = RequestMethod.GET)
 	public Result postForm() {
 		return HttpResults.success(adminUserService.postForm());
 	}
