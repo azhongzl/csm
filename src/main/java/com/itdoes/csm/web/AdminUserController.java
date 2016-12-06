@@ -31,7 +31,7 @@ public class AdminUserController extends BaseEntityController {
 		return HttpResults.success(adminUserService.listUsers(pageNo, pageSize));
 	}
 
-	@RequestMapping(value = "listUserGroup", method = RequestMethod.GET)
+	@RequestMapping(value = "listUserGroups", method = RequestMethod.GET)
 	public Result listUserGroups() {
 		return HttpResults.success(adminUserService.listUserGroups());
 	}
