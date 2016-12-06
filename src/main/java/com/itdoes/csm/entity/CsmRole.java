@@ -18,7 +18,6 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "csm_role")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.ALL, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS) })
 public class CsmRole extends BaseEntity {
 	private static final long serialVersionUID = -1566193677L;
 
@@ -26,6 +25,7 @@ public class CsmRole extends BaseEntity {
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
+	@javax.validation.constraints.NotNull
 	@Column(name = "name")
 	private String name;
 

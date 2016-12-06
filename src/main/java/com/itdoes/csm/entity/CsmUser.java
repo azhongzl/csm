@@ -18,7 +18,6 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "csm_user")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.ALL, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS) })
 public class CsmUser extends BaseEntity {
 	private static final long serialVersionUID = -1566100664L;
 
@@ -26,15 +25,19 @@ public class CsmUser extends BaseEntity {
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
+	@javax.validation.constraints.NotNull
 	@Column(name = "username")
 	private String username;
 	@Column(name = "password")
 	private String password;
+	@javax.validation.constraints.NotNull
 	@Column(name = "salt")
 	private String salt;
+	@javax.validation.constraints.NotNull
 	@Column(name = "active")
 	private Boolean active;
 	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUserGroup.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
+	@javax.validation.constraints.NotNull
 	@Column(name = "user_group_id")
 	private java.util.UUID userGroupId;
 

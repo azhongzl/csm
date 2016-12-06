@@ -18,7 +18,6 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "csm_permission")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.ALL, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS) })
 public class CsmPermission extends BaseEntity {
 	private static final long serialVersionUID = -1636844660L;
 
@@ -26,8 +25,10 @@ public class CsmPermission extends BaseEntity {
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
+	@javax.validation.constraints.NotNull
 	@Column(name = "name")
 	private String name;
+	@javax.validation.constraints.NotNull
 	@Column(name = "permission")
 	private String permission;
 

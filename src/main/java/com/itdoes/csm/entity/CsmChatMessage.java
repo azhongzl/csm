@@ -18,7 +18,6 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "csm_chat_message")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.ALL, filter = com.itdoes.common.business.entity.EntityPermFilter.USER) })
 public class CsmChatMessage extends BaseEntity {
 	private static final long serialVersionUID = -1705651342L;
 
@@ -27,15 +26,19 @@ public class CsmChatMessage extends BaseEntity {
 	@Column(name = "id")
 	private java.util.UUID id;
 	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
+	@javax.validation.constraints.NotNull
 	@Column(name = "room_id")
 	private java.util.UUID roomId;
 	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
+	@javax.validation.constraints.NotNull
 	@Column(name = "sender_id")
 	private java.util.UUID senderId;
 	@Column(name = "create_date_time")
 	private java.time.LocalDateTime createDateTime;
+	@javax.validation.constraints.NotNull
 	@Column(name = "from_admin")
 	private Boolean fromAdmin;
+	@javax.validation.constraints.NotNull
 	@Column(name = "message")
 	private String message;
 

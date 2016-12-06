@@ -18,7 +18,6 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "csm_role_permission")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.ALL, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS) })
 public class CsmRolePermission extends BaseEntity {
 	private static final long serialVersionUID = -865708510L;
 
@@ -27,9 +26,11 @@ public class CsmRolePermission extends BaseEntity {
 	@Column(name = "id")
 	private java.util.UUID id;
 	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmRole.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
+	@javax.validation.constraints.NotNull
 	@Column(name = "role_id")
 	private java.util.UUID roleId;
 	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmPermission.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
+	@javax.validation.constraints.NotNull
 	@Column(name = "permission_id")
 	private java.util.UUID permissionId;
 

@@ -18,7 +18,6 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "csm_faq")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.WRITE, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS), @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.READ, filter = com.itdoes.common.business.entity.EntityPermFilter.ANON) })
 @org.hibernate.search.annotations.Indexed
 public class CsmFaq extends BaseEntity {
 	private static final long serialVersionUID = 2027675641L;
@@ -28,23 +27,29 @@ public class CsmFaq extends BaseEntity {
 	@Column(name = "id")
 	private java.util.UUID id;
 	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmFaqCategory.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
+	@javax.validation.constraints.NotNull
 	@Column(name = "category_id")
 	private java.util.UUID categoryId;
+	@javax.validation.constraints.NotNull
 	@org.hibernate.search.annotations.Field
 	@Column(name = "question")
 	private String question;
+	@javax.validation.constraints.NotNull
 	@org.hibernate.search.annotations.Field
 	@Column(name = "answer")
 	private String answer;
 	@com.itdoes.common.business.entity.FieldUpload
 	@Column(name = "attachments")
 	private String attachments;
+	@javax.validation.constraints.NotNull
 	@Column(name = "active")
 	private Boolean active;
+	@javax.validation.constraints.NotNull
 	@Column(name = "create_account_id")
 	private java.util.UUID createAccountId;
 	@Column(name = "create_date_time")
 	private java.time.LocalDateTime createDateTime;
+	@javax.validation.constraints.NotNull
 	@Column(name = "modify_account_id")
 	private java.util.UUID modifyAccountId;
 	@Column(name = "modify_date_time")

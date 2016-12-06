@@ -18,7 +18,6 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "csm_chat_unhandled_customer")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.ALL, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS) })
 public class CsmChatUnhandledCustomer extends BaseEntity {
 	private static final long serialVersionUID = -2110794452L;
 
@@ -27,6 +26,7 @@ public class CsmChatUnhandledCustomer extends BaseEntity {
 	@Column(name = "id")
 	private java.util.UUID id;
 	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
+	@javax.validation.constraints.NotNull
 	@Column(name = "user_id")
 	private java.util.UUID userId;
 	@Column(name = "create_date_time")

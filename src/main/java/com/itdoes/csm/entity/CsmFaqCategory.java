@@ -18,7 +18,6 @@ import com.itdoes.common.business.entity.BaseEntity;
 @Entity
 @Table(name = "csm_faq_category")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@com.itdoes.common.business.entity.EntityPerms({ @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.WRITE, filter = com.itdoes.common.business.entity.EntityPermFilter.PERMS), @com.itdoes.common.business.entity.EntityPerm(command = com.itdoes.common.business.entity.EntityPermCommand.READ, filter = com.itdoes.common.business.entity.EntityPermFilter.ANON) })
 public class CsmFaqCategory extends BaseEntity {
 	private static final long serialVersionUID = 1207564311L;
 
@@ -26,16 +25,20 @@ public class CsmFaqCategory extends BaseEntity {
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
+	@javax.validation.constraints.NotNull
 	@Column(name = "name")
 	private String name;
 	@Column(name = "description")
 	private String description;
+	@javax.validation.constraints.NotNull
 	@Column(name = "active")
 	private Boolean active;
+	@javax.validation.constraints.NotNull
 	@Column(name = "create_account_id")
 	private java.util.UUID createAccountId;
 	@Column(name = "create_date_time")
 	private java.time.LocalDateTime createDateTime;
+	@javax.validation.constraints.NotNull
 	@Column(name = "modify_account_id")
 	private java.util.UUID modifyAccountId;
 	@Column(name = "modify_date_time")
