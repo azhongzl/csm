@@ -28,7 +28,7 @@ public class AdminUserGroupPutController extends BaseEntityPutController {
 	private AdminUserGroupService adminUserGroupService;
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
-	public Result putUserGroup(@Valid @ModelAttribute(ENTITY_KEY) CsmUserGroup userGroup, ServletRequest request) {
+	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmUserGroup userGroup, ServletRequest request) {
 		adminUserGroupService.put(userGroup, getOldEntity(request));
 		return HttpResults.success();
 	}

@@ -126,7 +126,7 @@ public class AdminUserGroupService extends BaseService {
 	}
 
 	public CsmUserGroup getEntity(String id) {
-		return userGroupPair.getInternalService().get(userGroupPair, UUID.fromString(id));
+		return userCacheService.getUserGroup(id);
 	}
 
 	public void put(CsmUserGroup userGroup, CsmUserGroup oldUserGroup) {
