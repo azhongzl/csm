@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,9 @@ public class ProfileService extends BaseService {
 		Validate.isTrue(user.isActive().equals(oldUser.isActive()), "Cannot modify active");
 		Validate.isTrue(user.getUserGroupId().equals(oldUser.getUserGroupId()), "Cannot modify UserGroup");
 
-		pair.getInternalService().put(pair, user, oldUser);
+		if (StringUtils.isNotBlank(user.getPlainPassword())) {
+			user.populatePassword();
+			pair.getInternalService().put(pair, user, oldUser);
+		}
 	}
 }
