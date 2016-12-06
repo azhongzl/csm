@@ -31,6 +31,7 @@
 				/profile = user
 				/admin/user/** = perms["itdoes:user:user"]
 				/admin/userGroup/** = perms["itdoes:user:userGroup"]
+				/admin/role/** = perms["itdoes:user:role"]
 				/chat/** = user
 				/refreshParentCloseChildWindow = anon
 				/admin/search/createIndex = perms["itdoes:search:createIndex"]
