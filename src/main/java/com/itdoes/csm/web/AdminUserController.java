@@ -36,14 +36,14 @@ public class AdminUserController extends BaseEntityController {
 		return HttpResults.success(adminUserService.listUserGroups());
 	}
 
+	@RequestMapping(value = "get/{id}", method = RequestMethod.GET)
+	public Result getUser(@PathVariable("id") String id) {
+		return HttpResults.success(adminUserService.getUser(id));
+	}
+
 	@RequestMapping(value = "post", method = RequestMethod.POST)
 	public Result postUser(@Valid CsmUser user) {
 		return HttpResults.success(adminUserService.postUser(user));
-	}
-
-	@RequestMapping(value = "put/{id}", method = RequestMethod.GET)
-	public Result putUserForm(@PathVariable("id") String id) {
-		return HttpResults.success(adminUserService.getUser(id));
 	}
 
 	@RequestMapping(value = "delete/{id}")
