@@ -1,5 +1,7 @@
 package com.itdoes.csm.service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,13 +30,21 @@ import com.itdoes.csm.entity.CsmUserGroup;
  */
 @Service
 public class AdminUserService extends BaseService {
+	private static class UserGroupComparator implements Comparator<CsmUserGroup> {
+		private static final UserGroupComparator INSTANCE = new UserGroupComparator();
+
+		@Override
+		public int compare(CsmUserGroup o1, CsmUserGroup o2) {
+			return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+		}
+	}
+
 	private static final Root ROOT = Root.getInstance();
 
 	@Autowired
 	private EntityEnv env;
 
 	private EntityPair<CsmUser, UUID> userPair;
-	private EntityPair<CsmUserGroup, UUID> userGroupPair;
 
 	@Autowired
 	private UserCacheService userCacheService;
@@ -42,7 +52,6 @@ public class AdminUserService extends BaseService {
 	@PostConstruct
 	public void myInit() {
 		userPair = env.getPair(CsmUser.class.getSimpleName());
-		userGroupPair = env.getPair(CsmUserGroup.class.getSimpleName());
 	}
 
 	public Page<CsmUser> listUsers(int pageNo, int pageSize) {
@@ -54,18 +63,23 @@ public class AdminUserService extends BaseService {
 	}
 
 	public List<CsmUserGroup> listUserGroups() {
-		return userGroupPair.getExternalService().findAll(userGroupPair,
-				Specifications.build(CsmUserGroup.class,
-						Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
-				SpringDatas.newSort(true, "name"));
+		final List<CsmUserGroup> userGroupList = Lists
+				.newArrayListWithCapacity(userCacheService.getUserGroupMap().size() - 1);
+		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
+			if (!ROOT.isRootById(userGroup.getId())) {
+				userGroupList.add(userGroup);
+			}
+		}
+		Collections.sort(userGroupList, UserGroupComparator.INSTANCE);
+		return userGroupList;
 	}
 
 	public CsmUser getUser(String id) {
-		return userPair.getExternalService().get(userPair, UUID.fromString(id));
+		return userCacheService.getUser(id);
 	}
 
 	public CsmUser getInternalUser(String id) {
-		return userPair.getInternalService().get(userPair, UUID.fromString(id));
+		return userCacheService.getUser(id);
 	}
 
 	public UUID postUser(CsmUser user) {

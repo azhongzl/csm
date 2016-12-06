@@ -33,8 +33,12 @@ public class ProfileService extends BaseService {
 		userPair = env.getPair(CsmUser.class.getSimpleName());
 	}
 
+	public CsmUser getUser() {
+		return userCacheService.getUser(Shiros.getShiroUser().getId());
+	}
+
 	public CsmUser getInternalUser() {
-		return userPair.getInternalService().get(userPair, UUID.fromString(Shiros.getShiroUser().getId()));
+		return userCacheService.getUser(Shiros.getShiroUser().getId());
 	}
 
 	public void putUser(CsmUser user, CsmUser oldUser) {

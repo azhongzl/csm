@@ -98,6 +98,10 @@ public class UserCacheService extends BaseService {
 		userGroupMap.remove(userGroupId);
 	}
 
+	public Map<String, CsmUserGroup> getUserGroupMap() {
+		return userGroupMap;
+	}
+
 	public CsmUserGroup getUserGroup(String userGroupId) {
 		if (StringUtils.isBlank(userGroupId)) {
 			return null;
@@ -150,6 +154,10 @@ public class UserCacheService extends BaseService {
 		userGroupRoleMap.remove(id);
 	}
 
+	public Map<String, CsmUserGroupRole> getUserGroupRoleMap() {
+		return userGroupRoleMap;
+	}
+
 	public void addRole(CsmRole role) {
 		roleMap.put(role.getId().toString(), role);
 	}
@@ -160,6 +168,18 @@ public class UserCacheService extends BaseService {
 
 	public void removeRole(String id) {
 		roleMap.remove(id);
+	}
+
+	public Map<String, CsmRole> getRoleMap() {
+		return roleMap;
+	}
+
+	public CsmRole getRole(String id) {
+		if (StringUtils.isBlank(id)) {
+			return null;
+		}
+
+		return roleMap.get(id);
 	}
 
 	public void addRolePermission(CsmRolePermission rolePermission) {
