@@ -25,6 +25,9 @@ public class ProfileService extends BaseService {
 
 	private EntityPair<CsmUser, UUID> userPair;
 
+	@Autowired
+	private UserCacheService userCacheService;
+
 	@PostConstruct
 	public void myInit() {
 		userPair = env.getPair(CsmUser.class.getSimpleName());
@@ -43,6 +46,7 @@ public class ProfileService extends BaseService {
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
 			userPair.getExternalService().put(userPair, user, oldUser);
+			userCacheService.modifyUser(user);
 		}
 	}
 }
