@@ -30,7 +30,6 @@ public class CsmUser extends BaseEntity {
 	private String username;
 	@Column(name = "password")
 	private String password;
-	@javax.validation.constraints.NotNull
 	@Column(name = "salt")
 	private String salt;
 	@javax.validation.constraints.NotNull
