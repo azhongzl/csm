@@ -25,40 +25,35 @@ public class AdminUserGroupController extends BaseEntityController {
 	@Autowired
 	private AdminUserGroupService adminUserGroupService;
 
-	@RequestMapping(value = "list", method = RequestMethod.GET)
-	public Result listUserGroups() {
-		return HttpResults.success(adminUserGroupService.listUserGroups());
+	@RequestMapping(value = "listForm", method = RequestMethod.GET)
+	public Result listForm() {
+		return HttpResults.success(adminUserGroupService.listForm());
 	}
 
-	@RequestMapping(value = "listCandidateSuperUserGroups/{id}", method = RequestMethod.GET)
-	public Result listCandidateSuperUserGroups(@PathVariable("id") String id) {
-		return HttpResults.success(adminUserGroupService.listCandidateSuperUserGroups(id));
-	}
-
-	@RequestMapping(value = "listRoles", method = RequestMethod.GET)
-	public Result listRoles() {
-		return HttpResults.success(adminUserGroupService.listRoles());
-	}
-
-	@RequestMapping(value = "listUserGroupRoles/{id}", method = RequestMethod.GET)
-	public Result listUserGroupRoles(@PathVariable("id") String id) {
-		return HttpResults.success(adminUserGroupService.listUserGroupRoles(id));
-	}
-
-	@RequestMapping(value = "get/{id}", method = RequestMethod.GET)
-	public Result getUserGroup(@PathVariable("id") String id) {
-		return HttpResults.success(adminUserGroupService.getUserGroup(id));
+	@RequestMapping(value = "postForm", method = RequestMethod.GET)
+	public Result postForm() {
+		return HttpResults.success(adminUserGroupService.postForm());
 	}
 
 	@RequestMapping(value = "post", method = RequestMethod.POST)
-	public Result postUserGroup(@Valid CsmUserGroup userGroup) {
-		return HttpResults.success(adminUserGroupService.postUserGroup(userGroup));
+	public Result post(@Valid CsmUserGroup userGroup) {
+		return HttpResults.success(adminUserGroupService.post(userGroup));
+	}
+
+	@RequestMapping(value = "putForm/{id}", method = RequestMethod.GET)
+	public Result putForm(@PathVariable("id") String id) {
+		return HttpResults.success(adminUserGroupService.putForm(id));
 	}
 
 	@RequestMapping(value = "delete/{id}")
-	public Result deleteUserGroup(@PathVariable("id") String id) {
-		adminUserGroupService.deleteUserGroup(id);
+	public Result delete(@PathVariable("id") String id) {
+		adminUserGroupService.delete(id);
 		return HttpResults.success();
+	}
+
+	@RequestMapping(value = "listUserGroupRoleForm/{id}", method = RequestMethod.GET)
+	public Result listUserGroupRoleForm(@PathVariable("id") String id) {
+		return HttpResults.success(adminUserGroupService.listUserGroupRoleForm(id));
 	}
 
 	@RequestMapping(value = "postUserGroupRole", method = RequestMethod.POST)

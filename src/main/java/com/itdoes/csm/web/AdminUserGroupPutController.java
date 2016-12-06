@@ -29,12 +29,12 @@ public class AdminUserGroupPutController extends BaseEntityPutController {
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
 	public Result putUserGroup(@Valid @ModelAttribute(ENTITY_KEY) CsmUserGroup userGroup, ServletRequest request) {
-		adminUserGroupService.putUserGroup(userGroup, getOldEntity(request));
+		adminUserGroupService.put(userGroup, getOldEntity(request));
 		return HttpResults.success();
 	}
 
 	@ModelAttribute
 	public void getEntity(@RequestParam("id") String id, Model model, ServletRequest request) {
-		cacheEntity(model, request, adminUserGroupService.getInternalUserGroup(id));
+		cacheEntity(model, request, adminUserGroupService.getEntity(id));
 	}
 }

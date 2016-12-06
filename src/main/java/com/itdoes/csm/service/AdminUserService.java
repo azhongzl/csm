@@ -68,7 +68,7 @@ public class AdminUserService extends BaseService {
 
 	public Map<Object, Object> postForm() {
 		final Map<Object, Object> model = new HashMap<>();
-		model.put("userGroupList", listUserGroups());
+		model.put("userGroupList", getUserGroupList());
 		return model;
 	}
 
@@ -90,7 +90,7 @@ public class AdminUserService extends BaseService {
 	public Map<Object, Object> putForm(String id) {
 		final Map<Object, Object> model = new HashMap<>();
 		model.put("user", userCacheService.getUser(id));
-		model.put("userGroupList", listUserGroups());
+		model.put("userGroupList", getUserGroupList());
 		return model;
 	}
 
@@ -118,7 +118,7 @@ public class AdminUserService extends BaseService {
 		userCacheService.removeUser(id);
 	}
 
-	private List<CsmUserGroup> listUserGroups() {
+	private List<CsmUserGroup> getUserGroupList() {
 		final List<CsmUserGroup> userGroupList = Lists
 				.newArrayListWithCapacity(userCacheService.getUserGroupMap().size() - 1);
 		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {

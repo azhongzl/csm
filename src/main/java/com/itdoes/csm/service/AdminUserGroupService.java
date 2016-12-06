@@ -2,7 +2,9 @@ package com.itdoes.csm.service;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -90,39 +92,19 @@ public class AdminUserGroupService extends BaseService {
 		userGroupPair = env.getPair(CsmUserGroup.class.getSimpleName());
 	}
 
-	public List<CsmUserGroup> listUserGroups() {
-		final List<CsmUserGroup> userGroupList = Lists
-				.newArrayListWithCapacity(userCacheService.getUserGroupMap().size() - 1);
-		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
-			if (!ROOT.isRootById(userGroup.getId())) {
-				userGroupList.add(userGroup);
-			}
-		}
-		Collections.sort(userGroupList, UserGroupComparator.INSTANCE);
-		return userGroupList;
+	public Map<Object, Object> listForm() {
+		final Map<Object, Object> model = new HashMap<>();
+		model.put("userGroupList", getUserGroupList());
+		return model;
 	}
 
-	public List<CsmUserGroup> listCandidateSuperUserGroups(String id) {
-		final List<CsmUserGroup> userGroupList = Lists.newArrayList();
-		final Set<CsmUserGroup> subUserGroupSet = userCacheService.getSubUserGroupSet(id);
-		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
-			if (!ROOT.isRootById(userGroup.getId()) && !subUserGroupSet.contains(userGroup)) {
-				userGroupList.add(userGroup);
-			}
-		}
-		Collections.sort(userGroupList, UserGroupComparator.INSTANCE);
-		return userGroupList;
+	public Map<Object, Object> postForm() {
+		final Map<Object, Object> model = new HashMap<>();
+		model.put("superUserGroupList", getUserGroupList());
+		return model;
 	}
 
-	public CsmUserGroup getUserGroup(String id) {
-		return userGroupPair.getExternalService().get(userGroupPair, UUID.fromString(id));
-	}
-
-	public CsmUserGroup getInternalUserGroup(String id) {
-		return userGroupPair.getInternalService().get(userGroupPair, UUID.fromString(id));
-	}
-
-	public UUID postUserGroup(CsmUserGroup userGroup) {
+	public UUID post(CsmUserGroup userGroup) {
 		Validate.isTrue(StringUtils.isNotBlank(userGroup.getName()), "Name should not be blank");
 		Validate.notNull(userGroup.getAdmin(), "Admin should not be null");
 		Validate.notNull(userGroup.getChat(), "Chat should not be null");
@@ -136,7 +118,18 @@ public class AdminUserGroupService extends BaseService {
 		return id;
 	}
 
-	public void putUserGroup(CsmUserGroup userGroup, CsmUserGroup oldUserGroup) {
+	public Map<Object, Object> putForm(String id) {
+		final Map<Object, Object> model = new HashMap<>();
+		model.put("userGroup", userCacheService.getUserGroup(id));
+		model.put("superUserGroupList", getCandidateSuperUserGroupList(id));
+		return model;
+	}
+
+	public CsmUserGroup getEntity(String id) {
+		return userGroupPair.getInternalService().get(userGroupPair, UUID.fromString(id));
+	}
+
+	public void put(CsmUserGroup userGroup, CsmUserGroup oldUserGroup) {
 		Validate.isTrue(!ROOT.isRootByName(userGroup.getName()) && !ROOT.isRootById(userGroup.getId()),
 				"Cannot modify root UserGroup");
 		if (userGroup.getSuperId() != null) {
@@ -154,14 +147,16 @@ public class AdminUserGroupService extends BaseService {
 		userCacheService.modifyUserGroup(userGroup);
 	}
 
-	public void deleteUserGroup(String id) {
+	public void delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroup");
 
 		userGroupPair.getExternalService().delete(userGroupPair, UUID.fromString(id));
 		userCacheService.removeUserGroup(id);
 	}
 
-	public List<CsmRole> listRoles() {
+	public Map<Object, Object> listUserGroupRoleForm(String id) {
+		final Map<Object, Object> model = new HashMap<>();
+
 		final List<CsmRole> roleList = Lists.newArrayListWithCapacity(userCacheService.getRoleMap().size() - 1);
 		for (CsmRole role : userCacheService.getRoleMap().values()) {
 			if (!ROOT.isRootById(role.getId())) {
@@ -169,10 +164,8 @@ public class AdminUserGroupService extends BaseService {
 			}
 		}
 		Collections.sort(roleList, RoleComparator.INSTANCE);
-		return roleList;
-	}
+		model.put("roleList", roleList);
 
-	public List<UserGroupRoleDto> listUserGroupRoles(String id) {
 		final List<UserGroupRoleDto> userGroupRoleDtoList = Lists.newArrayList();
 		for (CsmUserGroupRole userGroupRole : userCacheService.getUserGroupRoleMap().values()) {
 			final String userGroupRoleIdString = userGroupRole.getUserGroupId().toString();
@@ -182,7 +175,9 @@ public class AdminUserGroupService extends BaseService {
 			}
 		}
 		Collections.sort(userGroupRoleDtoList, UserGroupRoleDtoComparator.INSTANCE);
-		return userGroupRoleDtoList;
+		model.put("userGroupRoleDtoList", userGroupRoleDtoList);
+
+		return model;
 	}
 
 	public UUID postUserGroupRole(CsmUserGroupRole userGroupRole) {
@@ -197,5 +192,29 @@ public class AdminUserGroupService extends BaseService {
 	public void deleteUserGroupRole(String id) {
 		userGroupRolePair.getExternalService().delete(userGroupRolePair, UUID.fromString(id));
 		userCacheService.removeUserGroupRole(id);
+	}
+
+	private List<CsmUserGroup> getUserGroupList() {
+		final List<CsmUserGroup> userGroupList = Lists
+				.newArrayListWithCapacity(userCacheService.getUserGroupMap().size() - 1);
+		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
+			if (!ROOT.isRootById(userGroup.getId())) {
+				userGroupList.add(userGroup);
+			}
+		}
+		Collections.sort(userGroupList, UserGroupComparator.INSTANCE);
+		return userGroupList;
+	}
+
+	private List<CsmUserGroup> getCandidateSuperUserGroupList(String id) {
+		final List<CsmUserGroup> userGroupList = Lists.newArrayList();
+		final Set<CsmUserGroup> subUserGroupSet = userCacheService.getSubUserGroupSet(id);
+		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
+			if (!ROOT.isRootById(userGroup.getId()) && !subUserGroupSet.contains(userGroup)) {
+				userGroupList.add(userGroup);
+			}
+		}
+		Collections.sort(userGroupList, UserGroupComparator.INSTANCE);
+		return userGroupList;
 	}
 }
