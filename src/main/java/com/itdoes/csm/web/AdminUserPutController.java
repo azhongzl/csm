@@ -34,6 +34,6 @@ public class AdminUserPutController extends BaseEntityPutController {
 
 	@ModelAttribute
 	public void getEntity(@RequestParam("id") String id, ServletRequest request) {
-		cacheEntity(request, adminUserService.getUser(id));
+		cacheEntity(request, adminUserService.getInternalUser(id));
 	}
 }

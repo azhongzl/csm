@@ -31,6 +31,10 @@ public class ProfileService extends BaseService {
 	}
 
 	public CsmUser getUser() {
+		return pair.getExternalService().get(pair, UUID.fromString(Shiros.getShiroUser().getId()));
+	}
+
+	public CsmUser getInternalUser() {
 		return pair.getInternalService().get(pair, UUID.fromString(Shiros.getShiroUser().getId()));
 	}
 
@@ -42,7 +46,7 @@ public class ProfileService extends BaseService {
 
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
-			pair.getInternalService().put(pair, user, oldUser);
+			pair.getExternalService().put(pair, user, oldUser);
 		}
 	}
 }

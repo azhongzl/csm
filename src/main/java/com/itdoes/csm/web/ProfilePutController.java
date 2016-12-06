@@ -35,6 +35,6 @@ public class ProfilePutController extends BaseEntityPutController {
 
 	@ModelAttribute
 	public <T, ID extends Serializable> void getEntity(ServletRequest request) {
-		cacheEntity(request, profileService.getUser());
+		cacheEntity(request, profileService.getInternalUser());
 	}
 }

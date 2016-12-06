@@ -36,7 +36,11 @@ public class AdminUserService extends BaseService {
 	}
 
 	public CsmUser getUser(String id) {
-		return userCacheService.getUser(id);
+		return pair.getExternalService().get(pair, UUID.fromString(id));
+	}
+
+	public CsmUser getInternalUser(String id) {
+		return pair.getInternalService().get(pair, UUID.fromString(id));
 	}
 
 	public UUID postUser(CsmUser user) {
@@ -49,7 +53,7 @@ public class AdminUserService extends BaseService {
 		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
 
 		user.populatePassword();
-		final UUID id = pair.getInternalService().post(pair, user);
+		final UUID id = pair.getExternalService().post(pair, user);
 		userCacheService.addUser(user);
 		return id;
 	}
@@ -63,14 +67,14 @@ public class AdminUserService extends BaseService {
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
 		}
-		pair.getInternalService().put(pair, user, oldUser);
+		pair.getExternalService().put(pair, user, oldUser);
 		userCacheService.modifyUser(user);
 	}
 
 	public void deleteUser(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root User");
 
-		pair.getInternalService().delete(pair, UUID.fromString(id));
+		pair.getExternalService().delete(pair, UUID.fromString(id));
 		userCacheService.removeUser(id);
 	}
 }
