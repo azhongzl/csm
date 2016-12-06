@@ -27,22 +27,22 @@ public class AdminUserGroupService extends BaseService {
 	@Autowired
 	private EntityEnv env;
 
-	private EntityPair<CsmUserGroup, UUID> pair;
+	private EntityPair<CsmUserGroup, UUID> userGroupPair;
 
 	@Autowired
 	private UserCacheService userCacheService;
 
 	@PostConstruct
 	public void myInit() {
-		pair = env.getPair(CsmUserGroup.class.getSimpleName());
+		userGroupPair = env.getPair(CsmUserGroup.class.getSimpleName());
 	}
 
 	public CsmUserGroup getUserGroup(String id) {
-		return pair.getExternalService().get(pair, UUID.fromString(id));
+		return userGroupPair.getExternalService().get(userGroupPair, UUID.fromString(id));
 	}
 
 	public CsmUserGroup getInternalUserGroup(String id) {
-		return pair.getInternalService().get(pair, UUID.fromString(id));
+		return userGroupPair.getInternalService().get(userGroupPair, UUID.fromString(id));
 	}
 
 	public UUID postUserGroup(CsmUserGroup userGroup) {
@@ -54,7 +54,7 @@ public class AdminUserGroupService extends BaseService {
 			Validate.isTrue(!ROOT.isRootById(userGroup.getSuperId()), "Cannot use root as super UserGroup");
 		}
 
-		final UUID id = pair.getExternalService().post(pair, userGroup);
+		final UUID id = userGroupPair.getExternalService().post(userGroupPair, userGroup);
 		userCacheService.addUserGroup(userGroup);
 		return id;
 	}
@@ -73,14 +73,14 @@ public class AdminUserGroupService extends BaseService {
 			}
 		}
 
-		pair.getExternalService().put(pair, userGroup, oldUserGroup);
+		userGroupPair.getExternalService().put(userGroupPair, userGroup, oldUserGroup);
 		userCacheService.modifyUserGroup(userGroup);
 	}
 
 	public void deleteUserGroup(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroup");
 
-		pair.getExternalService().delete(pair, UUID.fromString(id));
+		userGroupPair.getExternalService().delete(userGroupPair, UUID.fromString(id));
 		userCacheService.removeUserGroup(id);
 	}
 }

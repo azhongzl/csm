@@ -23,19 +23,19 @@ public class ProfileService extends BaseService {
 	@Autowired
 	private EntityEnv env;
 
-	private EntityPair<CsmUser, UUID> pair;
+	private EntityPair<CsmUser, UUID> userPair;
 
 	@PostConstruct
 	public void myInit() {
-		pair = env.getPair(CsmUser.class.getSimpleName());
+		userPair = env.getPair(CsmUser.class.getSimpleName());
 	}
 
 	public CsmUser getUser() {
-		return pair.getExternalService().get(pair, UUID.fromString(Shiros.getShiroUser().getId()));
+		return userPair.getExternalService().get(userPair, UUID.fromString(Shiros.getShiroUser().getId()));
 	}
 
 	public CsmUser getInternalUser() {
-		return pair.getInternalService().get(pair, UUID.fromString(Shiros.getShiroUser().getId()));
+		return userPair.getInternalService().get(userPair, UUID.fromString(Shiros.getShiroUser().getId()));
 	}
 
 	public void putUser(CsmUser user, CsmUser oldUser) {
@@ -46,7 +46,7 @@ public class ProfileService extends BaseService {
 
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
-			pair.getExternalService().put(pair, user, oldUser);
+			userPair.getExternalService().put(userPair, user, oldUser);
 		}
 	}
 }

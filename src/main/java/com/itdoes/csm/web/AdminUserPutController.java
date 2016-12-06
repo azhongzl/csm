@@ -27,7 +27,7 @@ public class AdminUserPutController extends BaseEntityPutController {
 	private AdminUserService adminUserService;
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
-	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmUser user, ServletRequest request) {
+	public Result putUser(@Valid @ModelAttribute(ENTITY_KEY) CsmUser user, ServletRequest request) {
 		adminUserService.putUser(user, getOldEntity(request));
 		return HttpResults.success();
 	}

@@ -1,5 +1,6 @@
 package com.itdoes.csm.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -7,13 +8,20 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
+import com.itdoes.common.core.jpa.FindFilter;
+import com.itdoes.common.core.jpa.FindFilter.Operator;
+import com.itdoes.common.core.jpa.Specifications;
+import com.itdoes.common.core.spring.SpringDatas;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmUser;
+import com.itdoes.csm.entity.CsmUserGroup;
 
 /**
  * @author Jalen Zhong
@@ -25,22 +33,40 @@ public class AdminUserService extends BaseService {
 	@Autowired
 	private EntityEnv env;
 
-	private EntityPair<CsmUser, UUID> pair;
+	private EntityPair<CsmUser, UUID> userPair;
+	private EntityPair<CsmUserGroup, UUID> userGroupPair;
 
 	@Autowired
 	private UserCacheService userCacheService;
 
 	@PostConstruct
 	public void myInit() {
-		pair = env.getPair(CsmUser.class.getSimpleName());
+		userPair = env.getPair(CsmUser.class.getSimpleName());
+		userGroupPair = env.getPair(CsmUserGroup.class.getSimpleName());
+	}
+
+	public Page<CsmUser> listUsers(int pageNo, int pageSize) {
+
+		return userPair.getExternalService().find(userPair,
+				Specifications.build(CsmUser.class,
+						Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
+				SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,
+						SpringDatas.newSort(true, "username")));
+	}
+
+	public List<CsmUserGroup> listUserGroups() {
+		return userGroupPair.getExternalService().findAll(userGroupPair,
+				Specifications.build(CsmUserGroup.class,
+						Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
+				SpringDatas.newSort(true, "name"));
 	}
 
 	public CsmUser getUser(String id) {
-		return pair.getExternalService().get(pair, UUID.fromString(id));
+		return userPair.getExternalService().get(userPair, UUID.fromString(id));
 	}
 
 	public CsmUser getInternalUser(String id) {
-		return pair.getInternalService().get(pair, UUID.fromString(id));
+		return userPair.getInternalService().get(userPair, UUID.fromString(id));
 	}
 
 	public UUID postUser(CsmUser user) {
@@ -53,7 +79,7 @@ public class AdminUserService extends BaseService {
 		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
 
 		user.populatePassword();
-		final UUID id = pair.getExternalService().post(pair, user);
+		final UUID id = userPair.getExternalService().post(userPair, user);
 		userCacheService.addUser(user);
 		return id;
 	}
@@ -67,14 +93,14 @@ public class AdminUserService extends BaseService {
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
 		}
-		pair.getExternalService().put(pair, user, oldUser);
+		userPair.getExternalService().put(userPair, user, oldUser);
 		userCacheService.modifyUser(user);
 	}
 
 	public void deleteUser(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root User");
 
-		pair.getExternalService().delete(pair, UUID.fromString(id));
+		userPair.getExternalService().delete(userPair, UUID.fromString(id));
 		userCacheService.removeUser(id);
 	}
 }

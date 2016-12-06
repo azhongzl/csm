@@ -25,17 +25,17 @@ public class AdminUserGroupController extends BaseEntityController {
 	private AdminUserGroupService adminUserGroupService;
 
 	@RequestMapping(value = "post", method = RequestMethod.POST)
-	public Result post(@Valid CsmUserGroup userGroup) {
+	public Result postUserGroup(@Valid CsmUserGroup userGroup) {
 		return HttpResults.success(adminUserGroupService.postUserGroup(userGroup));
 	}
 
 	@RequestMapping(value = "put/{id}", method = RequestMethod.GET)
-	public Result putForm(@PathVariable("id") String id) {
+	public Result putUserGroupForm(@PathVariable("id") String id) {
 		return HttpResults.success(adminUserGroupService.getUserGroup(id));
 	}
 
 	@RequestMapping(value = "delete/{id}")
-	public Result delete(@PathVariable("id") String id) {
+	public Result deleteUserGroup(@PathVariable("id") String id) {
 		adminUserGroupService.deleteUserGroup(id);
 		return HttpResults.success();
 	}
