@@ -20,6 +20,7 @@ import com.itdoes.common.business.Perms;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.entity.CsmPermission;
+import com.itdoes.csm.entity.CsmRole;
 import com.itdoes.csm.entity.CsmRolePermission;
 import com.itdoes.csm.entity.CsmUser;
 import com.itdoes.csm.entity.CsmUserGroup;
@@ -35,6 +36,7 @@ public class UserCacheService extends BaseService {
 
 	private final Map<String, CsmUserGroup> userGroupMap = Maps.newConcurrentMap();
 	private final Map<String, CsmUserGroupRole> userGroupRoleMap = Maps.newConcurrentMap();
+	private final Map<String, CsmRole> roleMap = Maps.newConcurrentMap();
 	private final Map<String, CsmRolePermission> rolePermissionMap = Maps.newConcurrentMap();
 	private final Map<String, Set<String>> permissionSetMap = Maps.newConcurrentMap();
 	private final Map<String, CsmUser> userMap = Maps.newConcurrentMap();
@@ -54,6 +56,12 @@ public class UserCacheService extends BaseService {
 				.findAll(userGroupRolePair, null, null);
 		for (CsmUserGroupRole userGroupRole : userGroupRoleList) {
 			addUserGroupRole(userGroupRole);
+		}
+
+		final EntityPair<CsmRole, UUID> rolePair = entityEnv.getPair(CsmRole.class.getSimpleName());
+		final List<CsmRole> roleList = rolePair.getInternalService().findAll(rolePair, null, null);
+		for (CsmRole role : roleList) {
+			addRole(role);
 		}
 
 		final EntityPair<CsmRolePermission, UUID> rolePermissionPair = entityEnv
@@ -140,6 +148,18 @@ public class UserCacheService extends BaseService {
 
 	public void removeUserGroupRole(String id) {
 		userGroupRoleMap.remove(id);
+	}
+
+	public void addRole(CsmRole role) {
+		roleMap.put(role.getId().toString(), role);
+	}
+
+	public void modifyRole(CsmRole role) {
+		roleMap.put(role.getId().toString(), role);
+	}
+
+	public void removeRole(String id) {
+		roleMap.remove(id);
 	}
 
 	public void addRolePermission(CsmRolePermission rolePermission) {
