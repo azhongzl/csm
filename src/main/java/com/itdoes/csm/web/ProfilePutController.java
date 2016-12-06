@@ -28,14 +28,14 @@ public class ProfilePutController extends BaseEntityPutController {
 	@Autowired
 	private ProfileService profileService;
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "put", method = RequestMethod.POST)
 	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmUser user, ServletRequest request) {
-		profileService.putUser(user, getOldEntity(request));
+		profileService.put(user, getOldEntity(request));
 		return HttpResults.success();
 	}
 
 	@ModelAttribute
 	public <T, ID extends Serializable> void getEntity(Model model, ServletRequest request) {
-		cacheEntity(model, request, profileService.getInternalUser());
+		cacheEntity(model, request, profileService.getEntity());
 	}
 }

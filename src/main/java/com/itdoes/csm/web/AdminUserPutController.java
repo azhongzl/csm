@@ -28,13 +28,13 @@ public class AdminUserPutController extends BaseEntityPutController {
 	private AdminUserService adminUserService;
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
-	public Result putUser(@Valid @ModelAttribute(ENTITY_KEY) CsmUser user, ServletRequest request) {
-		adminUserService.putUser(user, getOldEntity(request));
+	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmUser user, ServletRequest request) {
+		adminUserService.put(user, getOldEntity(request));
 		return HttpResults.success();
 	}
 
 	@ModelAttribute
 	public void getEntity(@RequestParam("id") String id, Model model, ServletRequest request) {
-		cacheEntity(model, request, adminUserService.getInternalUser(id));
+		cacheEntity(model, request, adminUserService.getEntity(id));
 	}
 }

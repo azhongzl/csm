@@ -1,5 +1,7 @@
 package com.itdoes.csm.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -33,15 +35,17 @@ public class ProfileService extends BaseService {
 		userPair = env.getPair(CsmUser.class.getSimpleName());
 	}
 
-	public CsmUser getUser() {
+	public Map<Object, Object> putForm() {
+		final Map<Object, Object> model = new HashMap<>();
+		model.put("user", userCacheService.getUser(Shiros.getShiroUser().getId()));
+		return model;
+	}
+
+	public CsmUser getEntity() {
 		return userCacheService.getUser(Shiros.getShiroUser().getId());
 	}
 
-	public CsmUser getInternalUser() {
-		return userCacheService.getUser(Shiros.getShiroUser().getId());
-	}
-
-	public void putUser(CsmUser user, CsmUser oldUser) {
+	public void put(CsmUser user, CsmUser oldUser) {
 		Validate.isTrue(user.getId().equals(oldUser.getId()), "Cannot modify other user");
 		Validate.isTrue(user.getUsername().equals(oldUser.getUsername()), "Cannot modify username");
 		Validate.isTrue(user.getActive().equals(oldUser.getActive()), "Cannot modify active");

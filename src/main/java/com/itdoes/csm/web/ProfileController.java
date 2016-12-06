@@ -20,8 +20,8 @@ public class ProfileController extends BaseEntityController {
 	@Autowired
 	private ProfileService profileService;
 
-	@RequestMapping(method = RequestMethod.GET)
-	public Result getUser() {
-		return HttpResults.success(profileService.getUser());
+	@RequestMapping(value = "putForm", method = RequestMethod.GET)
+	public Result putForm() {
+		return HttpResults.success(profileService.putForm());
 	}
 }

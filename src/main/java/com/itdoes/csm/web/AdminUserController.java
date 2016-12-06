@@ -25,30 +25,30 @@ public class AdminUserController extends BaseEntityController {
 	@Autowired
 	private AdminUserService adminUserService;
 
-	@RequestMapping(value = "list", method = RequestMethod.GET)
-	public Result listUsers(@RequestParam(value = PAGE_NO, defaultValue = "1") int pageNo,
+	@RequestMapping(value = "listForm", method = RequestMethod.GET)
+	public Result listForm(@RequestParam(value = PAGE_NO, defaultValue = "1") int pageNo,
 			@RequestParam(value = PAGE_SIZE, defaultValue = "-1") int pageSize) {
-		return HttpResults.success(adminUserService.listUsers(pageNo, pageSize));
+		return HttpResults.success(adminUserService.listForm(pageNo, pageSize));
 	}
 
-	@RequestMapping(value = "listUserGroups", method = RequestMethod.GET)
-	public Result listUserGroups() {
-		return HttpResults.success(adminUserService.listUserGroups());
-	}
-
-	@RequestMapping(value = "get/{id}", method = RequestMethod.GET)
-	public Result getUser(@PathVariable("id") String id) {
-		return HttpResults.success(adminUserService.getUser(id));
+	@RequestMapping(value = "postForm", method = RequestMethod.POST)
+	public Result postForm() {
+		return HttpResults.success(adminUserService.postForm());
 	}
 
 	@RequestMapping(value = "post", method = RequestMethod.POST)
-	public Result postUser(@Valid CsmUser user) {
-		return HttpResults.success(adminUserService.postUser(user));
+	public Result post(@Valid CsmUser user) {
+		return HttpResults.success(adminUserService.post(user));
+	}
+
+	@RequestMapping(value = "putForm/{id}", method = RequestMethod.GET)
+	public Result putForm(@PathVariable("id") String id) {
+		return HttpResults.success(adminUserService.putForm(id));
 	}
 
 	@RequestMapping(value = "delete/{id}")
-	public Result deleteUser(@PathVariable("id") String id) {
-		adminUserService.deleteUser(id);
+	public Result delete(@PathVariable("id") String id) {
+		adminUserService.delete(id);
 		return HttpResults.success();
 	}
 }

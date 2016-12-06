@@ -2,7 +2,9 @@ package com.itdoes.csm.service;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -10,7 +12,6 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
@@ -54,35 +55,24 @@ public class AdminUserService extends BaseService {
 		userPair = env.getPair(CsmUser.class.getSimpleName());
 	}
 
-	public Page<CsmUser> listUsers(int pageNo, int pageSize) {
-		return userPair.getExternalService().find(userPair,
-				Specifications.build(CsmUser.class,
-						Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
-				SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,
-						SpringDatas.newSort(true, "username")));
+	public Map<Object, Object> listForm(int pageNo, int pageSize) {
+		final Map<Object, Object> model = new HashMap<>();
+		model.put("userList",
+				userPair.getExternalService().find(userPair,
+						Specifications.build(CsmUser.class,
+								Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
+						SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,
+								SpringDatas.newSort(true, "username"))));
+		return model;
 	}
 
-	public List<CsmUserGroup> listUserGroups() {
-		final List<CsmUserGroup> userGroupList = Lists
-				.newArrayListWithCapacity(userCacheService.getUserGroupMap().size() - 1);
-		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
-			if (!ROOT.isRootById(userGroup.getId())) {
-				userGroupList.add(userGroup);
-			}
-		}
-		Collections.sort(userGroupList, UserGroupComparator.INSTANCE);
-		return userGroupList;
+	public Map<Object, Object> postForm() {
+		final Map<Object, Object> model = new HashMap<>();
+		model.put("userGroupList", listUserGroups());
+		return model;
 	}
 
-	public CsmUser getUser(String id) {
-		return userCacheService.getUser(id);
-	}
-
-	public CsmUser getInternalUser(String id) {
-		return userCacheService.getUser(id);
-	}
-
-	public UUID postUser(CsmUser user) {
+	public UUID post(CsmUser user) {
 		Validate.isTrue(StringUtils.isNotBlank(user.getUsername()), "Username should not be blank");
 		Validate.notNull(user.getActive(), "Active should not be null");
 		Validate.notNull(user.getUserGroupId(), "UserGroup id should not be null");
@@ -97,7 +87,18 @@ public class AdminUserService extends BaseService {
 		return id;
 	}
 
-	public void putUser(CsmUser user, CsmUser oldUser) {
+	public Map<Object, Object> putForm(String id) {
+		final Map<Object, Object> model = new HashMap<>();
+		model.put("user", userCacheService.getUser(id));
+		model.put("userGroupList", listUserGroups());
+		return model;
+	}
+
+	public CsmUser getEntity(String id) {
+		return userCacheService.getUser(id);
+	}
+
+	public void put(CsmUser user, CsmUser oldUser) {
 		Validate.isTrue(user.getUsername().equals(oldUser.getUsername()), "Cannot modify username");
 		Validate.isTrue(!ROOT.isRootByName(user.getUsername()) && !ROOT.isRootById(user.getId()),
 				"Cannot modify root User");
@@ -110,10 +111,22 @@ public class AdminUserService extends BaseService {
 		userCacheService.modifyUser(user);
 	}
 
-	public void deleteUser(String id) {
+	public void delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root User");
 
 		userPair.getExternalService().delete(userPair, UUID.fromString(id));
 		userCacheService.removeUser(id);
+	}
+
+	private List<CsmUserGroup> listUserGroups() {
+		final List<CsmUserGroup> userGroupList = Lists
+				.newArrayListWithCapacity(userCacheService.getUserGroupMap().size() - 1);
+		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
+			if (!ROOT.isRootById(userGroup.getId())) {
+				userGroupList.add(userGroup);
+			}
+		}
+		Collections.sort(userGroupList, UserGroupComparator.INSTANCE);
+		return userGroupList;
 	}
 }
