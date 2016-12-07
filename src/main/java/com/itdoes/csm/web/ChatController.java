@@ -1,7 +1,6 @@
 package com.itdoes.csm.web;
 
 import java.security.Principal;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -11,10 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.itdoes.common.business.web.BaseController;
-import com.itdoes.common.core.shiro.ShiroUser;
-import com.itdoes.common.core.shiro.Shiros;
+import com.itdoes.common.core.Result;
 import com.itdoes.csm.entity.CsmChatMessage;
-import com.itdoes.csm.service.ChatService;
+import com.itdoes.csm.service.ui.ChatUiService;
 
 /**
  * @author Jalen Zhong
@@ -23,7 +21,7 @@ import com.itdoes.csm.service.ChatService;
 @RequestMapping("/chat")
 public class ChatController extends BaseController {
 	@Autowired
-	private ChatService chatService;
+	private ChatUiService chatService;
 
 	private final SimpMessagingTemplate template;
 
@@ -38,16 +36,12 @@ public class ChatController extends BaseController {
 	}
 
 	@SubscribeMapping("/chatCInitMessage")
-	public List<CsmChatMessage> chatCInitMessage(Principal principal) {
-		return chatService.customerInitMessage(getShiroUser(principal));
+	public Result customerInitMessage(Principal principal) {
+		return chatService.initMessage(principal);
 	}
 
 	@MessageMapping("/chatCSendMessage")
-	public void chatCSendMessage(CsmChatMessage message, Principal principal) {
-		chatService.customerSendMessage(message, getShiroUser(principal), template);
-	}
-
-	private ShiroUser getShiroUser(Principal principal) {
-		return Shiros.getShiroUser(principal);
+	public void sendMessage(CsmChatMessage message, Principal principal) {
+		chatService.customerSendMessage(message, principal, template);
 	}
 }

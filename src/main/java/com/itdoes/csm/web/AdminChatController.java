@@ -1,7 +1,6 @@
 package com.itdoes.csm.web;
 
 import java.security.Principal;
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -21,12 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.shiro.ShiroUser;
-import com.itdoes.common.core.shiro.Shiros;
-import com.itdoes.csm.dto.ChatUser;
 import com.itdoes.csm.entity.CsmChatCustomerUserGroup;
 import com.itdoes.csm.entity.CsmChatMessage;
-import com.itdoes.csm.service.ChatService;
+import com.itdoes.csm.service.ui.AdminChatUiService;
 
 /**
  * @author Jalen Zhong
@@ -35,7 +31,7 @@ import com.itdoes.csm.service.ChatService;
 @RequestMapping("/admin/chat")
 public class AdminChatController extends BaseController {
 	@Autowired
-	private ChatService chatService;
+	private AdminChatUiService chatService;
 
 	private final SimpMessagingTemplate template;
 
@@ -45,13 +41,12 @@ public class AdminChatController extends BaseController {
 	}
 
 	@RequestMapping
-	public String adminChat(Principal principal, Model model) {
-		model.addAttribute("currentUserGroup", chatService.getUserGroup(getShiroUser(principal)));
+	public String chat(Principal principal, Model model) {
 		return "admin/chat";
 	}
 
 	@RequestMapping("icon")
-	public String adminChatIcon(
+	public String chatIcon(
 			@RequestParam(value = FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, required = false) String username,
 			@RequestParam(value = "iconWidth", required = false) String iconWidth,
 			@RequestParam(value = "iconHeight", required = false) String iconHeight, Model model) {
@@ -64,14 +59,13 @@ public class AdminChatController extends BaseController {
 	@RequestMapping("hasUnhandledCustomers")
 	@ResponseBody
 	public Result hasUnhandledCustomers(Principal principal) {
-		return Result.success().addData("hasUnhandledCustomers",
-				chatService.hasUnhandledCustomers(getShiroUser(principal)));
+		return chatService.hasUnhandledCustomers(principal);
 	}
 
 	@RequestMapping(value = "postCustomerUserGroup", method = RequestMethod.POST)
 	@ResponseBody
 	public Result postCustomerUserGroup(@Valid CsmChatCustomerUserGroup chatCustomerUserGroup, Principal principal) {
-		return chatService.postCustomerUserGroup(chatCustomerUserGroup, getShiroUser(principal), template);
+		return chatService.postCustomerUserGroup(chatCustomerUserGroup, principal, template);
 	}
 
 	@RequestMapping(value = "deleteCustomerUserGroup/{id}")
@@ -81,21 +75,17 @@ public class AdminChatController extends BaseController {
 	}
 
 	@SubscribeMapping("/chatAInit")
-	public List<ChatUser> chatAInit(Principal principal) {
-		return chatService.adminInit(getShiroUser(principal));
+	public Result init(Principal principal) {
+		return chatService.init(principal);
 	}
 
 	@SubscribeMapping("/chatAInitMessage/{roomId}")
-	public List<CsmChatMessage> chatAInitMessage(@DestinationVariable String roomId, Principal principal) {
-		return chatService.adminInitMessage(roomId, getShiroUser(principal));
+	public Result initMessage(@DestinationVariable String roomId, Principal principal) {
+		return chatService.initMessage(roomId, principal);
 	}
 
 	@MessageMapping("/chatASendMessage")
-	public void chatASendMessage(CsmChatMessage message, Principal principal) {
-		chatService.adminSendMessage(message, getShiroUser(principal), template);
-	}
-
-	private ShiroUser getShiroUser(Principal principal) {
-		return Shiros.getShiroUser(principal);
+	public void sendMessage(CsmChatMessage message, Principal principal) {
+		chatService.sendMessage(message, principal, template);
 	}
 }
