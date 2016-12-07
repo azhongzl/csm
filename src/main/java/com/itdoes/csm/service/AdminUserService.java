@@ -61,7 +61,7 @@ public class AdminUserService extends BaseService {
 						Specifications.build(CsmUser.class,
 								Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
 						SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,
-								SpringDatas.newSort(true, "username"))));
+								SpringDatas.newSort("username", true))));
 		return model;
 	}
 
