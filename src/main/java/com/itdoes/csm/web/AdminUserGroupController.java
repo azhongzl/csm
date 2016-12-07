@@ -47,8 +47,7 @@ public class AdminUserGroupController extends BaseController {
 
 	@RequestMapping(value = "delete/{id}")
 	public Result delete(@PathVariable("id") String id) {
-		adminUserGroupService.delete(id);
-		return HttpResults.success();
+		return HttpResults.success(adminUserGroupService.delete(id));
 	}
 
 	@RequestMapping(value = "listUserGroupRoleForm/{id}", method = RequestMethod.GET)

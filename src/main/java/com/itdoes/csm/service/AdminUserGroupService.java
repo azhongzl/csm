@@ -21,6 +21,7 @@ import com.itdoes.common.core.MapModel;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmRole;
+import com.itdoes.csm.entity.CsmUser;
 import com.itdoes.csm.entity.CsmUserGroup;
 import com.itdoes.csm.entity.CsmUserGroupRole;
 
@@ -144,11 +145,28 @@ public class AdminUserGroupService extends BaseService {
 		userCacheService.modifyUserGroup(userGroup);
 	}
 
-	public void delete(String id) {
+	public MapModel delete(String id) {
+		final MapModel model = new MapModel();
+
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroup");
+
+		final Set<CsmUserGroup> subUserGroupSet = userCacheService.getSubUserGroupSet(id);
+		if (subUserGroupSet.size() > 1) {
+			model.put("1", "Fail, UserGroup has children");
+			return model;
+		}
+
+		for (CsmUser user : userCacheService.getUserMap().values()) {
+			if (user.getUserGroupId().toString().equals(id)) {
+				model.put("2", "Fail, UserGroup has user");
+				return model;
+			}
+		}
 
 		userGroupPair.external().delete(userGroupPair, UUID.fromString(id));
 		userCacheService.removeUserGroup(id);
+		model.put("0", "success");
+		return model;
 	}
 
 	public MapModel listUserGroupRoleForm(String id) {
