@@ -72,7 +72,7 @@ public class AdminPermissionService extends BaseService {
 		Validate.isTrue(StringUtils.isNotBlank(permission.getPermission()), "Permission value should not be blank");
 		Validate.isTrue(!ROOT.isRootByName(permission.getName()), "Cannot create root Permission");
 
-		final UUID id = permissionPair.getExternalService().post(permissionPair, permission);
+		final UUID id = permissionPair.external().post(permissionPair, permission);
 		userCacheService.addPermission(permission);
 		return id;
 	}
@@ -91,14 +91,14 @@ public class AdminPermissionService extends BaseService {
 		Validate.isTrue(!ROOT.isRootByName(permission.getName()) && !ROOT.isRootById(permission.getId()),
 				"Cannot modify root Permission");
 
-		permissionPair.getExternalService().put(permissionPair, permission, oldPermission);
+		permissionPair.external().put(permissionPair, permission, oldPermission);
 		userCacheService.modifyPermission(permission);
 	}
 
 	public void delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root Permission");
 
-		permissionPair.getExternalService().delete(permissionPair, UUID.fromString(id));
+		permissionPair.external().delete(permissionPair, UUID.fromString(id));
 		userCacheService.removePermission(id);
 	}
 }

@@ -169,8 +169,8 @@ public class ChatService extends BaseService {
 		if (curAdminUserGroup.getChat()) {
 			return true;
 		} else {
-			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = chatCustomerUserGroupPair
-					.getInternalService().findAll(chatCustomerUserGroupPair,
+			final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = chatCustomerUserGroupPair.external()
+					.findAll(chatCustomerUserGroupPair,
 							Specifications.build(CsmChatCustomerUserGroup.class,
 									Lists.newArrayList(
 											new FindFilter("userGroupId", Operator.EQ, curAdminUserGroupIdString))),
@@ -203,7 +203,7 @@ public class ChatService extends BaseService {
 	}
 
 	private boolean isCustomerUserGroupExist(String customerId, String userGroupId) {
-		return chatCustomerUserGroupPair.getExternalService().count(chatCustomerUserGroupPair,
+		return chatCustomerUserGroupPair.external().count(chatCustomerUserGroupPair,
 				Specifications.build(CsmChatCustomerUserGroup.class,
 						Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerId),
 								new FindFilter("userGroupId", Operator.EQ, userGroupId)))) > 0;
@@ -218,7 +218,7 @@ public class ChatService extends BaseService {
 		}
 
 		chatCustomerUserGroup.setOperatorUserId(UUID.fromString(shiroUser.getId()));
-		final Serializable id = chatCustomerUserGroupPair.getExternalService().post(chatCustomerUserGroupPair,
+		final Serializable id = chatCustomerUserGroupPair.external().post(chatCustomerUserGroupPair,
 				chatCustomerUserGroup);
 
 		final ChatEvent messageEvent = new ChatEvent(customerId);
@@ -228,9 +228,9 @@ public class ChatService extends BaseService {
 	}
 
 	public void deleteCustomerUserGroup(String id, SimpMessagingTemplate template) {
-		final CsmChatCustomerUserGroup chatCustomerUserGroup = chatCustomerUserGroupPair.getExternalService()
+		final CsmChatCustomerUserGroup chatCustomerUserGroup = chatCustomerUserGroupPair.external()
 				.get(chatCustomerUserGroupPair, UUID.fromString(id));
-		chatCustomerUserGroupPair.getExternalService().delete(chatCustomerUserGroupPair, UUID.fromString(id));
+		chatCustomerUserGroupPair.external().delete(chatCustomerUserGroupPair, UUID.fromString(id));
 
 		final ChatEvent messageEvent = new ChatEvent(chatCustomerUserGroup.getCustomerUserId().toString());
 		template.convertAndSend(
@@ -239,7 +239,7 @@ public class ChatService extends BaseService {
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {
-		chatMessagePair.getInternalService().post(chatMessagePair, message);
+		chatMessagePair.external().post(chatMessagePair, message);
 	}
 
 	private List<CsmChatMessage> initMessage(String roomId, ShiroUser shiroUser, boolean forAdmin) {
@@ -271,7 +271,7 @@ public class ChatService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getChatMessageListFromDb(String roomId) {
-		return chatMessagePair.getExternalService().find(chatMessagePair,
+		return chatMessagePair.external().find(chatMessagePair,
 				Specifications.build(CsmChatMessage.class,
 						Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId))),
 				MESSAGE_PAGE_REQUEST).getContent();

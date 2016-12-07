@@ -46,42 +46,41 @@ public class UserCacheService extends BaseService {
 	@PostConstruct
 	public void myInit() {
 		final EntityPair<CsmUserGroup, UUID> userGroupPair = entityEnv.getPair(CsmUserGroup.class.getSimpleName());
-		final List<CsmUserGroup> userGroupList = userGroupPair.getInternalService().findAll(userGroupPair, null, null);
+		final List<CsmUserGroup> userGroupList = userGroupPair.internal().findAll(userGroupPair, null, null);
 		for (CsmUserGroup userGroup : userGroupList) {
 			addUserGroup(userGroup);
 		}
 
 		final EntityPair<CsmUserGroupRole, UUID> userGroupRolePair = entityEnv
 				.getPair(CsmUserGroupRole.class.getSimpleName());
-		final List<CsmUserGroupRole> userGroupRoleList = userGroupRolePair.getInternalService()
-				.findAll(userGroupRolePair, null, null);
+		final List<CsmUserGroupRole> userGroupRoleList = userGroupRolePair.internal().findAll(userGroupRolePair, null,
+				null);
 		for (CsmUserGroupRole userGroupRole : userGroupRoleList) {
 			addUserGroupRole(userGroupRole);
 		}
 
 		final EntityPair<CsmRole, UUID> rolePair = entityEnv.getPair(CsmRole.class.getSimpleName());
-		final List<CsmRole> roleList = rolePair.getInternalService().findAll(rolePair, null, null);
+		final List<CsmRole> roleList = rolePair.internal().findAll(rolePair, null, null);
 		for (CsmRole role : roleList) {
 			addRole(role);
 		}
 
 		final EntityPair<CsmRolePermission, UUID> rolePermissionPair = entityEnv
 				.getPair(CsmRolePermission.class.getSimpleName());
-		final List<CsmRolePermission> rolePermissionList = rolePermissionPair.getInternalService()
-				.findAll(rolePermissionPair, null, null);
+		final List<CsmRolePermission> rolePermissionList = rolePermissionPair.internal().findAll(rolePermissionPair,
+				null, null);
 		for (CsmRolePermission rolePermission : rolePermissionList) {
 			addRolePermission(rolePermission);
 		}
 
 		final EntityPair<CsmPermission, UUID> permissionPair = entityEnv.getPair(CsmPermission.class.getSimpleName());
-		final List<CsmPermission> permissionList = permissionPair.getInternalService().findAll(permissionPair, null,
-				null);
+		final List<CsmPermission> permissionList = permissionPair.internal().findAll(permissionPair, null, null);
 		for (CsmPermission permission : permissionList) {
 			addPermission(permission);
 		}
 
 		final EntityPair<CsmUser, UUID> userPair = entityEnv.getPair(CsmUser.class.getSimpleName());
-		final List<CsmUser> userList = userPair.getInternalService().findAll(userPair, null, null);
+		final List<CsmUser> userList = userPair.internal().findAll(userPair, null, null);
 		for (CsmUser user : userList) {
 			addUser(user);
 		}

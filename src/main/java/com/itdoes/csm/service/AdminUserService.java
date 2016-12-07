@@ -57,7 +57,7 @@ public class AdminUserService extends BaseService {
 	public MapModel listForm(int pageNo, int pageSize) {
 		final MapModel model = new MapModel();
 		model.put("userList",
-				userPair.getExternalService().find(userPair,
+				userPair.external().find(userPair,
 						Specifications.build(CsmUser.class,
 								Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
 						SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,
@@ -79,7 +79,7 @@ public class AdminUserService extends BaseService {
 		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
 
 		user.populatePassword();
-		final UUID id = userPair.getExternalService().post(userPair, user);
+		final UUID id = userPair.external().post(userPair, user);
 		userCacheService.addUser(user);
 		return id;
 	}
@@ -104,14 +104,14 @@ public class AdminUserService extends BaseService {
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
 		}
-		userPair.getExternalService().put(userPair, user, oldUser);
+		userPair.external().put(userPair, user, oldUser);
 		userCacheService.modifyUser(user);
 	}
 
 	public void delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root User");
 
-		userPair.getExternalService().delete(userPair, UUID.fromString(id));
+		userPair.external().delete(userPair, UUID.fromString(id));
 		userCacheService.removeUser(id);
 	}
 

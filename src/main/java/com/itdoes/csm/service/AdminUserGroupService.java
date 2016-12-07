@@ -110,7 +110,7 @@ public class AdminUserGroupService extends BaseService {
 			Validate.isTrue(!ROOT.isRootById(userGroup.getSuperId()), "Cannot use root as super UserGroup");
 		}
 
-		final UUID id = userGroupPair.getExternalService().post(userGroupPair, userGroup);
+		final UUID id = userGroupPair.external().post(userGroupPair, userGroup);
 		userCacheService.addUserGroup(userGroup);
 		return id;
 	}
@@ -140,14 +140,14 @@ public class AdminUserGroupService extends BaseService {
 			}
 		}
 
-		userGroupPair.getExternalService().put(userGroupPair, userGroup, oldUserGroup);
+		userGroupPair.external().put(userGroupPair, userGroup, oldUserGroup);
 		userCacheService.modifyUserGroup(userGroup);
 	}
 
 	public void delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroup");
 
-		userGroupPair.getExternalService().delete(userGroupPair, UUID.fromString(id));
+		userGroupPair.external().delete(userGroupPair, UUID.fromString(id));
 		userCacheService.removeUserGroup(id);
 	}
 
@@ -183,7 +183,7 @@ public class AdminUserGroupService extends BaseService {
 		Validate.isTrue(!ROOT.isRootById(userGroupRole.getUserGroupId()) && !ROOT.isRootById(userGroupRole.getRoleId()),
 				"Cannot create root UserGroupRole");
 
-		final UUID id = userGroupRolePair.getExternalService().post(userGroupRolePair, userGroupRole);
+		final UUID id = userGroupRolePair.external().post(userGroupRolePair, userGroupRole);
 		userCacheService.addUserGroupRole(userGroupRole);
 		return id;
 	}
@@ -191,7 +191,7 @@ public class AdminUserGroupService extends BaseService {
 	public void deleteUserGroupRole(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroupRole");
 
-		userGroupRolePair.getExternalService().delete(userGroupRolePair, UUID.fromString(id));
+		userGroupRolePair.external().delete(userGroupRolePair, UUID.fromString(id));
 		userCacheService.removeUserGroupRole(id);
 	}
 

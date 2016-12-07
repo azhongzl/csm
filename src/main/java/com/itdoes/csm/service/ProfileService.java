@@ -52,7 +52,7 @@ public class ProfileService extends BaseService {
 
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
-			userPair.getExternalService().put(userPair, user, oldUser);
+			userPair.external().put(userPair, user, oldUser);
 			userCacheService.modifyUser(user);
 		}
 	}

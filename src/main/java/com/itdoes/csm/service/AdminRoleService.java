@@ -111,7 +111,7 @@ public class AdminRoleService extends BaseService {
 		Validate.isTrue(StringUtils.isNotBlank(role.getName()), "Role name should not be blank");
 		Validate.isTrue(!ROOT.isRootByName(role.getName()), "Cannot create root Role");
 
-		final UUID id = rolePair.getExternalService().post(rolePair, role);
+		final UUID id = rolePair.external().post(rolePair, role);
 		userCacheService.addRole(role);
 		return id;
 	}
@@ -130,14 +130,14 @@ public class AdminRoleService extends BaseService {
 		Validate.isTrue(!ROOT.isRootByName(role.getName()) && !ROOT.isRootById(role.getId()),
 				"Cannot modify root Role");
 
-		rolePair.getExternalService().put(rolePair, role, oldRole);
+		rolePair.external().put(rolePair, role, oldRole);
 		userCacheService.modifyRole(role);
 	}
 
 	public void delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root Role");
 
-		rolePair.getExternalService().delete(rolePair, UUID.fromString(id));
+		rolePair.external().delete(rolePair, UUID.fromString(id));
 		userCacheService.removeRole(id);
 	}
 
@@ -175,7 +175,7 @@ public class AdminRoleService extends BaseService {
 				!ROOT.isRootById(rolePermission.getRoleId()) && !ROOT.isRootById(rolePermission.getPermissionId()),
 				"Cannot create root RolePermission");
 
-		final UUID id = rolePermissionPair.getExternalService().post(rolePermissionPair, rolePermission);
+		final UUID id = rolePermissionPair.external().post(rolePermissionPair, rolePermission);
 		userCacheService.addRolePermission(rolePermission);
 		return id;
 	}
@@ -183,7 +183,7 @@ public class AdminRoleService extends BaseService {
 	public void deleteRolePermission(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root RolePermission");
 
-		rolePermissionPair.getExternalService().delete(rolePermissionPair, UUID.fromString(id));
+		rolePermissionPair.external().delete(rolePermissionPair, UUID.fromString(id));
 		userCacheService.removeRolePermission(id);
 	}
 }
