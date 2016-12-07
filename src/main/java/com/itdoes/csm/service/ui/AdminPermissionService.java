@@ -1,4 +1,4 @@
-package com.itdoes.csm.service;
+package com.itdoes.csm.service.ui;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,9 +16,10 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
-import com.itdoes.common.core.MapModel;
+import com.itdoes.common.core.Result;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmPermission;
+import com.itdoes.csm.service.UserCacheService;
 
 /**
  * @author Jalen Zhong
@@ -49,8 +50,7 @@ public class AdminPermissionService extends BaseService {
 		permissionPair = env.getPair(CsmPermission.class.getSimpleName());
 	}
 
-	public MapModel listForm() {
-		final MapModel model = new MapModel();
+	public Result listForm() {
 		final List<CsmPermission> permissionList = Lists
 				.newArrayListWithCapacity(userCacheService.getPermissionMap().size() - 1);
 		for (CsmPermission permission : userCacheService.getPermissionMap().values()) {
@@ -59,46 +59,45 @@ public class AdminPermissionService extends BaseService {
 			}
 		}
 		Collections.sort(permissionList, PermissionComparator.INSTANCE);
-		model.put("permissionList", permissionList);
-		return model;
+		return Result.success().addData("permissionList", permissionList);
 	}
 
-	public MapModel postForm() {
-		return MapModel.emptyMapModel();
+	public Result postForm() {
+		return Result.success();
 	}
 
-	public UUID post(CsmPermission permission) {
+	public Result post(CsmPermission permission) {
 		Validate.isTrue(StringUtils.isNotBlank(permission.getName()), "Permission name should not be blank");
 		Validate.isTrue(StringUtils.isNotBlank(permission.getPermission()), "Permission value should not be blank");
 		Validate.isTrue(!ROOT.isRootByName(permission.getName()), "Cannot create root Permission");
 
 		final UUID id = permissionPair.external().post(permissionPair, permission);
 		userCacheService.addPermission(permission);
-		return id;
+		return Result.success().addData("id", id);
 	}
 
-	public MapModel putForm(String id) {
-		final MapModel model = new MapModel();
-		model.put("permission", userCacheService.getPermission(id));
-		return model;
+	public Result putForm(String id) {
+		return Result.success().addData("permission", userCacheService.getPermission(id));
 	}
 
 	public CsmPermission getEntity(String id) {
 		return userCacheService.getPermission(id);
 	}
 
-	public void put(CsmPermission permission, CsmPermission oldPermission) {
+	public Result put(CsmPermission permission, CsmPermission oldPermission) {
 		Validate.isTrue(!ROOT.isRootByName(permission.getName()) && !ROOT.isRootById(permission.getId()),
 				"Cannot modify root Permission");
 
 		permissionPair.external().put(permissionPair, permission, oldPermission);
 		userCacheService.modifyPermission(permission);
+		return Result.success();
 	}
 
-	public void delete(String id) {
+	public Result delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root Permission");
 
 		permissionPair.external().delete(permissionPair, UUID.fromString(id));
 		userCacheService.removePermission(id);
+		return Result.success();
 	}
 }

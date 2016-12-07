@@ -1,4 +1,4 @@
-package com.itdoes.csm.service;
+package com.itdoes.csm.service.ui;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,7 +16,7 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
-import com.itdoes.common.core.MapModel;
+import com.itdoes.common.core.Result;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
@@ -24,6 +24,7 @@ import com.itdoes.common.core.spring.SpringDatas;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmUser;
 import com.itdoes.csm.entity.CsmUserGroup;
+import com.itdoes.csm.service.UserCacheService;
 
 /**
  * @author Jalen Zhong
@@ -54,24 +55,20 @@ public class AdminUserService extends BaseService {
 		userPair = env.getPair(CsmUser.class.getSimpleName());
 	}
 
-	public MapModel listForm(int pageNo, int pageSize) {
-		final MapModel model = new MapModel();
-		model.put("userList",
+	public Result listForm(int pageNo, int pageSize) {
+		return Result.success().addData("userList",
 				userPair.external().find(userPair,
 						Specifications.build(CsmUser.class,
 								Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
 						SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,
 								SpringDatas.newSort("username", true))));
-		return model;
 	}
 
-	public MapModel postForm() {
-		final MapModel model = new MapModel();
-		model.put("userGroupList", getUserGroupList());
-		return model;
+	public Result postForm() {
+		return Result.success().addData("userGroupList", getUserGroupList());
 	}
 
-	public UUID post(CsmUser user) {
+	public Result post(CsmUser user) {
 		Validate.isTrue(StringUtils.isNotBlank(user.getUsername()), "Username should not be blank");
 		Validate.isTrue(StringUtils.isNotBlank(user.getPlainPassword()), "Password should not be blank");
 		Validate.isTrue(userCacheService.getUserId(user.getUsername()) == null, "User [%s] exists", user.getUsername());
@@ -81,21 +78,19 @@ public class AdminUserService extends BaseService {
 		user.populatePassword();
 		final UUID id = userPair.external().post(userPair, user);
 		userCacheService.addUser(user);
-		return id;
+		return Result.success().addData("id", id);
 	}
 
-	public MapModel putForm(String id) {
-		final MapModel model = new MapModel();
-		model.put("user", userCacheService.getUser(id));
-		model.put("userGroupList", getUserGroupList());
-		return model;
+	public Result putForm(String id) {
+		return Result.success().addData("user", userCacheService.getUser(id)).addData("userGroupList",
+				getUserGroupList());
 	}
 
 	public CsmUser getEntity(String id) {
 		return userCacheService.getUser(id);
 	}
 
-	public void put(CsmUser user, CsmUser oldUser) {
+	public Result put(CsmUser user, CsmUser oldUser) {
 		Validate.isTrue(user.getUsername().equals(oldUser.getUsername()), "Cannot modify username");
 		Validate.isTrue(!ROOT.isRootByName(user.getUsername()) && !ROOT.isRootById(user.getId()),
 				"Cannot modify root User");
@@ -106,13 +101,15 @@ public class AdminUserService extends BaseService {
 		}
 		userPair.external().put(userPair, user, oldUser);
 		userCacheService.modifyUser(user);
+		return Result.success();
 	}
 
-	public void delete(String id) {
+	public Result delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root User");
 
 		userPair.external().delete(userPair, UUID.fromString(id));
 		userCacheService.removeUser(id);
+		return Result.success();
 	}
 
 	private List<CsmUserGroup> getUserGroupList() {

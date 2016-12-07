@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.itdoes.common.business.service.SearchService;
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
 
 /**
@@ -23,6 +22,6 @@ public class AdminSearchController extends BaseController {
 	@RequestMapping(value = "createIndex", method = RequestMethod.GET)
 	public Result createIndex() {
 		searchService.createIndex();
-		return HttpResults.success();
+		return Result.success();
 	}
 }

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.service.ProfileService;
 
@@ -22,6 +21,6 @@ public class ProfileController extends BaseController {
 
 	@RequestMapping(value = "putForm", method = RequestMethod.GET)
 	public Result putForm() {
-		return HttpResults.success(profileService.putForm());
+		return profileService.putForm();
 	}
 }

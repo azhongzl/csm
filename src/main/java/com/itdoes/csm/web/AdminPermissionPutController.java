@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.itdoes.common.business.web.BasePutController;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmPermission;
-import com.itdoes.csm.service.AdminPermissionService;
+import com.itdoes.csm.service.ui.AdminPermissionService;
 
 /**
  * @author Jalen Zhong
@@ -29,8 +28,7 @@ public class AdminPermissionPutController extends BasePutController {
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
 	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmPermission permission, ServletRequest request) {
-		adminPermissionService.put(permission, getOldEntity(request));
-		return HttpResults.success();
+		return adminPermissionService.put(permission, getOldEntity(request));
 	}
 
 	@ModelAttribute

@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.itdoes.common.business.web.BasePutController;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmUser;
-import com.itdoes.csm.service.AdminUserService;
+import com.itdoes.csm.service.ui.AdminUserService;
 
 /**
  * @author Jalen Zhong
@@ -29,8 +28,7 @@ public class AdminUserPutController extends BasePutController {
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
 	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmUser user, ServletRequest request) {
-		adminUserService.put(user, getOldEntity(request));
-		return HttpResults.success();
+		return adminUserService.put(user, getOldEntity(request));
 	}
 
 	@ModelAttribute

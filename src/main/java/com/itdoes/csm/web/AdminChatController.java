@@ -23,7 +23,6 @@ import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
-import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.csm.dto.ChatUser;
 import com.itdoes.csm.entity.CsmChatCustomerUserGroup;
 import com.itdoes.csm.entity.CsmChatMessage;
@@ -65,21 +64,20 @@ public class AdminChatController extends BaseController {
 	@RequestMapping("hasUnhandledCustomers")
 	@ResponseBody
 	public Result hasUnhandledCustomers(Principal principal) {
-		return HttpResults.success(chatService.hasUnhandledCustomers(getShiroUser(principal)));
+		return Result.success().addData("hasUnhandledCustomers",
+				chatService.hasUnhandledCustomers(getShiroUser(principal)));
 	}
 
 	@RequestMapping(value = "postCustomerUserGroup", method = RequestMethod.POST)
 	@ResponseBody
 	public Result postCustomerUserGroup(@Valid CsmChatCustomerUserGroup chatCustomerUserGroup, Principal principal) {
-		return HttpResults
-				.success(chatService.postCustomerUserGroup(chatCustomerUserGroup, getShiroUser(principal), template));
+		return chatService.postCustomerUserGroup(chatCustomerUserGroup, getShiroUser(principal), template);
 	}
 
 	@RequestMapping(value = "deleteCustomerUserGroup/{id}")
 	@ResponseBody
 	public Result deleteCustomerUserGroup(@PathVariable("id") String id) {
-		chatService.deleteCustomerUserGroup(id, template);
-		return HttpResults.success();
+		return chatService.deleteCustomerUserGroup(id, template);
 	}
 
 	@SubscribeMapping("/chatAInit")

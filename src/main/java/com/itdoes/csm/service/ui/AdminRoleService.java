@@ -1,4 +1,4 @@
-package com.itdoes.csm.service;
+package com.itdoes.csm.service.ui;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,11 +16,13 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
-import com.itdoes.common.core.MapModel;
+import com.itdoes.common.core.Result;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmPermission;
 import com.itdoes.csm.entity.CsmRole;
 import com.itdoes.csm.entity.CsmRolePermission;
+import com.itdoes.csm.entity.CsmUserGroupRole;
+import com.itdoes.csm.service.UserCacheService;
 
 /**
  * @author Jalen Zhong
@@ -90,8 +92,7 @@ public class AdminRoleService extends BaseService {
 		rolePermissionPair = env.getPair(CsmRolePermission.class.getSimpleName());
 	}
 
-	public MapModel listForm() {
-		final MapModel model = new MapModel();
+	public Result listForm() {
 		final List<CsmRole> roleList = Lists.newArrayListWithCapacity(userCacheService.getRoleMap().size() - 1);
 		for (CsmRole role : userCacheService.getRoleMap().values()) {
 			if (!ROOT.isRootById(role.getId())) {
@@ -99,51 +100,60 @@ public class AdminRoleService extends BaseService {
 			}
 		}
 		Collections.sort(roleList, RoleComparator.INSTANCE);
-		model.put("roleList", roleList);
-		return model;
+		return Result.success().addData("roleList", roleList);
 	}
 
-	public MapModel postForm() {
-		return MapModel.emptyMapModel();
+	public Result postForm() {
+		return Result.success();
 	}
 
-	public UUID post(CsmRole role) {
+	public Result post(CsmRole role) {
 		Validate.isTrue(StringUtils.isNotBlank(role.getName()), "Role name should not be blank");
 		Validate.isTrue(!ROOT.isRootByName(role.getName()), "Cannot create root Role");
 
 		final UUID id = rolePair.external().post(rolePair, role);
 		userCacheService.addRole(role);
-		return id;
+		return Result.success().addData("id", id);
 	}
 
-	public MapModel putForm(String id) {
-		final MapModel model = new MapModel();
-		model.put("role", userCacheService.getRole(id));
-		return model;
+	public Result putForm(String id) {
+		return Result.success().addData("role", userCacheService.getRole(id));
 	}
 
 	public CsmRole getEntity(String id) {
 		return userCacheService.getRole(id);
 	}
 
-	public void put(CsmRole role, CsmRole oldRole) {
+	public Result put(CsmRole role, CsmRole oldRole) {
 		Validate.isTrue(!ROOT.isRootByName(role.getName()) && !ROOT.isRootById(role.getId()),
 				"Cannot modify root Role");
 
 		rolePair.external().put(rolePair, role, oldRole);
 		userCacheService.modifyRole(role);
+		return Result.success();
 	}
 
-	public void delete(String id) {
+	public Result delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root Role");
+
+		for (CsmUserGroupRole userGroupRole : userCacheService.getUserGroupRoleMap().values()) {
+			if (userGroupRole.getRoleId().toString().equals(id)) {
+				return Result.fail(1, "Role is used by UserGroup");
+			}
+		}
+
+		for (CsmRolePermission rolePermission : userCacheService.getRolePermissionMap().values()) {
+			if (rolePermission.getRoleId().toString().equals(id)) {
+				return Result.fail(2, "Role is used by Permission");
+			}
+		}
 
 		rolePair.external().delete(rolePair, UUID.fromString(id));
 		userCacheService.removeRole(id);
+		return Result.success();
 	}
 
-	public MapModel listRolePermissionForm(String id) {
-		final MapModel model = new MapModel();
-
+	public Result listRolePermissionForm(String id) {
 		final List<CsmPermission> permissionList = Lists
 				.newArrayListWithCapacity(userCacheService.getPermissionMap().size() - 1);
 		for (CsmPermission permission : userCacheService.getPermissionMap().values()) {
@@ -152,7 +162,6 @@ public class AdminRoleService extends BaseService {
 			}
 		}
 		Collections.sort(permissionList, PermissionComparator.INSTANCE);
-		model.put("roleList", permissionList);
 
 		final List<RolePermissionDto> rolePermissionDtoList = Lists.newArrayList();
 		for (CsmRolePermission rolePermission : userCacheService.getRolePermissionMap().values()) {
@@ -163,12 +172,12 @@ public class AdminRoleService extends BaseService {
 			}
 		}
 		Collections.sort(rolePermissionDtoList, RolePermissionDtoComparator.INSTANCE);
-		model.put("rolePermissionDtoList", rolePermissionDtoList);
 
-		return model;
+		return Result.success().addData("roleList", permissionList).addData("rolePermissionDtoList",
+				rolePermissionDtoList);
 	}
 
-	public UUID postRolePermission(CsmRolePermission rolePermission) {
+	public Result postRolePermission(CsmRolePermission rolePermission) {
 		Validate.notNull(rolePermission.getRoleId(), "Role should not be null");
 		Validate.notNull(rolePermission.getPermissionId(), "Permission should not be null");
 		Validate.isTrue(
@@ -177,13 +186,14 @@ public class AdminRoleService extends BaseService {
 
 		final UUID id = rolePermissionPair.external().post(rolePermissionPair, rolePermission);
 		userCacheService.addRolePermission(rolePermission);
-		return id;
+		return Result.success().addData("id", id);
 	}
 
-	public void deleteRolePermission(String id) {
+	public Result deleteRolePermission(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root RolePermission");
 
 		rolePermissionPair.external().delete(rolePermissionPair, UUID.fromString(id));
 		userCacheService.removeRolePermission(id);
+		return Result.success();
 	}
 }

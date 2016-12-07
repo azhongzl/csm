@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmUserGroup;
 import com.itdoes.csm.entity.CsmUserGroupRole;
-import com.itdoes.csm.service.AdminUserGroupService;
+import com.itdoes.csm.service.ui.AdminUserGroupService;
 
 /**
  * @author Jalen Zhong
@@ -27,42 +26,41 @@ public class AdminUserGroupController extends BaseController {
 
 	@RequestMapping(value = "listForm", method = RequestMethod.GET)
 	public Result listForm() {
-		return HttpResults.success(adminUserGroupService.listForm());
+		return adminUserGroupService.listForm();
 	}
 
 	@RequestMapping(value = "postForm", method = RequestMethod.GET)
 	public Result postForm() {
-		return HttpResults.success(adminUserGroupService.postForm());
+		return adminUserGroupService.postForm();
 	}
 
 	@RequestMapping(value = "post", method = RequestMethod.POST)
 	public Result post(@Valid CsmUserGroup userGroup) {
-		return HttpResults.success(adminUserGroupService.post(userGroup));
+		return adminUserGroupService.post(userGroup);
 	}
 
 	@RequestMapping(value = "putForm/{id}", method = RequestMethod.GET)
 	public Result putForm(@PathVariable("id") String id) {
-		return HttpResults.success(adminUserGroupService.putForm(id));
+		return adminUserGroupService.putForm(id);
 	}
 
 	@RequestMapping(value = "delete/{id}")
 	public Result delete(@PathVariable("id") String id) {
-		return HttpResults.success(adminUserGroupService.delete(id));
+		return adminUserGroupService.delete(id);
 	}
 
 	@RequestMapping(value = "listUserGroupRoleForm/{id}", method = RequestMethod.GET)
 	public Result listUserGroupRoleForm(@PathVariable("id") String id) {
-		return HttpResults.success(adminUserGroupService.listUserGroupRoleForm(id));
+		return adminUserGroupService.listUserGroupRoleForm(id);
 	}
 
 	@RequestMapping(value = "postUserGroupRole", method = RequestMethod.POST)
 	public Result postUserGroupRole(@Valid CsmUserGroupRole userGroupRole) {
-		return HttpResults.success(adminUserGroupService.postUserGroupRole(userGroupRole));
+		return adminUserGroupService.postUserGroupRole(userGroupRole);
 	}
 
 	@RequestMapping(value = "deleteUserGroupRole/{id}")
 	public Result deleteUserGroupRole(@PathVariable("id") String id) {
-		adminUserGroupService.deleteUserGroupRole(id);
-		return HttpResults.success();
+		return adminUserGroupService.deleteUserGroupRole(id);
 	}
 }

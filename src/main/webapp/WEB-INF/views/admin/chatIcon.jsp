@@ -21,7 +21,7 @@
 				url : "${ctx}/admin/chat/hasUnhandledCustomers",
 				async : false,
 				success : function(result) {
-					if (result.data) {
+					if (result.data.hasUnhandledCustomers) {
 						setImg("001.gif");
 					} else {
 						setImg("002.png");

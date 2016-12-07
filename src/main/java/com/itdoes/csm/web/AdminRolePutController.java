@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.itdoes.common.business.web.BasePutController;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmRole;
-import com.itdoes.csm.service.AdminRoleService;
+import com.itdoes.csm.service.ui.AdminRoleService;
 
 /**
  * @author Jalen Zhong
@@ -29,8 +28,7 @@ public class AdminRolePutController extends BasePutController {
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
 	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmRole role, ServletRequest request) {
-		adminRoleService.put(role, getOldEntity(request));
-		return HttpResults.success();
+		return adminRoleService.put(role, getOldEntity(request));
 	}
 
 	@ModelAttribute

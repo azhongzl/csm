@@ -1,4 +1,4 @@
-package com.itdoes.csm.service;
+package com.itdoes.csm.service.ui;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,13 +17,14 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
-import com.itdoes.common.core.MapModel;
+import com.itdoes.common.core.Result;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmRole;
 import com.itdoes.csm.entity.CsmUser;
 import com.itdoes.csm.entity.CsmUserGroup;
 import com.itdoes.csm.entity.CsmUserGroupRole;
+import com.itdoes.csm.service.UserCacheService;
 
 /**
  * @author Jalen Zhong
@@ -90,21 +91,18 @@ public class AdminUserGroupService extends BaseService {
 	@PostConstruct
 	public void myInit() {
 		userGroupPair = env.getPair(CsmUserGroup.class.getSimpleName());
+		userGroupRolePair = env.getPair(CsmUserGroupRole.class.getSimpleName());
 	}
 
-	public MapModel listForm() {
-		final MapModel model = new MapModel();
-		model.put("userGroupList", getUserGroupList());
-		return model;
+	public Result listForm() {
+		return Result.success().addData("userGroupList", getUserGroupList());
 	}
 
-	public MapModel postForm() {
-		final MapModel model = new MapModel();
-		model.put("superUserGroupList", getUserGroupList());
-		return model;
+	public Result postForm() {
+		return Result.success().addData("superUserGroupList", getUserGroupList());
 	}
 
-	public UUID post(CsmUserGroup userGroup) {
+	public Result post(CsmUserGroup userGroup) {
 		Validate.isTrue(StringUtils.isNotBlank(userGroup.getName()), "Name should not be blank");
 		Validate.isTrue(!ROOT.isRootByName(userGroup.getName()), "Cannot create root UserGroup");
 		if (userGroup.getSuperId() != null) {
@@ -113,21 +111,19 @@ public class AdminUserGroupService extends BaseService {
 
 		final UUID id = userGroupPair.external().post(userGroupPair, userGroup);
 		userCacheService.addUserGroup(userGroup);
-		return id;
+		return Result.success().addData("id", id);
 	}
 
-	public MapModel putForm(String id) {
-		final MapModel model = new MapModel();
-		model.put("userGroup", userCacheService.getUserGroup(id));
-		model.put("superUserGroupList", getCandidateSuperUserGroupList(id));
-		return model;
+	public Result putForm(String id) {
+		return Result.success().addData("userGroup", userCacheService.getUserGroup(id)).addData("superUserGroupList",
+				getCandidateSuperUserGroupList(id));
 	}
 
 	public CsmUserGroup getEntity(String id) {
 		return userCacheService.getUserGroup(id);
 	}
 
-	public void put(CsmUserGroup userGroup, CsmUserGroup oldUserGroup) {
+	public Result put(CsmUserGroup userGroup, CsmUserGroup oldUserGroup) {
 		Validate.isTrue(!ROOT.isRootByName(userGroup.getName()) && !ROOT.isRootById(userGroup.getId()),
 				"Cannot modify root UserGroup");
 		if (userGroup.getSuperId() != null) {
@@ -143,35 +139,29 @@ public class AdminUserGroupService extends BaseService {
 
 		userGroupPair.external().put(userGroupPair, userGroup, oldUserGroup);
 		userCacheService.modifyUserGroup(userGroup);
+		return Result.success();
 	}
 
-	public MapModel delete(String id) {
-		final MapModel model = new MapModel();
-
+	public Result delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroup");
 
 		final Set<CsmUserGroup> subUserGroupSet = userCacheService.getSubUserGroupSet(id);
 		if (subUserGroupSet.size() > 1) {
-			model.put("1", "Fail, UserGroup has children");
-			return model;
+			return Result.fail(1, "UserGroup has children");
 		}
 
 		for (CsmUser user : userCacheService.getUserMap().values()) {
 			if (user.getUserGroupId().toString().equals(id)) {
-				model.put("2", "Fail, UserGroup has user");
-				return model;
+				return Result.fail(2, "UserGroup has user");
 			}
 		}
 
 		userGroupPair.external().delete(userGroupPair, UUID.fromString(id));
 		userCacheService.removeUserGroup(id);
-		model.put("0", "success");
-		return model;
+		return Result.success();
 	}
 
-	public MapModel listUserGroupRoleForm(String id) {
-		final MapModel model = new MapModel();
-
+	public Result listUserGroupRoleForm(String id) {
 		final List<CsmRole> roleList = Lists.newArrayListWithCapacity(userCacheService.getRoleMap().size() - 1);
 		for (CsmRole role : userCacheService.getRoleMap().values()) {
 			if (!ROOT.isRootById(role.getId())) {
@@ -179,7 +169,6 @@ public class AdminUserGroupService extends BaseService {
 			}
 		}
 		Collections.sort(roleList, RoleComparator.INSTANCE);
-		model.put("roleList", roleList);
 
 		final List<UserGroupRoleDto> userGroupRoleDtoList = Lists.newArrayList();
 		for (CsmUserGroupRole userGroupRole : userCacheService.getUserGroupRoleMap().values()) {
@@ -190,12 +179,11 @@ public class AdminUserGroupService extends BaseService {
 			}
 		}
 		Collections.sort(userGroupRoleDtoList, UserGroupRoleDtoComparator.INSTANCE);
-		model.put("userGroupRoleDtoList", userGroupRoleDtoList);
 
-		return model;
+		return Result.success().addData("roleList", roleList).addData("userGroupRoleDtoList", userGroupRoleDtoList);
 	}
 
-	public UUID postUserGroupRole(CsmUserGroupRole userGroupRole) {
+	public Result postUserGroupRole(CsmUserGroupRole userGroupRole) {
 		Validate.notNull(userGroupRole.getUserGroupId(), "UserGroup should not be null");
 		Validate.notNull(userGroupRole.getRoleId(), "Role should not be null");
 		Validate.isTrue(!ROOT.isRootById(userGroupRole.getUserGroupId()) && !ROOT.isRootById(userGroupRole.getRoleId()),
@@ -203,14 +191,15 @@ public class AdminUserGroupService extends BaseService {
 
 		final UUID id = userGroupRolePair.external().post(userGroupRolePair, userGroupRole);
 		userCacheService.addUserGroupRole(userGroupRole);
-		return id;
+		return Result.success().addData("id", id);
 	}
 
-	public void deleteUserGroupRole(String id) {
+	public Result deleteUserGroupRole(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroupRole");
 
 		userGroupRolePair.external().delete(userGroupRolePair, UUID.fromString(id));
 		userCacheService.removeUserGroupRole(id);
+		return Result.success();
 	}
 
 	private List<CsmUserGroup> getUserGroupList() {

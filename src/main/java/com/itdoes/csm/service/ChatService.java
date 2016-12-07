@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
+import com.itdoes.common.core.Result;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
@@ -209,12 +210,12 @@ public class ChatService extends BaseService {
 								new FindFilter("userGroupId", Operator.EQ, userGroupId)))) > 0;
 	}
 
-	public Serializable postCustomerUserGroup(CsmChatCustomerUserGroup chatCustomerUserGroup, ShiroUser shiroUser,
+	public Result postCustomerUserGroup(CsmChatCustomerUserGroup chatCustomerUserGroup, ShiroUser shiroUser,
 			SimpMessagingTemplate template) {
 		final String customerId = chatCustomerUserGroup.getCustomerUserId().toString();
 		final String userGroupId = chatCustomerUserGroup.getUserGroupId().toString();
 		if (isCustomerUserGroupExist(customerId, userGroupId)) {
-			return false;
+			return Result.fail(1, "CustomerUserGroup exists");
 		}
 
 		chatCustomerUserGroup.setOperatorUserId(UUID.fromString(shiroUser.getId()));
@@ -224,10 +225,10 @@ public class ChatService extends BaseService {
 		final ChatEvent messageEvent = new ChatEvent(customerId);
 		template.convertAndSend("/topic/chat/postCustomerUserGroup/" + userGroupId, messageEvent);
 
-		return id;
+		return Result.success().addData("id", id);
 	}
 
-	public void deleteCustomerUserGroup(String id, SimpMessagingTemplate template) {
+	public Result deleteCustomerUserGroup(String id, SimpMessagingTemplate template) {
 		final CsmChatCustomerUserGroup chatCustomerUserGroup = chatCustomerUserGroupPair.external()
 				.get(chatCustomerUserGroupPair, UUID.fromString(id));
 		chatCustomerUserGroupPair.external().delete(chatCustomerUserGroupPair, UUID.fromString(id));
@@ -236,6 +237,7 @@ public class ChatService extends BaseService {
 		template.convertAndSend(
 				"/topic/chat/deleteCustomerUserGroup/" + chatCustomerUserGroup.getUserGroupId().toString(),
 				messageEvent);
+		return Result.success();
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {

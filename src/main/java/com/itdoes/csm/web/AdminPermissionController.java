@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmPermission;
-import com.itdoes.csm.service.AdminPermissionService;
+import com.itdoes.csm.service.ui.AdminPermissionService;
 
 /**
  * @author Jalen Zhong
@@ -26,27 +25,26 @@ public class AdminPermissionController extends BaseController {
 
 	@RequestMapping(value = "listForm", method = RequestMethod.GET)
 	public Result listForm() {
-		return HttpResults.success(adminPermissionService.listForm());
+		return adminPermissionService.listForm();
 	}
 
 	@RequestMapping(value = "postForm", method = RequestMethod.GET)
 	public Result postForm() {
-		return HttpResults.success(adminPermissionService.postForm());
+		return adminPermissionService.postForm();
 	}
 
 	@RequestMapping(value = "post", method = RequestMethod.POST)
 	public Result post(@Valid CsmPermission permission) {
-		return HttpResults.success(adminPermissionService.post(permission));
+		return adminPermissionService.post(permission);
 	}
 
 	@RequestMapping(value = "putForm/{id}", method = RequestMethod.GET)
 	public Result putForm(@PathVariable("id") String id) {
-		return HttpResults.success(adminPermissionService.putForm(id));
+		return adminPermissionService.putForm(id);
 	}
 
 	@RequestMapping(value = "delete/{id}")
 	public Result delete(@PathVariable("id") String id) {
-		adminPermissionService.delete(id);
-		return HttpResults.success();
+		return adminPermissionService.delete(id);
 	}
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
-import com.itdoes.common.core.MapModel;
+import com.itdoes.common.core.Result;
 import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.csm.entity.CsmUser;
 
@@ -34,17 +34,15 @@ public class ProfileService extends BaseService {
 		userPair = env.getPair(CsmUser.class.getSimpleName());
 	}
 
-	public MapModel putForm() {
-		final MapModel model = new MapModel();
-		model.put("user", userCacheService.getUser(Shiros.getShiroUser().getId()));
-		return model;
+	public Result putForm() {
+		return Result.success().addData("user", userCacheService.getUser(Shiros.getShiroUser().getId()));
 	}
 
 	public CsmUser getEntity() {
 		return userCacheService.getUser(Shiros.getShiroUser().getId());
 	}
 
-	public void put(CsmUser user, CsmUser oldUser) {
+	public Result put(CsmUser user, CsmUser oldUser) {
 		Validate.isTrue(user.getId().equals(oldUser.getId()), "Cannot modify other user");
 		Validate.isTrue(user.getUsername().equals(oldUser.getUsername()), "Cannot modify username");
 		Validate.isTrue(user.getActive().equals(oldUser.getActive()), "Cannot modify active");
@@ -55,5 +53,7 @@ public class ProfileService extends BaseService {
 			userPair.external().put(userPair, user, oldUser);
 			userCacheService.modifyUser(user);
 		}
+
+		return Result.success();
 	}
 }

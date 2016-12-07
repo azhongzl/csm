@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.itdoes.common.business.service.SearchService;
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmFaq;
 
@@ -32,6 +31,6 @@ public class SearchController extends BaseController {
 			@RequestParam(value = BaseController.PAGE_NO, defaultValue = "1") int pageNo,
 			@RequestParam(value = BaseController.PAGE_SIZE, defaultValue = "-1") int pageSize, ServletRequest request) {
 		final Page<?> page = searchService.searchDefault(searchString, CsmFaq.class, FAQ_FIELDS, pageNo, pageSize);
-		return HttpResults.success(page);
+		return Result.success().addData("searchResult", page);
 	}
 }
