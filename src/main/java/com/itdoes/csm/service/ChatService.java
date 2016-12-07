@@ -227,12 +227,15 @@ public class ChatService extends BaseService {
 		return id;
 	}
 
-	public void deleteCustomerUserGroup(String id, String customerUserId, String userGroupId,
-			SimpMessagingTemplate template) {
+	public void deleteCustomerUserGroup(String id, SimpMessagingTemplate template) {
+		final CsmChatCustomerUserGroup chatCustomerUserGroup = chatCustomerUserGroupPair.getExternalService()
+				.get(chatCustomerUserGroupPair, UUID.fromString(id));
 		chatCustomerUserGroupPair.getExternalService().delete(chatCustomerUserGroupPair, UUID.fromString(id));
 
-		final ChatEvent messageEvent = new ChatEvent(customerUserId);
-		template.convertAndSend("/topic/chat/deleteCustomerUserGroup/" + userGroupId, messageEvent);
+		final ChatEvent messageEvent = new ChatEvent(chatCustomerUserGroup.getCustomerUserId().toString());
+		template.convertAndSend(
+				"/topic/chat/deleteCustomerUserGroup/" + chatCustomerUserGroup.getUserGroupId().toString(),
+				messageEvent);
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {

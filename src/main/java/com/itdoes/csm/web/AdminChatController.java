@@ -77,9 +77,8 @@ public class AdminChatController extends BaseController {
 
 	@RequestMapping(value = "deleteCustomerUserGroup/{id}")
 	@ResponseBody
-	public Result deleteCustomerUserGroup(@PathVariable("id") String id,
-			@RequestParam("customerUserId") String customerUserId, @RequestParam("userGroupId") String userGroupId) {
-		chatService.deleteCustomerUserGroup(id, customerUserId, userGroupId, template);
+	public Result deleteCustomerUserGroup(@PathVariable("id") String id) {
+		chatService.deleteCustomerUserGroup(id, template);
 		return HttpResults.success();
 	}
 
