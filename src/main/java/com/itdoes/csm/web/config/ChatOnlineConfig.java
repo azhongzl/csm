@@ -1,4 +1,4 @@
-package com.itdoes.csm.web;
+package com.itdoes.csm.web.config;
 
 import java.util.Optional;
 
