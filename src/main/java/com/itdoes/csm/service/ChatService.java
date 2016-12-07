@@ -12,9 +12,6 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +23,7 @@ import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
 import com.itdoes.common.core.shiro.ShiroUser;
+import com.itdoes.common.core.spring.SpringDatas;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.dto.ChatUser;
@@ -41,10 +39,9 @@ import com.itdoes.csm.entity.CsmUserGroup;
 public class ChatService extends BaseService {
 	public static final String CUSTOMER_SERVICE_NAME = "Customer Service";
 
-	public static final int MESSAGE_PAGE_SIZE = 10;
-
-	private static final PageRequest MESSAGE_PAGE_REQUEST = new PageRequest(0, MESSAGE_PAGE_SIZE,
-			new Sort(Direction.DESC, "createDateTime"));
+	private static final int MESSAGE_PAGE_SIZE = 10;
+	private static final PageRequest MESSAGE_PAGE_REQUEST = SpringDatas.newPageRequest(1, MESSAGE_PAGE_SIZE,
+			SpringDatas.newSort("createDateTime", false));
 
 	private static class ChatUserComparator implements Comparator<ChatUser> {
 		private static final ChatUserComparator INSTANCE = new ChatUserComparator();
@@ -206,37 +203,36 @@ public class ChatService extends BaseService {
 	}
 
 	private boolean isCustomerUserGroupExist(String customerId, String userGroupId) {
-		return chatCustomerUserGroupPair.getInternalService().count(chatCustomerUserGroupPair,
+		return chatCustomerUserGroupPair.getExternalService().count(chatCustomerUserGroupPair,
 				Specifications.build(CsmChatCustomerUserGroup.class,
 						Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerId),
 								new FindFilter("userGroupId", Operator.EQ, userGroupId)))) > 0;
 	}
 
-	public Serializable addCustomerUserGroup(String customerId, String userGroupId, ShiroUser shiroUser,
+	public Serializable postCustomerUserGroup(CsmChatCustomerUserGroup chatCustomerUserGroup, ShiroUser shiroUser,
 			SimpMessagingTemplate template) {
+		final String customerId = chatCustomerUserGroup.getCustomerUserId().toString();
+		final String userGroupId = chatCustomerUserGroup.getUserGroupId().toString();
 		if (isCustomerUserGroupExist(customerId, userGroupId)) {
 			return false;
 		}
 
-		final CsmChatCustomerUserGroup chatCustomerUserGroup = new CsmChatCustomerUserGroup();
-		chatCustomerUserGroup.setCustomerUserId(UUID.fromString(customerId));
-		chatCustomerUserGroup.setUserGroupId(UUID.fromString(userGroupId));
 		chatCustomerUserGroup.setOperatorUserId(UUID.fromString(shiroUser.getId()));
-		final Serializable id = chatCustomerUserGroupPair.getInternalService().post(chatCustomerUserGroupPair,
+		final Serializable id = chatCustomerUserGroupPair.getExternalService().post(chatCustomerUserGroupPair,
 				chatCustomerUserGroup);
 
 		final ChatEvent messageEvent = new ChatEvent(customerId);
-		template.convertAndSend("/topic/chat/addCustomerUserGroup/" + userGroupId, messageEvent);
+		template.convertAndSend("/topic/chat/postCustomerUserGroup/" + userGroupId, messageEvent);
 
 		return id;
 	}
 
-	public void removeCustomerUserGroup(String id, String customerId, String userGroupId,
+	public void deleteCustomerUserGroup(String id, String customerUserId, String userGroupId,
 			SimpMessagingTemplate template) {
-		chatCustomerUserGroupPair.getInternalService().delete(chatCustomerUserGroupPair, UUID.fromString(id));
+		chatCustomerUserGroupPair.getExternalService().delete(chatCustomerUserGroupPair, UUID.fromString(id));
 
-		final ChatEvent messageEvent = new ChatEvent(customerId);
-		template.convertAndSend("/topic/chat/removeCustomerUserGroup/" + userGroupId, messageEvent);
+		final ChatEvent messageEvent = new ChatEvent(customerUserId);
+		template.convertAndSend("/topic/chat/deleteCustomerUserGroup/" + userGroupId, messageEvent);
 	}
 
 	private void saveChatMessage(CsmChatMessage message) {
@@ -272,13 +268,9 @@ public class ChatService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getChatMessageListFromDb(String roomId) {
-		final List<CsmChatMessage> messageList = chatMessagePair.getInternalService()
-				.find(chatMessagePair, buildMessageSpecification(roomId), MESSAGE_PAGE_REQUEST).getContent();
-		return messageList;
-	}
-
-	private Specification<CsmChatMessage> buildMessageSpecification(String roomId) {
-		return Specifications.build(CsmChatMessage.class,
-				Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId)));
+		return chatMessagePair.getExternalService().find(chatMessagePair,
+				Specifications.build(CsmChatMessage.class,
+						Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId))),
+				MESSAGE_PAGE_REQUEST).getContent();
 	}
 }

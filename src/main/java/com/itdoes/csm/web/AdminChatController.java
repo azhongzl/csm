@@ -3,6 +3,8 @@ package com.itdoes.csm.web;
 import java.security.Principal;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -11,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +25,7 @@ import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.csm.dto.ChatUser;
+import com.itdoes.csm.entity.CsmChatCustomerUserGroup;
 import com.itdoes.csm.entity.CsmChatMessage;
 import com.itdoes.csm.service.ChatService;
 
@@ -60,23 +64,22 @@ public class AdminChatController extends BaseController {
 
 	@RequestMapping("hasUnhandledCustomers")
 	@ResponseBody
-	public Result adminHasUnhandledCustomers(Principal principal) {
+	public Result hasUnhandledCustomers(Principal principal) {
 		return HttpResults.success(chatService.hasUnhandledCustomers(getShiroUser(principal)));
 	}
 
-	@RequestMapping(value = "addCustomerUserGroup", method = RequestMethod.POST)
+	@RequestMapping(value = "postCustomerUserGroup", method = RequestMethod.POST)
 	@ResponseBody
-	public Result adminAddCustomerUserGroup(@RequestParam("customerId") String customerId,
-			@RequestParam("userGroupId") String userGroupId, Principal principal) {
+	public Result postCustomerUserGroup(@Valid CsmChatCustomerUserGroup chatCustomerUserGroup, Principal principal) {
 		return HttpResults
-				.success(chatService.addCustomerUserGroup(customerId, userGroupId, getShiroUser(principal), template));
+				.success(chatService.postCustomerUserGroup(chatCustomerUserGroup, getShiroUser(principal), template));
 	}
 
-	@RequestMapping(value = "removeCustomerUserGroup", method = RequestMethod.POST)
+	@RequestMapping(value = "deleteCustomerUserGroup/{id}")
 	@ResponseBody
-	public Result adminRemoveCustomerUserGroup(@RequestParam("customerUserGroupId") String id,
-			@RequestParam("customerId") String customerId, @RequestParam("userGroupId") String userGroupId) {
-		chatService.removeCustomerUserGroup(id, customerId, userGroupId, template);
+	public Result deleteCustomerUserGroup(@PathVariable("id") String id,
+			@RequestParam("customerUserId") String customerUserId, @RequestParam("userGroupId") String userGroupId) {
+		chatService.deleteCustomerUserGroup(id, customerUserId, userGroupId, template);
 		return HttpResults.success();
 	}
 
