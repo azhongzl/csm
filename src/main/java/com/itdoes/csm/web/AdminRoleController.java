@@ -13,7 +13,7 @@ import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmRole;
 import com.itdoes.csm.entity.CsmRolePermission;
-import com.itdoes.csm.service.ui.AdminRoleService;
+import com.itdoes.csm.service.ui.AdminRoleUiService;
 
 /**
  * @author Jalen Zhong
@@ -22,7 +22,7 @@ import com.itdoes.csm.service.ui.AdminRoleService;
 @RequestMapping(value = "/admin/role", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class AdminRoleController extends BaseController {
 	@Autowired
-	private AdminRoleService adminRoleService;
+	private AdminRoleUiService adminRoleService;
 
 	@RequestMapping(value = "listForm", method = RequestMethod.GET)
 	public Result listForm() {

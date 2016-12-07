@@ -13,7 +13,7 @@ import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmUserGroup;
 import com.itdoes.csm.entity.CsmUserGroupRole;
-import com.itdoes.csm.service.ui.AdminUserGroupService;
+import com.itdoes.csm.service.ui.AdminUserGroupUiService;
 
 /**
  * @author Jalen Zhong
@@ -22,7 +22,7 @@ import com.itdoes.csm.service.ui.AdminUserGroupService;
 @RequestMapping(value = "/admin/userGroup", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class AdminUserGroupController extends BaseController {
 	@Autowired
-	private AdminUserGroupService adminUserGroupService;
+	private AdminUserGroupUiService adminUserGroupService;
 
 	@RequestMapping(value = "listForm", method = RequestMethod.GET)
 	public Result listForm() {

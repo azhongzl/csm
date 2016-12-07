@@ -13,7 +13,7 @@ import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmUser;
-import com.itdoes.csm.service.ui.AdminUserService;
+import com.itdoes.csm.service.ui.AdminUserUiService;
 
 /**
  * @author Jalen Zhong
@@ -22,7 +22,7 @@ import com.itdoes.csm.service.ui.AdminUserService;
 @RequestMapping(value = "/admin/user", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class AdminUserController extends BaseController {
 	@Autowired
-	private AdminUserService adminUserService;
+	private AdminUserUiService adminUserService;
 
 	@RequestMapping(value = "listForm", method = RequestMethod.GET)
 	public Result listForm(@RequestParam(value = PAGE_NO, defaultValue = "1") int pageNo,

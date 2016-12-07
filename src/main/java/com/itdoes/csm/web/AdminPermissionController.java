@@ -12,7 +12,7 @@ import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmPermission;
-import com.itdoes.csm.service.ui.AdminPermissionService;
+import com.itdoes.csm.service.ui.AdminPermissionUiService;
 
 /**
  * @author Jalen Zhong
@@ -21,7 +21,7 @@ import com.itdoes.csm.service.ui.AdminPermissionService;
 @RequestMapping(value = "/admin/permission", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class AdminPermissionController extends BaseController {
 	@Autowired
-	private AdminPermissionService adminPermissionService;
+	private AdminPermissionUiService adminPermissionService;
 
 	@RequestMapping(value = "listForm", method = RequestMethod.GET)
 	public Result listForm() {

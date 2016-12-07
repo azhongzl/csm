@@ -30,7 +30,7 @@ import com.itdoes.csm.service.UserCacheService;
  * @author Jalen Zhong
  */
 @Service
-public class AdminUserService extends BaseService {
+public class AdminUserUiService extends BaseService {
 	private static class UserGroupComparator implements Comparator<CsmUserGroup> {
 		private static final UserGroupComparator INSTANCE = new UserGroupComparator();
 

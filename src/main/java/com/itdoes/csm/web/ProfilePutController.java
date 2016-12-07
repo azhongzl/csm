@@ -16,7 +16,7 @@ import com.itdoes.common.business.web.BasePutController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmUser;
-import com.itdoes.csm.service.ui.ProfileService;
+import com.itdoes.csm.service.ui.ProfileUiService;
 
 /**
  * @author Jalen Zhong
@@ -25,7 +25,7 @@ import com.itdoes.csm.service.ui.ProfileService;
 @RequestMapping(value = "/profile", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class ProfilePutController extends BasePutController {
 	@Autowired
-	private ProfileService profileService;
+	private ProfileUiService profileService;
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
 	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmUser user, ServletRequest request) {

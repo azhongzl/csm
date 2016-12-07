@@ -15,7 +15,7 @@ import com.itdoes.common.business.web.BasePutController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmRole;
-import com.itdoes.csm.service.ui.AdminRoleService;
+import com.itdoes.csm.service.ui.AdminRoleUiService;
 
 /**
  * @author Jalen Zhong
@@ -24,7 +24,7 @@ import com.itdoes.csm.service.ui.AdminRoleService;
 @RequestMapping(value = "/admin/role", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class AdminRolePutController extends BasePutController {
 	@Autowired
-	private AdminRoleService adminRoleService;
+	private AdminRoleUiService adminRoleService;
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
 	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmRole role, ServletRequest request) {

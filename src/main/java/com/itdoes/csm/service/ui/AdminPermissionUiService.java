@@ -26,7 +26,7 @@ import com.itdoes.csm.service.UserCacheService;
  * @author Jalen Zhong
  */
 @Service
-public class AdminPermissionService extends BaseService {
+public class AdminPermissionUiService extends BaseService {
 	private static class PermissionComparator implements Comparator<CsmPermission> {
 		private static final PermissionComparator INSTANCE = new PermissionComparator();
 

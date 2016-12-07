@@ -28,7 +28,7 @@ import com.itdoes.csm.service.UserCacheService;
  * @author Jalen Zhong
  */
 @Service
-public class AdminRoleService extends BaseService {
+public class AdminRoleUiService extends BaseService {
 	private static class RoleComparator implements Comparator<CsmRole> {
 		private static final RoleComparator INSTANCE = new RoleComparator();
 

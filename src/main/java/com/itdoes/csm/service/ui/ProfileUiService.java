@@ -21,7 +21,7 @@ import com.itdoes.csm.service.UserCacheService;
  * @author Jalen Zhong
  */
 @Service
-public class ProfileService extends BaseService {
+public class ProfileUiService extends BaseService {
 	@Autowired
 	private EntityEnv env;
 

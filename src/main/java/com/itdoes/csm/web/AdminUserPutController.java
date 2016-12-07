@@ -15,7 +15,7 @@ import com.itdoes.common.business.web.BasePutController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmUser;
-import com.itdoes.csm.service.ui.AdminUserService;
+import com.itdoes.csm.service.ui.AdminUserUiService;
 
 /**
  * @author Jalen Zhong
@@ -24,7 +24,7 @@ import com.itdoes.csm.service.ui.AdminUserService;
 @RequestMapping(value = "/admin/user", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class AdminUserPutController extends BasePutController {
 	@Autowired
-	private AdminUserService adminUserService;
+	private AdminUserUiService adminUserService;
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
 	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmUser user, ServletRequest request) {
