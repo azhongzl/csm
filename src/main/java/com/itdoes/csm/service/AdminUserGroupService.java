@@ -168,8 +168,8 @@ public class AdminUserGroupService extends BaseService {
 
 		final List<UserGroupRoleDto> userGroupRoleDtoList = Lists.newArrayList();
 		for (CsmUserGroupRole userGroupRole : userCacheService.getUserGroupRoleMap().values()) {
-			final String userGroupRoleIdString = userGroupRole.getUserGroupId().toString();
-			if (userGroupRoleIdString.equals(id)) {
+			final String userGroupIdString = userGroupRole.getUserGroupId().toString();
+			if (userGroupIdString.equals(id)) {
 				userGroupRoleDtoList.add(new UserGroupRoleDto(userGroupRole,
 						userCacheService.getRole(userGroupRole.getRoleId().toString())));
 			}

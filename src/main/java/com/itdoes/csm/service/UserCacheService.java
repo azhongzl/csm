@@ -38,6 +38,7 @@ public class UserCacheService extends BaseService {
 	private final Map<String, CsmUserGroupRole> userGroupRoleMap = Maps.newConcurrentMap();
 	private final Map<String, CsmRole> roleMap = Maps.newConcurrentMap();
 	private final Map<String, CsmRolePermission> rolePermissionMap = Maps.newConcurrentMap();
+	private final Map<String, CsmPermission> permissionMap = Maps.newHashMap();
 	private final Map<String, Set<String>> permissionSetMap = Maps.newConcurrentMap();
 	private final Map<String, CsmUser> userMap = Maps.newConcurrentMap();
 	private final Map<String, String> usernameIdMap = Maps.newConcurrentMap();
@@ -194,16 +195,33 @@ public class UserCacheService extends BaseService {
 		rolePermissionMap.remove(id);
 	}
 
+	public Map<String, CsmRolePermission> getRolePermissionMap() {
+		return rolePermissionMap;
+	}
+
 	public void addPermission(CsmPermission permission) {
-		permissionSetMap.put(permission.getId().toString(), getPermissionSet(permission));
+		final String permissionIdString = permission.getId().toString();
+		permissionMap.put(permissionIdString, permission);
+		permissionSetMap.put(permissionIdString, getPermissionSet(permission));
 	}
 
 	public void modifyPermission(CsmPermission permission) {
-		permissionSetMap.put(permission.getId().toString(), getPermissionSet(permission));
+		final String permissionIdString = permission.getId().toString();
+		permissionMap.put(permissionIdString, permission);
+		permissionSetMap.put(permissionIdString, getPermissionSet(permission));
 	}
 
 	public void removePermission(String id) {
+		permissionMap.remove(id);
 		permissionSetMap.remove(id);
+	}
+
+	public Map<String, CsmPermission> getPermissionMap() {
+		return permissionMap;
+	}
+
+	public CsmPermission getPermission(String id) {
+		return permissionMap.get(id);
 	}
 
 	public Set<String> getPermissionSetByUser(String userId) {
