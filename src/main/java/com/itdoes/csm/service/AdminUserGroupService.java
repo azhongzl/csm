@@ -183,6 +183,8 @@ public class AdminUserGroupService extends BaseService {
 	public UUID postUserGroupRole(CsmUserGroupRole userGroupRole) {
 		Validate.notNull(userGroupRole.getUserGroupId(), "UserGroup should not be null");
 		Validate.notNull(userGroupRole.getRoleId(), "Role should not be null");
+		Validate.isTrue(!ROOT.isRootById(userGroupRole.getUserGroupId()) && !ROOT.isRootById(userGroupRole.getRoleId()),
+				"Cannot create root UserGroupRole");
 
 		final UUID id = userGroupRolePair.getExternalService().post(userGroupRolePair, userGroupRole);
 		userCacheService.addUserGroupRole(userGroupRole);
@@ -190,6 +192,8 @@ public class AdminUserGroupService extends BaseService {
 	}
 
 	public void deleteUserGroupRole(String id) {
+		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroupRole");
+
 		userGroupRolePair.getExternalService().delete(userGroupRolePair, UUID.fromString(id));
 		userCacheService.removeUserGroupRole(id);
 	}

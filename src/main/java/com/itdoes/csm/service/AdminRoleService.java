@@ -170,6 +170,9 @@ public class AdminRoleService extends BaseService {
 	public UUID postRolePermission(CsmRolePermission rolePermission) {
 		Validate.notNull(rolePermission.getRoleId(), "Role should not be null");
 		Validate.notNull(rolePermission.getPermissionId(), "Permission should not be null");
+		Validate.isTrue(
+				!ROOT.isRootById(rolePermission.getRoleId()) && !ROOT.isRootById(rolePermission.getPermissionId()),
+				"Cannot create root RolePermission");
 
 		final UUID id = rolePermissionPair.getExternalService().post(rolePermissionPair, rolePermission);
 		userCacheService.addRolePermission(rolePermission);
@@ -177,6 +180,8 @@ public class AdminRoleService extends BaseService {
 	}
 
 	public void deleteRolePermission(String id) {
+		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root RolePermission");
+
 		rolePermissionPair.getExternalService().delete(rolePermissionPair, UUID.fromString(id));
 		userCacheService.removeRolePermission(id);
 	}
