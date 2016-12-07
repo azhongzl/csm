@@ -1,4 +1,4 @@
-package com.itdoes.csm.service;
+package com.itdoes.csm.service.ui;
 
 import java.util.UUID;
 
@@ -15,6 +15,7 @@ import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.csm.entity.CsmUser;
+import com.itdoes.csm.service.UserCacheService;
 
 /**
  * @author Jalen Zhong

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.MediaTypes;
-import com.itdoes.csm.service.ProfileService;
+import com.itdoes.csm.service.ui.ProfileService;
 
 /**
  * @author Jalen Zhong
