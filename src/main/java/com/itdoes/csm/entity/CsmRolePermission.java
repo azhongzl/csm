@@ -25,7 +25,7 @@ public class CsmRolePermission extends BaseEntity {
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
-	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmRole.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
+	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmRole.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE)
 	@javax.validation.constraints.NotNull
 	@Column(name = "role_id")
 	private java.util.UUID roleId;

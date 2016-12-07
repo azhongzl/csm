@@ -25,7 +25,7 @@ public class CsmUserGroupRole extends BaseEntity {
 	@javax.persistence.GeneratedValue
 	@Column(name = "id")
 	private java.util.UUID id;
-	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUserGroup.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
+	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUserGroup.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE)
 	@javax.validation.constraints.NotNull
 	@Column(name = "user_group_id")
 	private java.util.UUID userGroupId;

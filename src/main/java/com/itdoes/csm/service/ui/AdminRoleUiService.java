@@ -142,12 +142,6 @@ public class AdminRoleUiService extends BaseService {
 			}
 		}
 
-		for (CsmRolePermission rolePermission : userCacheService.getRolePermissionMap().values()) {
-			if (rolePermission.getRoleId().toString().equals(id)) {
-				return Result.fail(2, "Role is used by Permission");
-			}
-		}
-
 		rolePair.external().delete(rolePair, UUID.fromString(id));
 		userCacheService.removeRole(id);
 		return Result.success();
