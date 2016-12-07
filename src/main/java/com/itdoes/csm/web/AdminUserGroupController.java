@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itdoes.common.business.web.BaseEntityController;
+import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
@@ -21,7 +21,7 @@ import com.itdoes.csm.service.AdminUserGroupService;
  */
 @RestController
 @RequestMapping(value = "/admin/userGroup", produces = MediaTypes.APPLICATION_JSON_UTF_8)
-public class AdminUserGroupController extends BaseEntityController {
+public class AdminUserGroupController extends BaseController {
 	@Autowired
 	private AdminUserGroupService adminUserGroupService;
 

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itdoes.common.business.web.BaseEntityController;
+import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.HttpResults;
 import com.itdoes.common.core.web.MediaTypes;
@@ -21,7 +21,7 @@ import com.itdoes.csm.service.AdminUserService;
  */
 @RestController
 @RequestMapping(value = "/admin/user", produces = MediaTypes.APPLICATION_JSON_UTF_8)
-public class AdminUserController extends BaseEntityController {
+public class AdminUserController extends BaseController {
 	@Autowired
 	private AdminUserService adminUserService;
 
