@@ -105,8 +105,6 @@ public class AdminUserGroupService extends BaseService {
 
 	public UUID post(CsmUserGroup userGroup) {
 		Validate.isTrue(StringUtils.isNotBlank(userGroup.getName()), "Name should not be blank");
-		Validate.notNull(userGroup.getAdmin(), "Admin should not be null");
-		Validate.notNull(userGroup.getChat(), "Chat should not be null");
 		Validate.isTrue(!ROOT.isRootByName(userGroup.getName()), "Cannot create root UserGroup");
 		if (userGroup.getSuperId() != null) {
 			Validate.isTrue(!ROOT.isRootById(userGroup.getSuperId()), "Cannot use root as super UserGroup");

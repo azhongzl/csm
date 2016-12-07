@@ -45,6 +45,12 @@ public class AdminRoleController extends BaseController {
 		return HttpResults.success(adminRoleService.putForm(id));
 	}
 
+	@RequestMapping(value = "delete/{id}")
+	public Result delete(@PathVariable("id") String id) {
+		adminRoleService.delete(id);
+		return HttpResults.success();
+	}
+
 	@RequestMapping(value = "listRolePermissionForm/{id}", method = RequestMethod.GET)
 	public Result listRolePermissionForm(@PathVariable("id") String id) {
 		return HttpResults.success(adminRoleService.listRolePermissionForm(id));

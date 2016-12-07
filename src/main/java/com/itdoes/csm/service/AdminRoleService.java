@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,6 +108,7 @@ public class AdminRoleService extends BaseService {
 	}
 
 	public UUID post(CsmRole role) {
+		Validate.isTrue(StringUtils.isNotBlank(role.getName()), "Role name should not be blank");
 		Validate.isTrue(!ROOT.isRootByName(role.getName()), "Cannot create root Role");
 
 		final UUID id = rolePair.getExternalService().post(rolePair, role);
