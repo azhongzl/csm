@@ -34,7 +34,6 @@ public class CsmChatCustomerUserGroup extends BaseEntity {
 	@Column(name = "user_group_id")
 	private java.util.UUID userGroupId;
 	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
-	@javax.validation.constraints.NotNull
 	@Column(name = "operator_user_id")
 	private java.util.UUID operatorUserId;
 
