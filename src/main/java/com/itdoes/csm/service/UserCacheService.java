@@ -221,6 +221,10 @@ public class UserCacheService extends BaseService {
 	}
 
 	public CsmPermission getPermission(String id) {
+		if (StringUtils.isBlank(id)) {
+			return null;
+		}
+
 		return permissionMap.get(id);
 	}
 
