@@ -19,6 +19,7 @@ import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmPermission;
+import com.itdoes.csm.entity.CsmRolePermission;
 import com.itdoes.csm.service.UserCacheService;
 
 /**
@@ -95,6 +96,12 @@ public class AdminPermissionService extends BaseService {
 
 	public Result delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root Permission");
+
+		for (CsmRolePermission rolePermission : userCacheService.getRolePermissionMap().values()) {
+			if (rolePermission.getPermissionId().toString().equals(id)) {
+				return Result.fail(2, "Permission is used by Role");
+			}
+		}
 
 		permissionPair.external().delete(permissionPair, UUID.fromString(id));
 		userCacheService.removePermission(id);
