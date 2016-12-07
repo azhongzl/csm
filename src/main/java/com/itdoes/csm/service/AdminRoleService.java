@@ -2,9 +2,7 @@ package com.itdoes.csm.service;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +15,7 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
+import com.itdoes.common.core.MapModel;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmPermission;
 import com.itdoes.csm.entity.CsmRole;
@@ -90,8 +89,8 @@ public class AdminRoleService extends BaseService {
 		rolePermissionPair = env.getPair(CsmRolePermission.class.getSimpleName());
 	}
 
-	public Map<Object, Object> listForm() {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel listForm() {
+		final MapModel model = new MapModel();
 		final List<CsmRole> roleList = Lists.newArrayListWithCapacity(userCacheService.getRoleMap().size() - 1);
 		for (CsmRole role : userCacheService.getRoleMap().values()) {
 			if (!ROOT.isRootById(role.getId())) {
@@ -103,8 +102,8 @@ public class AdminRoleService extends BaseService {
 		return model;
 	}
 
-	public Map<Object, Object> postForm() {
-		return Collections.emptyMap();
+	public MapModel postForm() {
+		return MapModel.emptyMapModel();
 	}
 
 	public UUID post(CsmRole role) {
@@ -115,8 +114,8 @@ public class AdminRoleService extends BaseService {
 		return id;
 	}
 
-	public Map<Object, Object> putForm(String id) {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel putForm(String id) {
+		final MapModel model = new MapModel();
 		model.put("role", userCacheService.getRole(id));
 		return model;
 	}
@@ -140,8 +139,8 @@ public class AdminRoleService extends BaseService {
 		userCacheService.removeRole(id);
 	}
 
-	public Map<Object, Object> listRolePermissionForm(String id) {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel listRolePermissionForm(String id) {
+		final MapModel model = new MapModel();
 
 		final List<CsmPermission> permissionList = Lists
 				.newArrayListWithCapacity(userCacheService.getPermissionMap().size() - 1);

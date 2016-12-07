@@ -2,9 +2,7 @@ package com.itdoes.csm.service;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -18,6 +16,7 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
+import com.itdoes.common.core.MapModel;
 import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.jpa.Specifications;
@@ -55,8 +54,8 @@ public class AdminUserService extends BaseService {
 		userPair = env.getPair(CsmUser.class.getSimpleName());
 	}
 
-	public Map<Object, Object> listForm(int pageNo, int pageSize) {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel listForm(int pageNo, int pageSize) {
+		final MapModel model = new MapModel();
 		model.put("userList",
 				userPair.getExternalService().find(userPair,
 						Specifications.build(CsmUser.class,
@@ -66,8 +65,8 @@ public class AdminUserService extends BaseService {
 		return model;
 	}
 
-	public Map<Object, Object> postForm() {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel postForm() {
+		final MapModel model = new MapModel();
 		model.put("userGroupList", getUserGroupList());
 		return model;
 	}
@@ -87,8 +86,8 @@ public class AdminUserService extends BaseService {
 		return id;
 	}
 
-	public Map<Object, Object> putForm(String id) {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel putForm(String id) {
+		final MapModel model = new MapModel();
 		model.put("user", userCacheService.getUser(id));
 		model.put("userGroupList", getUserGroupList());
 		return model;

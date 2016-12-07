@@ -1,7 +1,5 @@
 package com.itdoes.csm.service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
+import com.itdoes.common.core.MapModel;
 import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.csm.entity.CsmUser;
 
@@ -35,8 +34,8 @@ public class ProfileService extends BaseService {
 		userPair = env.getPair(CsmUser.class.getSimpleName());
 	}
 
-	public Map<Object, Object> putForm() {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel putForm() {
+		final MapModel model = new MapModel();
 		model.put("user", userCacheService.getUser(Shiros.getShiroUser().getId()));
 		return model;
 	}

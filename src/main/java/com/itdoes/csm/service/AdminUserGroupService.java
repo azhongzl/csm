@@ -2,9 +2,7 @@ package com.itdoes.csm.service;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,6 +17,7 @@ import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
+import com.itdoes.common.core.MapModel;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmRole;
@@ -92,14 +91,14 @@ public class AdminUserGroupService extends BaseService {
 		userGroupPair = env.getPair(CsmUserGroup.class.getSimpleName());
 	}
 
-	public Map<Object, Object> listForm() {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel listForm() {
+		final MapModel model = new MapModel();
 		model.put("userGroupList", getUserGroupList());
 		return model;
 	}
 
-	public Map<Object, Object> postForm() {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel postForm() {
+		final MapModel model = new MapModel();
 		model.put("superUserGroupList", getUserGroupList());
 		return model;
 	}
@@ -118,8 +117,8 @@ public class AdminUserGroupService extends BaseService {
 		return id;
 	}
 
-	public Map<Object, Object> putForm(String id) {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel putForm(String id) {
+		final MapModel model = new MapModel();
 		model.put("userGroup", userCacheService.getUserGroup(id));
 		model.put("superUserGroupList", getCandidateSuperUserGroupList(id));
 		return model;
@@ -154,8 +153,8 @@ public class AdminUserGroupService extends BaseService {
 		userCacheService.removeUserGroup(id);
 	}
 
-	public Map<Object, Object> listUserGroupRoleForm(String id) {
-		final Map<Object, Object> model = new HashMap<>();
+	public MapModel listUserGroupRoleForm(String id) {
+		final MapModel model = new MapModel();
 
 		final List<CsmRole> roleList = Lists.newArrayListWithCapacity(userCacheService.getRoleMap().size() - 1);
 		for (CsmRole role : userCacheService.getRoleMap().values()) {
