@@ -99,7 +99,7 @@ public class AdminPermissionService extends BaseService {
 
 		for (CsmRolePermission rolePermission : userCacheService.getRolePermissionMap().values()) {
 			if (rolePermission.getPermissionId().toString().equals(id)) {
-				return Result.fail(2, "Permission is used by Role");
+				return Result.fail(1, "Permission is used by Role");
 			}
 		}
 
