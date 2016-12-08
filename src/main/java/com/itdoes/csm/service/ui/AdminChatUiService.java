@@ -12,6 +12,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.Validate;
+import org.assertj.core.util.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -120,12 +121,8 @@ public class AdminChatUiService extends BaseService {
 		if (userGroup.getChat()) {
 			return Result.success().addData(key, true);
 		} else {
-			final List<CsmChatCustomerUserGroup> customerUserGroupList = customerUserGroupPair.db()
-					.findAll(customerUserGroupPair,
-							Specifications.build(CsmChatCustomerUserGroup.class,
-									Lists.newArrayList(
-											new FindFilter("userGroupId", Operator.EQ, userGroup.getId().toString()))),
-							null);
+			final List<CsmChatCustomerUserGroup> customerUserGroupList = getCustomerUserGroupListByUserGroup(
+					userGroup.getId().toString());
 			if (Collections3.isEmpty(customerUserGroupList)) {
 				return Result.success().addData(key, false);
 			}
@@ -142,27 +139,37 @@ public class AdminChatUiService extends BaseService {
 
 	public Result listCustomerUserGroups(String customerId, Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
-		if (!canAssignUserGroup(shiroUser.getId())) {
+		if (!canAssignCustomerUserGroup(shiroUser.getId())) {
 			return Result.fail(1, "You have no right to assign UserGroup");
 		}
 
-		final List<CsmChatCustomerUserGroup> customerUserGroupList = customerUserGroupPair.db()
-				.findAll(customerUserGroupPair, Specifications.build(CsmChatCustomerUserGroup.class,
-						Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerId))), null);
+		final List<CsmChatCustomerUserGroup> customerUserGroupList = getCustomerUserGroupListByCustomer(customerId);
 		final List<CustomerUserGroupDto> customerUserGroupDtoList = Lists
 				.newArrayListWithCapacity(customerUserGroupList.size());
+		final Set<UUID> customerUserGroupIdSet = Sets.newHashSet();
 		for (CsmChatCustomerUserGroup customerUserGroup : customerUserGroupList) {
 			customerUserGroupDtoList.add(new CustomerUserGroupDto(customerUserGroup,
 					userCacheService.getUserGroup(customerUserGroup.getUserGroupId().toString())));
+			customerUserGroupIdSet.add(customerUserGroup.getUserGroupId());
 		}
 		Collections.sort(customerUserGroupDtoList, CustomerUserGroupDtoComparator.INSTANCE);
-		return Result.success().addData("customerUserGroupList", customerUserGroupDtoList);
+
+		final List<CsmUserGroup> userGroupList = Lists.newArrayList();
+		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
+			if (!ROOT.isRootById(userGroup.getId()) && !userGroup.getChat() && userGroup.getAdmin()
+					&& !customerUserGroupIdSet.contains(userGroup.getId())) {
+				userGroupList.add(userGroup);
+			}
+		}
+
+		return Result.success().addData("customerUserGroupList", customerUserGroupDtoList).addData("userGroupList",
+				userGroupList);
 	}
 
 	public Result postCustomerUserGroup(CsmChatCustomerUserGroup customerUserGroup, Principal principal,
 			SimpMessagingTemplate template) {
 		final ShiroUser shiroUser = getShiroUser(principal);
-		if (!canAssignUserGroup(shiroUser.getId())) {
+		if (!canAssignCustomerUserGroup(shiroUser.getId())) {
 			return Result.fail(1, "You have no right to assign UserGroup");
 		}
 
@@ -176,14 +183,14 @@ public class AdminChatUiService extends BaseService {
 		final Serializable id = customerUserGroupPair.db().post(customerUserGroupPair, customerUserGroup);
 
 		final ChatEvent messageEvent = new ChatEvent(customerId);
-		template.convertAndSend("/topic/chat/postCustomerUserGroup/" + userGroupId, messageEvent);
+		template.convertAndSend("/topic/chat/addCustomerUserGroup/" + userGroupId, messageEvent);
 
 		return Result.success().addData("id", id);
 	}
 
 	public Result deleteCustomerUserGroup(String id, Principal principal, SimpMessagingTemplate template) {
 		final ShiroUser shiroUser = getShiroUser(principal);
-		if (!canAssignUserGroup(shiroUser.getId())) {
+		if (!canAssignCustomerUserGroup(shiroUser.getId())) {
 			return Result.fail(1, "You have no right to assign UserGroup");
 		}
 
@@ -192,7 +199,7 @@ public class AdminChatUiService extends BaseService {
 		customerUserGroupPair.db().delete(customerUserGroupPair, UUID.fromString(id));
 
 		final ChatEvent messageEvent = new ChatEvent(customerUserGroup.getCustomerUserId().toString());
-		template.convertAndSend("/topic/chat/deleteCustomerUserGroup/" + customerUserGroup.getUserGroupId().toString(),
+		template.convertAndSend("/topic/chat/removeCustomerUserGroup/" + customerUserGroup.getUserGroupId().toString(),
 				messageEvent);
 		return Result.success();
 	}
@@ -200,6 +207,10 @@ public class AdminChatUiService extends BaseService {
 	public Result init(Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
 		final CsmUserGroup curAdminUserGroup = userCacheService.getUserGroupByUser(shiroUser.getId());
+		List<CsmChatCustomerUserGroup> customerUserGroupList = Collections.emptyList();
+		if (!curAdminUserGroup.getChat()) {
+			customerUserGroupList = getCustomerUserGroupListByUserGroup(curAdminUserGroup.getId().toString());
+		}
 
 		final List<ChatUser> customerList = Lists.newArrayList();
 		for (CsmUser user : userCacheService.getUserMap().values()) {
@@ -208,31 +219,28 @@ public class AdminChatUiService extends BaseService {
 				if (!userGroup.getAdmin()) {
 					final ChatUser chatUser = new ChatUser(user.getId().toString(), user.getUsername());
 					chatUser.setOnline(onlineService.isOnlineUser(chatUser.getUserId()));
-					chatUser.setUnhandled(isUnhandledCustomer(chatUser.getUserId(), curAdminUserGroup));
+					chatUser.setUnhandled(
+							isUnhandledCustomer(chatUser.getUserId(), curAdminUserGroup, customerUserGroupList));
 					customerList.add(chatUser);
 				}
 			}
 		}
 		Collections.sort(customerList, ChatUserComparator.INSTANCE);
-		return Result.success().addData("customerList", customerList);
+		return Result.success().addData("currentUserGroup", curAdminUserGroup)
+				.addData("customerUserGroupList", customerUserGroupList).addData("customerList", customerList);
 	}
 
 	public Result initMessage(String roomId, Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
-		if (!canSendMessage(shiroUser.getId(), roomId)) {
-			return Result.fail(1, "You have no right to send message to this customer");
+		final boolean canSendMessage = canSendMessage(shiroUser.getId(), roomId);
+
+		final Result result = Result.success().addData("canSendMessage", canSendMessage)
+				.addData("canAssignCustomerUserGroup", canAssignCustomerUserGroup(shiroUser.getId()));
+		if (canSendMessage) {
+			result.addData("messageList", getLatestMessageList(roomId, principal));
 		}
 
-		final List<CsmChatMessage> messageList = getLatestMessageList(roomId, principal);
-
-		final List<CsmUserGroup> userGroupList = Lists.newArrayList();
-		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
-			if (!ROOT.isRootById(userGroup.getId()) && !userGroup.getChat() && userGroup.getAdmin()) {
-				userGroupList.add(userGroup);
-			}
-		}
-
-		return Result.success().addData("messageList", messageList).addData("userGroupList", userGroupList);
+		return result;
 	}
 
 	public void sendMessage(CsmChatMessage message, Principal principal, SimpMessagingTemplate template) {
@@ -293,7 +301,8 @@ public class AdminChatUiService extends BaseService {
 								new FindFilter("userGroupId", Operator.EQ, userGroupId)))) > 0;
 	}
 
-	private boolean isUnhandledCustomer(String customerId, CsmUserGroup adminUserGroup) {
+	private boolean isUnhandledCustomer(String customerId, CsmUserGroup adminUserGroup,
+			List<CsmChatCustomerUserGroup> customerUserGroupList) {
 		if (!unhandledCustomerService.isUnhandledCustomer(customerId)) {
 			return false;
 		}
@@ -301,11 +310,35 @@ public class AdminChatUiService extends BaseService {
 		if (adminUserGroup.getChat()) {
 			return true;
 		} else {
-			return isCustomerUserGroupExist(customerId, adminUserGroup.getId().toString());
+			if (Collections3.isEmpty(customerUserGroupList)) {
+				return false;
+			}
+
+			for (CsmChatCustomerUserGroup customerUserGroup : customerUserGroupList) {
+				if (customerUserGroup.getCustomerUserId().toString().equals(customerId)) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 
-	private boolean canAssignUserGroup(String adminId) {
+	private List<CsmChatCustomerUserGroup> getCustomerUserGroupListByUserGroup(String userGroupId) {
+		return customerUserGroupPair.db().findAll(customerUserGroupPair,
+				Specifications.build(CsmChatCustomerUserGroup.class,
+						Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, userGroupId))),
+				null);
+	}
+
+	private List<CsmChatCustomerUserGroup> getCustomerUserGroupListByCustomer(String customerUserId) {
+		return customerUserGroupPair.db()
+				.findAll(customerUserGroupPair,
+						Specifications.build(CsmChatCustomerUserGroup.class,
+								Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerUserId))),
+						null);
+	}
+
+	private boolean canAssignCustomerUserGroup(String adminId) {
 		final CsmUserGroup userGroup = userCacheService.getUserGroupByUser(adminId);
 		if (userGroup == null) {
 			return false;
@@ -349,19 +382,6 @@ public class AdminChatUiService extends BaseService {
 		}
 
 		return isCustomerUserGroupExist(customerId, userGroupIdString);
-	}
-
-	private boolean canBeAlerted(String adminId, String customerId) {
-		final CsmUserGroup userGroup = userCacheService.getUserGroupByUser(adminId);
-		if (userGroup == null) {
-			return false;
-		}
-
-		if (userGroup.getChat()) {
-			return true;
-		}
-
-		return isCustomerUserGroupExist(customerId, userGroup.getId().toString());
 	}
 
 	private ShiroUser getShiroUser(Principal principal) {
