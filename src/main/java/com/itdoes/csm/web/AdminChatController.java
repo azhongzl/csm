@@ -76,8 +76,8 @@ public class AdminChatController extends BaseController {
 
 	@RequestMapping(value = "deleteCustomerUserGroup/{id}")
 	@ResponseBody
-	public Result deleteCustomerUserGroup(@PathVariable("id") String id) {
-		return chatService.deleteCustomerUserGroup(id, template);
+	public Result deleteCustomerUserGroup(@PathVariable("id") String id, Principal principal) {
+		return chatService.deleteCustomerUserGroup(id, principal, template);
 	}
 
 	@SubscribeMapping("/chatAInit")
