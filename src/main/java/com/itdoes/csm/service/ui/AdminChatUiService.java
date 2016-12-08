@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
@@ -192,8 +194,10 @@ public class AdminChatUiService extends BaseService {
 		customerUserGroup.setOperatorUserId(UUID.fromString(shiroUser.getId()));
 		customerUserGroup = customerUserGroupPair.db().post(customerUserGroupPair, customerUserGroup);
 
-		final ChatEvent messageEvent = new ChatEvent(customerId);
-		template.convertAndSend("/topic/chat/addCustomerUserGroup/" + userGroupId, messageEvent);
+		final Map<String, Object> messageEvent = Maps.newHashMap();
+		messageEvent.put("customerId", customerId);
+		messageEvent.put("userGroupId", userGroupId);
+		template.convertAndSend("/topic/chat/addCustomerUserGroup", messageEvent);
 
 		return Result.success().addData("id", customerUserGroup.getId());
 	}
@@ -203,9 +207,10 @@ public class AdminChatUiService extends BaseService {
 				UUID.fromString(id));
 		customerUserGroupPair.db().delete(customerUserGroupPair, UUID.fromString(id));
 
-		final ChatEvent messageEvent = new ChatEvent(customerUserGroup.getCustomerUserId().toString());
-		template.convertAndSend("/topic/chat/removeCustomerUserGroup/" + customerUserGroup.getUserGroupId().toString(),
-				messageEvent);
+		final Map<String, Object> messageEvent = Maps.newHashMap();
+		messageEvent.put("customerId", customerUserGroup.getCustomerUserId().toString());
+		messageEvent.put("userGroupId", customerUserGroup.getUserGroupId().toString());
+		template.convertAndSend("/topic/chat/removeCustomerUserGroup", messageEvent);
 		return Result.success();
 	}
 
