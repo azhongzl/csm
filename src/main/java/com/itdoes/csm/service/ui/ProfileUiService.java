@@ -51,7 +51,7 @@ public class ProfileUiService extends BaseService {
 
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
-			userPair.external().put(userPair, user, oldUser);
+			userPair.db().put(userPair, user, oldUser);
 			userCacheService.modifyUser(user);
 		}
 

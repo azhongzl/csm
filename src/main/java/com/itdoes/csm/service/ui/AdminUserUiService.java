@@ -57,7 +57,7 @@ public class AdminUserUiService extends BaseService {
 
 	public Result listForm(int pageNo, int pageSize) {
 		return Result.success().addData("userList",
-				userPair.external().find(userPair,
+				userPair.db().find(userPair,
 						Specifications.build(CsmUser.class,
 								Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
 						SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,
@@ -76,9 +76,9 @@ public class AdminUserUiService extends BaseService {
 		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
 
 		user.populatePassword();
-		final UUID id = userPair.external().post(userPair, user);
+		user = userPair.db().post(userPair, user);
 		userCacheService.addUser(user);
-		return Result.success().addData("id", id);
+		return Result.success().addData("id", user.getId());
 	}
 
 	public Result putForm(String id) {
@@ -99,7 +99,7 @@ public class AdminUserUiService extends BaseService {
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
 		}
-		userPair.external().put(userPair, user, oldUser);
+		userPair.db().put(userPair, user, oldUser);
 		userCacheService.modifyUser(user);
 		return Result.success();
 	}
@@ -107,7 +107,7 @@ public class AdminUserUiService extends BaseService {
 	public Result delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root User");
 
-		userPair.external().delete(userPair, UUID.fromString(id));
+		userPair.db().delete(userPair, UUID.fromString(id));
 		userCacheService.removeUser(id);
 		return Result.success();
 	}

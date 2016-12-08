@@ -111,9 +111,9 @@ public class AdminRoleUiService extends BaseService {
 		Validate.isTrue(StringUtils.isNotBlank(role.getName()), "Role name should not be blank");
 		Validate.isTrue(!ROOT.isRootByName(role.getName()), "Cannot create root Role");
 
-		final UUID id = rolePair.external().post(rolePair, role);
+		role = rolePair.db().post(rolePair, role);
 		userCacheService.addRole(role);
-		return Result.success().addData("id", id);
+		return Result.success().addData("id", role.getId());
 	}
 
 	public Result putForm(String id) {
@@ -128,7 +128,7 @@ public class AdminRoleUiService extends BaseService {
 		Validate.isTrue(!ROOT.isRootByName(role.getName()) && !ROOT.isRootById(role.getId()),
 				"Cannot modify root Role");
 
-		rolePair.external().put(rolePair, role, oldRole);
+		rolePair.db().put(rolePair, role, oldRole);
 		userCacheService.modifyRole(role);
 		return Result.success();
 	}
@@ -142,7 +142,7 @@ public class AdminRoleUiService extends BaseService {
 			}
 		}
 
-		rolePair.external().delete(rolePair, UUID.fromString(id));
+		rolePair.db().delete(rolePair, UUID.fromString(id));
 		userCacheService.removeRole(id);
 		return Result.success();
 	}
@@ -178,15 +178,15 @@ public class AdminRoleUiService extends BaseService {
 				!ROOT.isRootById(rolePermission.getRoleId()) && !ROOT.isRootById(rolePermission.getPermissionId()),
 				"Cannot create root RolePermission");
 
-		final UUID id = rolePermissionPair.external().post(rolePermissionPair, rolePermission);
+		rolePermission = rolePermissionPair.db().post(rolePermissionPair, rolePermission);
 		userCacheService.addRolePermission(rolePermission);
-		return Result.success().addData("id", id);
+		return Result.success().addData("id", rolePermission.getId());
 	}
 
 	public Result deleteRolePermission(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root RolePermission");
 
-		rolePermissionPair.external().delete(rolePermissionPair, UUID.fromString(id));
+		rolePermissionPair.db().delete(rolePermissionPair, UUID.fromString(id));
 		userCacheService.removeRolePermission(id);
 		return Result.success();
 	}

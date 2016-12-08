@@ -30,10 +30,10 @@
 				/search/** = anon
 				/admin/search/createIndex = perms["itdoes:search:createIndex"]
 				/profile = user
-				/admin/user/** = perms["itdoes:user:user"]
-				/admin/userGroup/** = perms["itdoes:user:userGroup"]
-				/admin/role/** = perms["itdoes:user:role"]
-				/admin/permission/** = perms["itdoes:user:permission"]
+				/admin/user/** = perms["itdoes:user"]
+				/admin/userGroup/** = perms["itdoes:userGroup"]
+				/admin/role/** = perms["itdoes:role"]
+				/admin/permission/** = perms["itdoes:permission"]
 				/chat/** = user
 				/admin/chat/icon = anon
 				/refreshParentCloseChildWindow = anon

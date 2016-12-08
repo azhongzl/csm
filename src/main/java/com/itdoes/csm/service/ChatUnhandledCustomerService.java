@@ -35,7 +35,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 	public void myInit() {
 		chatUnhandledCustomerPair = entityEnv.getPair(CsmChatUnhandledCustomer.class.getSimpleName());
 
-		final List<CsmChatUnhandledCustomer> unhandledCustomerList = chatUnhandledCustomerPair.internal()
+		final List<CsmChatUnhandledCustomer> unhandledCustomerList = chatUnhandledCustomerPair.db()
 				.findAll(chatUnhandledCustomerPair, null, null);
 		if (Collections3.isEmpty(unhandledCustomerList)) {
 			return;
@@ -47,7 +47,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 			addUnhandledCustomer(event);
 		}
 
-		chatUnhandledCustomerPair.internal().deleteIterable(chatUnhandledCustomerPair, unhandledCustomerList);
+		chatUnhandledCustomerPair.db().deleteIterable(chatUnhandledCustomerPair, unhandledCustomerList);
 	}
 
 	@PreDestroy
@@ -65,7 +65,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 			unhandledCustomerList.add(unhandledCustomer);
 		}
 
-		chatUnhandledCustomerPair.internal().postIterable(chatUnhandledCustomerPair, unhandledCustomerList);
+		chatUnhandledCustomerPair.db().postIterable(chatUnhandledCustomerPair, unhandledCustomerList);
 	}
 
 	public boolean hasUnhandledCustomers() {

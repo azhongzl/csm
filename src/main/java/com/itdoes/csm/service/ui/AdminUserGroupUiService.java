@@ -109,9 +109,9 @@ public class AdminUserGroupUiService extends BaseService {
 			Validate.isTrue(!ROOT.isRootById(userGroup.getSuperId()), "Cannot use root as super UserGroup");
 		}
 
-		final UUID id = userGroupPair.external().post(userGroupPair, userGroup);
+		userGroup = userGroupPair.db().post(userGroupPair, userGroup);
 		userCacheService.addUserGroup(userGroup);
-		return Result.success().addData("id", id);
+		return Result.success().addData("id", userGroup.getId());
 	}
 
 	public Result putForm(String id) {
@@ -137,7 +137,7 @@ public class AdminUserGroupUiService extends BaseService {
 			}
 		}
 
-		userGroupPair.external().put(userGroupPair, userGroup, oldUserGroup);
+		userGroupPair.db().put(userGroupPair, userGroup, oldUserGroup);
 		userCacheService.modifyUserGroup(userGroup);
 		return Result.success();
 	}
@@ -156,7 +156,7 @@ public class AdminUserGroupUiService extends BaseService {
 			}
 		}
 
-		userGroupPair.external().delete(userGroupPair, UUID.fromString(id));
+		userGroupPair.db().delete(userGroupPair, UUID.fromString(id));
 		userCacheService.removeUserGroup(id);
 		return Result.success();
 	}
@@ -189,15 +189,15 @@ public class AdminUserGroupUiService extends BaseService {
 		Validate.isTrue(!ROOT.isRootById(userGroupRole.getUserGroupId()) && !ROOT.isRootById(userGroupRole.getRoleId()),
 				"Cannot create root UserGroupRole");
 
-		final UUID id = userGroupRolePair.external().post(userGroupRolePair, userGroupRole);
+		userGroupRole = userGroupRolePair.db().post(userGroupRolePair, userGroupRole);
 		userCacheService.addUserGroupRole(userGroupRole);
-		return Result.success().addData("id", id);
+		return Result.success().addData("id", userGroupRole.getId());
 	}
 
 	public Result deleteUserGroupRole(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroupRole");
 
-		userGroupRolePair.external().delete(userGroupRolePair, UUID.fromString(id));
+		userGroupRolePair.db().delete(userGroupRolePair, UUID.fromString(id));
 		userCacheService.removeUserGroupRole(id);
 		return Result.success();
 	}

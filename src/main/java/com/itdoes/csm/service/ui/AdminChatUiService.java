@@ -120,7 +120,7 @@ public class AdminChatUiService extends BaseService {
 		if (curAdminUserGroup.getChat()) {
 			return Result.success().addData("hasUnhandledCustomers", true);
 		} else {
-			final List<CsmChatCustomerUserGroup> customerUserGroupList = customerUserGroupPair.external().findAll(
+			final List<CsmChatCustomerUserGroup> customerUserGroupList = customerUserGroupPair.db().findAll(
 					customerUserGroupPair,
 					Specifications.build(CsmChatCustomerUserGroup.class,
 							Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, curAdminUserGroupIdString))),
@@ -140,7 +140,7 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	public Result listCustomerUserGroups(String customerId, Principal principal) {
-		final List<CsmChatCustomerUserGroup> customerUserGroupList = customerUserGroupPair.external()
+		final List<CsmChatCustomerUserGroup> customerUserGroupList = customerUserGroupPair.db()
 				.findAll(customerUserGroupPair, Specifications.build(CsmChatCustomerUserGroup.class,
 						Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerId))), null);
 		final List<CustomerUserGroupDto> customerUserGroupDtoList = Lists
@@ -163,7 +163,7 @@ public class AdminChatUiService extends BaseService {
 
 		final ShiroUser shiroUser = getShiroUser(principal);
 		customerUserGroup.setOperatorUserId(UUID.fromString(shiroUser.getId()));
-		final Serializable id = customerUserGroupPair.external().post(customerUserGroupPair, customerUserGroup);
+		final Serializable id = customerUserGroupPair.db().post(customerUserGroupPair, customerUserGroup);
 
 		final ChatEvent messageEvent = new ChatEvent(customerId);
 		template.convertAndSend("/topic/chat/postCustomerUserGroup/" + userGroupId, messageEvent);
@@ -172,9 +172,9 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	public Result deleteCustomerUserGroup(String id, SimpMessagingTemplate template) {
-		final CsmChatCustomerUserGroup customerUserGroup = customerUserGroupPair.external().get(customerUserGroupPair,
+		final CsmChatCustomerUserGroup customerUserGroup = customerUserGroupPair.db().get(customerUserGroupPair,
 				UUID.fromString(id));
-		customerUserGroupPair.external().delete(customerUserGroupPair, UUID.fromString(id));
+		customerUserGroupPair.db().delete(customerUserGroupPair, UUID.fromString(id));
 
 		final ChatEvent messageEvent = new ChatEvent(customerUserGroup.getCustomerUserId().toString());
 		template.convertAndSend("/topic/chat/deleteCustomerUserGroup/" + customerUserGroup.getUserGroupId().toString(),
@@ -230,7 +230,7 @@ public class AdminChatUiService extends BaseService {
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(true);
 		message.setSenderName(shiroUser.getUsername());
-		messagePair.external().post(messagePair, message);
+		messagePair.db().post(messagePair, message);
 		template.convertAndSend("/topic/chat/message/" + roomIdString, message);
 
 		final ChatEvent messageEvent = new ChatEvent(roomIdString);
@@ -239,7 +239,7 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getLatestMessageList(String roomId, Principal principal) {
-		final List<CsmChatMessage> dbMessageList = messagePair.external().find(messagePair,
+		final List<CsmChatMessage> dbMessageList = messagePair.db().find(messagePair,
 				Specifications.build(CsmChatMessage.class,
 						Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId))),
 				MESSAGE_PAGE_REQUEST).getContent();
@@ -266,7 +266,7 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	private boolean isCustomerUserGroupExist(String customerId, String userGroupId) {
-		return customerUserGroupPair.external().count(customerUserGroupPair,
+		return customerUserGroupPair.db().count(customerUserGroupPair,
 				Specifications.build(CsmChatCustomerUserGroup.class,
 						Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerId),
 								new FindFilter("userGroupId", Operator.EQ, userGroupId)))) > 0;

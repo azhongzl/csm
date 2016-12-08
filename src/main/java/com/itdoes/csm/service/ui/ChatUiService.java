@@ -84,7 +84,7 @@ public class ChatUiService extends BaseService {
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(false);
 		message.setSenderName(shiroUser.getUsername());
-		messagePair.external().post(messagePair, message);
+		messagePair.db().post(messagePair, message);
 		template.convertAndSend("/topic/chat/message/" + curUserIdString, message);
 
 		final ChatEvent messageEvent = new ChatEvent(curUserIdString);
@@ -93,7 +93,7 @@ public class ChatUiService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getLatestMessageList(String roomId) {
-		final List<CsmChatMessage> dbMessageList = messagePair.external().find(messagePair,
+		final List<CsmChatMessage> dbMessageList = messagePair.db().find(messagePair,
 				Specifications.build(CsmChatMessage.class,
 						Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId))),
 				MESSAGE_PAGE_REQUEST).getContent();
