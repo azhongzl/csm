@@ -87,7 +87,7 @@ public class ChatUiService extends BaseService {
 		messagePair.db().post(messagePair, message);
 		template.convertAndSend("/topic/chat/message/" + curUserIdString, message);
 
-		final ChatEvent messageEvent = new ChatEvent(curUserIdString);
+		final ChatEvent messageEvent = new ChatEvent(curUserIdString).addData("userId", curUserIdString);
 		unhandledCustomerService.addUnhandledCustomer(messageEvent);
 		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
 	}
