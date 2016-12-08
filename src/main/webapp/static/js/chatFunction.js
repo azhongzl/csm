@@ -14,17 +14,17 @@ function connect() {
 							.getElementById('sentence').scrollHeight;
 				});
 		stompClient.subscribe('/app/chatCInitMessage', function(message) {
-			showMessages(JSON.parse(message.body));
+			showMessages(JSON.parse(message.body).data.messageList);
 		});
 	});
 }
 
 function sendMessage() {
-	if($("#message").val().length>0){
-	stompClient.send('/app/chatCSendMessage', {}, JSON.stringify({
-		'message' : $("#message").val()
-	}));
-	$("#message").val("");
+	if ($("#message").val().length > 0) {
+		stompClient.send('/app/chatCSendMessage', {}, JSON.stringify({
+			'message' : $("#message").val()
+		}));
+		$("#message").val("");
 	}
 }
 
@@ -37,21 +37,28 @@ function showMessages(messageList) {
 }
 
 function showMessage(message) {
-	var timeStr="";
-	var num=message.createDateTime.indexOf("T");
-	timeStr=message.createDateTime.substring(0,num)+" "+message.createDateTime.substring(num+1,19);
+	var timeStr = "";
+	var num = message.createDateTime.indexOf("T");
+	timeStr = message.createDateTime.substring(0, num) + " "
+			+ message.createDateTime.substring(num + 1, 19);
 	if (message.fromAdmin) {
-		$("#sentence").append(
-				"<p class='user1 left'>" + message.senderName + "</p></br>"
-						+ "<p class='speech1 left'>" + message.message
-						+ "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr
-						+ "</p><hr>");
+		$("#sentence")
+				.append(
+						"<div class='panel panel-primary' style='clear:both;float:right;width:400px'><div class='panel-heading' style='padding: 2px 0px ' >"
+								+ "Customer Service"
+								+ "&nbsp;&nbsp;&nbsp;&nbsp;"
+								+ timeStr
+								+ "</div><div class='panel-body'>"
+								+ message.message + " </div></div>");
 	} else {
-		$("#sentence").append(
-				"<p class='user2 right'>" + message.senderName + "</p></br>"
-						+ "<p class='speech2 right'>" + message.message
-						+ "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr
-						+ "</p><hr>");
+		$("#sentence")
+				.append(
+						"<div class='panel panel-info' style='clear:both;float:left;width:400px'><div class='panel-heading' style='padding: 2px 0px ' >"
+								+ message.senderName
+								+ "&nbsp;&nbsp;&nbsp;&nbsp;"
+								+ timeStr
+								+ "</div><div class='panel-body'>"
+								+ message.message + " </div></div>");
 	}
 }
 

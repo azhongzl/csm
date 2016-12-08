@@ -3,10 +3,9 @@ var ctx;
 var stompClient = null;
 var subscribeList ;
 var plainPassword="kuzco123";
-var url = "http://localhost:8080/csm/e/";
 var userId = "";
-var userName = "";
-
+var username = "";
+var root = "root";
 const
 chat = {
 	template : '#chatMainPage',
@@ -31,41 +30,70 @@ service = {
 	data : function() {
 		return {
 			selected : "",
+
 		}
+	},
+	created: function(){
+		store.commit('getService',{id:this.$route.query.id});
 	},
 	computed : {
 		service : function() {
-			let
-			id = this.$route.params.id;
-			let
-			service1 = [];
-			let
-			service2 = this.$store.state.service;
-			$.each(service2, function(i, n) {
-				if (n.customer == id || n.customer == "any") {
-					service1.push(n);
-				}
-			});
-			return service1;
+			return this.$store.state.service;
 		},
 		serviceList : function() {
 			return this.$store.state.serviceList;
 		}
 	},
 	methods : {
-		showUser : function(name, index) {
-			store.commit('removeUser', {
-				id : index
+		removeGroup : function(id, index) {
+			var canSendMsg=false;
+			if(store.state.currentUserGroup.userGroup.chat){
+				canSendMsg=true;
+			}else{
+				if(store.state.customerUserGroupList.indexOf(this.$route.query.id)!=-1){
+					canSendMsg=true;
+				}
+			}
+			if(!canSendMsg){
+				return;
+			}
+		   	let url1=ctx+ "/admin/chat/deleteCustomerUserGroup/" + id;
+			$.ajax({
+				type : "GET",
+				url : url1,
+				async : false,
+				success : function(result) {
+					myAlert("DELETE OK ");
+				},
+				timeout : 3000,
+				error :handleError
 			});
-
+			store.commit('getService',{id:this.$route.query.id});
 		},
-		select : function(res) {
-			let
-			id = this.$route.params.id;
+		
+	 select : function(res) {
+			let	id = this.$route.query.id;
 			res.customer = id;
-			store.commit('addUser', {
-				id : res
-			});
+			var canSendMsg=false;
+			if(store.state.currentUserGroup.userGroup.chat){
+				canSendMsg=true;
+			}else{
+				if(store.state.customerUserGroupList.indexOf(id)!=-1){
+					canSendMsg=true;
+				}
+			}
+			if(!canSendMsg){
+				return;
+			}
+			var url1=ctx+"/admin/chat/postCustomerUserGroup";
+			var savedata = {
+					customerUserId:id,
+					userGroupId:res.id,
+					operatorUserId:userId,
+			};
+			ajaxcreate(savedata, url1);
+			store.commit('getService',{id:id});
+			
 		},
 
 	}
@@ -75,23 +103,27 @@ const content={
 		  template:'#content',
 		  data:function(){
 			return {
-				userName:"",
+
 				sentence:"",
 					}; 
 		  },
 			watch:{
 				'$route':function(to,from){
+					store.commit('getService',{id:this.$route.query.id});
+					store.commit('getCustomerName',{id:this.$route.query.id,name:this.$route.query.name});
 					let customerId=	this.$route.query.id;
-					this.userName=this.$route.query.name;
 						showMsg(customerId);
 					}
 			},
 			created:function(){
 				let customerId=	this.$route.query.id;
-				this.userName=this.$route.query.name;
+				store.commit('getCustomerName',{id:customerId,name:this.$route.query.name});
 				showMsg(customerId);
 			},
 		  computed:{
+			  customerName : function(){
+				  return this.$store.state.customerName;
+			  }
 		  },
 
 		methods:{
@@ -113,92 +145,100 @@ const permission={
 		  template:'#permission',
 		  data:function(){
 			  return{
+				  permissions:[],
 				  permissionName:"",
 				  permissionValue:"",
 				  permissionId:"",
+				  modalTitle:""
 			  }
 		  },
 
 		  created:function(){
-			  store.commit('permission');
+			 this.getPermission();
 		  },
 
-		  computed:{
-			  permissions:function(){
-				  return this.$store.state.permissions;
-			  },
-
-		  },
 		methods:{
 			addNew:function(){
+				this.modalTitle="ADD NEW PERMISSION";
 				$("#myPermissionModal").modal('show');
+				
 			},
 			addNewSubmit:function(){
              if(this.permissionId.trim().length==0){
 				if (this.permissionName.trim().length>0){
-					var url=ctx+"/e/CsmPermission/post"
+					var url1=ctx+"/admin/permission/post"
 					var savedata = {
 							name : this.permissionName,
 							permission : this.permissionValue,
 	  				};
-	  				ajaxcreate(savedata, url);
-	  				  store.commit('permission');
+	  				ajaxcreate(savedata, url1);
+	  				 this.getPermission();
 	  				  this.permissionName="";
 	  				  this.permissionValue="";
 	  				$("#myPermissionModal").modal('hide');
 				}else{
-					alert("Please enter permission name ");
+					myAlert("Please enter permission name ");
 				};
              }else{
           	   if(this.permissionName.trim().length>0){
-    				var url = ctx + "/e/CsmPermission/put/" + this.permissionId;
+    				var url1 = ctx + "/admin/permission/put" ;
   				var putdata = {
+  					id:this.permissionId,
   					name : this.permissionName,
   					permission : this.permissionValue,
   			    				}
-  				ajaxPut(putdata, url);
-					store.commit('permission');
+  				ajaxPut(putdata, url1);
+  				 this.getPermission();
 	  				  this.permissionName="";
 	  				  this.permissionValue="";
 	  				  this.permissionId="";
 	  				$("#myPermissionModal").modal('hide');
           	   }else{
-          		   alert("Please enter permission name ");  
+          		   myAlert("Please enter permission name ");  
           	   }
           	   
              }
 			},
 			del:function(id){
-				let url = ctx+ "/e/CsmRolePermission/find";
-			    let checkKey = {
-			    		ff_permissionId:id,
-			    };
-		    	let result = ajaxFind(checkKey, url);
-		    	if (result.data.totalElements!=0){
-		    		alert("some role use this permission,you can't delete it");
-		    	}else{
+
+
 				var conf=confirm("are you sure?");
 				if (conf){
-					url=ctx+ "/e/CsmPermission/delete/" + id;
+					let url1 = ctx+ "/admin/permission/delete/"+id;
 					$.ajax({
 						type : "GET",
-						url : url,
+						url : url1,
 						async : false,
 						success : function(result) {
-							alert("DELETE OK ");
+							if (result.code===0){
+								myAlert("DELETE OK ");	
+							}
+							if (result.code===1 || result.code===2){
+								myAlert(result.message+" ,you can't delete it ");	
+							}
+
 						},
 						timeout : 3000,
 						error :handleError
 					});
-					store.commit('permission');
+					 this.getPermission();
 				}
-		      }
 			},
 			mod:function(id,name,per){
 				this.permissionName=name;
 				this.permissionValue=per;
 				this.permissionId=id;
+				this.modalTitle="MODIFY PERMISSION";
 				$("#myPermissionModal").modal('show');
+					
+			},
+			getPermission:function(){
+			   	let url = ctx+ "/admin/permission/listForm";
+		    	let checkKey = {};
+	    	let result = ajaxFind(checkKey, url);
+	    	if (result.data.permissionList!=undefined){
+		    	this.permissions = result.data.permissionList;    		
+	    	}
 					
 			},
 			}
@@ -207,112 +247,150 @@ const permission={
 
 const role={
 		  template:'#role',
+		  data:function(){
+			return{
+				modalTitle:"",
+				name:"",
+				id:"",
+				roles:[],
 
-		  created:function(){
-			  store.commit('role');
-			  
+			}  
 		  },
-		  computed:{
-			  roles:function(){
-				  return this.$store.state.roles;
-			  },
-
+		  created:function(){
+			  this.getRoles();
+			  
 		  },
 		methods:{
 			addNew:function(){
-				var name=prompt("please enter a Role:"," ");
-				if (name.trim().length>0){
-				var url=ctx+"/e/CsmRole/post"
-				var savedata = {
-						name:name
-				};
+				this.modalTitle="ADD NEW ROLE";
+				this.name="";
+				$("#roleModal").modal("show");
 
-				ajaxcreate(savedata, url);
-				  store.commit('role');
-				}
+			},
+			addNewSubmit:function(){
+				if (this.name.trim().length>0 && this.id.length==0){
+					var url1=ctx+"/admin/role/post"
+					var savedata = {
+							name:this.name
+					};
+					ajaxcreate(savedata, url1);
+					  this.getRoles();
+					}
+				if (this.name.trim().length>0 && this.id.length>0){
+					var url1 = ctx + "/admin/role/put/" ;
+					var putdata = {
+						name : this.name,
+						id : this.id,
+				    				}
+					ajaxPut(putdata, url1);
+					  this.getRoles();
+						}
+
+				$("#roleModal").modal('hide');
 			},
 			del:function(id){
 				var conf=confirm("are you sure?");
 				if (conf){
-					url=ctx+ "/e/CsmRole/delete/" + id;
+					url1=ctx+ "/admin/role/delete/" + id;
 					$.ajax({
 						type : "GET",
-						url : url,
+						url : url1,
 						async : false,
 						success : function(result) {
-							alert("DELETE OK ");
+							if (result.code   ===0){
+								myAlert("DELETE OK ");	
+							}
+							if (result.code===0){
+								myAlert("DELETE OK ");	
+							}
+							if (result.code===1 || result.code===2){
+								myAlert(result.message+" ,you can't delete it ");	
+							}
 						},
 						timeout : 3000,
 						error :handleError
 					});
-					store.commit('role');
+					  this.getRoles();
 				}
 			},
-			mod:function(id,per){
-				var name=prompt("input:",per);
-					if (name.trim().length>0){
-				var url = ctx + "/e/CsmRole/put/" + id;
-				var putdata = {
-					name : name,
-			    				}
-				ajaxPut(putdata, url);
-					store.commit('role');
-					}
-					
+			mod:function(id){
+				let url1 = ctx+ "/admin/role/putForm/"+id;
+		    	let checkKey = { 	};
+		    	let result = ajaxFind(checkKey, url1);
+		    	if (result.data.role!=undefined){
+					this.id=id;
+					this.name=result.data.role.name;
+		    	}
+				this.modalTitle="MODIFY ROLE";
+				$("#roleModal").modal('show');
+			},
+			getRoles:function(){
+				let url1 = ctx+ "/admin/role/listForm";
+		    	let checkKey = { 	};
+		    	let result = ajaxFind(checkKey, url1);
+		    	if (result.data.roleList!=undefined){
+		    		this.roles = result.data.roleList;    		
+		    	}
 			},
 			}
 		};
 
 const role_permission={
 	template:"#role_permission",
+	data:function(){
+		return{
+			rolePermissions:[],
+			permissions:[],
+		}
+	},
 	  created:function(){
-		  store.commit('permission');
-		  store.commit('role_permissions',{id:this.$route.query.id})
+		  this.getPermissions(this.$route.query.id);
 	  },
-	  
-	  computed:{
-		  permissions:function(){
-			  return this.$store.state.permissions;
-		  },
-		  role_permissions:function(){
-			 return this.$store.state.role_permissions; 
-		  }
-	  },
+
 	  methods:{
 		  add:function(id){
 			  var each=true;
-			  $.each(this.$store.state.role_permissions,function(i,n){
-				 if (n.permissionId==id){
-					 alert("you already have this permission");
+			  $.each(this.rolePermissions,function(i,n){
+				 if (n.permission.id==id){
+					 myAlert("you already have this permission");
 					 each=false;
 					 return false;
 				 }
 			  });
 			  if(each){
-					var url=ctx+"/e/CsmRolePermission/post";
+					var url1=ctx+"/admin/role/postRolePermission";
 					var savedata = {
 							roleId:this.$route.query.id,
 							permissionId:id,
 	    				};
-	    				ajaxcreate(savedata, url);
-	    				store.commit('role_permissions',{id:this.$route.query.id});
+	    				ajaxcreate(savedata, url1);
+	    				  this.getPermissions(this.$route.query.id);
 			  };
 
 		  },
 		  remove:function(id){
-				url=ctx+ "/e/CsmRolePermission/delete/" + id;
+				url1=ctx+ "/admin/role/deleteRolePermission/" + id;
 				$.ajax({
 					type : "GET",
-					url : url,
+					url : url1,
 					async : false,
 					success : function(result) {
-						alert("DELETE OK ");
+						myAlert("DELETE OK ");
 					},
 					timeout : 3000,
 					error :handleError
 				});
-				store.commit('role_permissions',{id:this.$route.query.id});
+				this.getPermissions(this.$route.query.id);
 		  },
+		  
+		  getPermissions:function(id){
+				let url = ctx+ "/admin/role/listRolePermissionForm/"+id;
+		    	let checkKey = {};
+		    	let result = ajaxFind(checkKey, url);
+			    this.rolePermissions = result.data.rolePermissionList;    		
+		    	this.permissions = result.data.roleList;
+		  },
+		  
 		  back:function(){
 			  router.push({path:'/role'});
 		  }
@@ -323,31 +401,31 @@ const group={
 		  template:'#group',
 		  data:function(){
 			  return{
+				  
+				  groups:"",
+				  group:"",
 				  groupId:"",
 				  groupText:"",
 				  sele:"",
 				  groupOptions: [ ],
-				  checked:false, 
+				  checked1:false, 
+				  checked2:false,
+				  modalTitle:"",
 			  }
 		  },
 		  created:function(){
-			  store.commit('groups');
-			  
+			  this.getGroups();
 		  },
-		  computed:{
-			  groups:function(){
-				  return this.$store.state.groups;
-			  },
 
-		  },
 		methods:{
 
 			addNew:function(){
-		    	this.groupOptions = this.$store.state.groups;
+		    	this.getGroupsOptions();
 				this.groupText="";
-				this.checked=false;
+				this.checked1=false;
+				this.checked2=false;
 				this.sele="";
-
+				this.modalTitle="ADD NEW GROUP";
 				$("#myModal").modal('show');
 				},
 			
@@ -355,141 +433,160 @@ const group={
 			addNewSubmit:function(){
 				if(this.groupId.length==0){
 					if(this.groupText.length==0){
-					alert('Please enter group name');
+					myAlert('Please enter group name');
 					}else{
-						var url=ctx+"/e/CsmUserGroup/post";
+						var url1=ctx+"/admin/userGroup/post";
 						var savedata = {
 							name:this.groupText,
-							admin:this.checked,
+							admin:this.checked1,
+							chat:this.checked2,
 							superId:this.sele,
 							};
 
-						ajaxcreate(savedata, url);
+						ajaxcreate(savedata, url1);
 						this.groupText="";
-						this.checked=false;
+						this.checked1=false;
+						this.checked2=false;
 						this.sele="";
 						this.groupOptions= [];
 						$("#myModal").modal('hide')
-						store.commit('groups');
+						
 					}
 				}
 				if(this.groupId.length>0){
-					 var url = ctx + "/e/CsmUserGroup/put/" + this.groupId;
+					 var url1 = ctx + "/admin/userGroup/put" ;
 					 var putdata = {
+							 	id:this.groupId,
 								name:this.groupText,
-								admin:this.checked,
+								admin:this.checked1,
+								chat:this.checked2,
 								superId:this.sele,
 					 }
-					 ajaxPut(putdata, url);
+					 ajaxPut(putdata, url1);
 					$("#myModal").modal('hide')
 						this.groupText="";
-						this.checked=false;
+						this.checked1=false;
+						this.checked2=false;
 						this.sele="";
 						this.groupOptions= [];
-					store.commit('groups');
 				}
+				this.getGroups();
 			},
 
-			del:function(id,name){
-				if(name.trim()=="System"){
-					alert("you can't delete it")
-				}else{
-					let url = ctx+ "/e/CsmUser/find";
-					let checkKey = {
-			    		ff_userGroupId:id,
-					};
-					let result = ajaxFind(checkKey, url);
-					 url = ctx+ "/e/CsmUserGroup/find";
-					 checkKey = {
-			    		ff_superId:id,
-					};
-					let result1 = ajaxFind(checkKey, url);
-					if (result.data.totalElements!=0 || result1.data.totalElements!=0){
-						alert("some user use this group,you can't delete it");
-					}else{
+			del:function(id){
+
 						var conf=confirm("are you sure?");
 						if (conf){
-							url=ctx+ "/e/CsmUserGroup/delete/" + id;
+							url1=ctx+ "/admin/userGroup/delete/" + id;
 							$.ajax({
 								type : "GET",
-								url : url,
+								url : url1,
 								async : false,
 								success : function(result) {
-									alert("DELETE OK ");
+									if (result.code===0){
+										myAlert("DELETE OK ");	
+									}
+									if (result.code===1 || result.code===2){
+										myAlert(result.message+" ,you can't delete it ");	
+									}
 								},
 								timeout : 3000,
 								error :handleError
 							});
-							store.commit('groups');
+							this.getGroups();
 						}
-					}
-				}
 			},
-			mod:function(id,name,admin,superId){
-		    	this.groupOptions = this.$store.state.groups;
-				this.groupText=name;
-				this.checked=admin;
-				this.sele=superId;
+			mod:function(id){
+		    	this.getGroup(id);
+				this.groupText=this.group.name;
+				this.checked1=this.group.admin;
+				this.checked2=this.group.chat;
+				this.sele=this.group.superId;
 				this.groupId=id;
+				this.modalTitle="MODIFY GROUP";
 				$("#myModal").modal('show');
-				
-				
-
-					
 			},
-			}
+			getGroups:function(){
+				let url1 = ctx+ "/admin/userGroup/listForm";
+		    	let checkKey = { 	};
+		    	let result = ajaxFind(checkKey, url1);
+		    	if (result.data.userGroupList!=undefined){
+		    		this.groups = result.data.userGroupList;    		
+		    	}
+			},
+			getGroup:function(id){
+				let url1 = ctx+ "/admin/userGroup/putForm/"+id;
+		    	let checkKey = {};
+		    	let result = ajaxFind(checkKey, url1);
+		    	if (result.data.userGroup!=undefined){
+		    		this.group = result.data.userGroup; 
+		    		this.groupOptions = result.data.superUserGroupList;
+		    	}
+			},
+			getGroupsOptions:function(){
+				let url1 = ctx+ "/admin/userGroup/postForm";
+		    	let checkKey = { 	};
+		    	let result = ajaxFind(checkKey, url1);
+		    	if (result.data.superUserGroupList!=undefined){
+		    		this.groupOptions = result.data.superUserGroupList;    		
+		    	}
+			},
+		}
 		};
 
 const group_role={
 		template:"#group_role",
+		data:function(){
+			return{
+				roles:[],
+				group_roles:[],
+			}
+		},
+ 		  created:function(){
+ 			 this.getRoles(this.$route.query.id);
+		  },
 
-		  created:function(){
-			  store.commit('role');
-			  store.commit('group_role',{id:this.$route.query.id})
-		  },
-		  
-		  computed:{
-			  roles:function(){
-				  return this.$store.state.roles;
-			  },
-			  group_roles:function(){
-				  return this.$store.state.group_roles;
-			  },
-		  },
 		  methods:{
 			  add:function(id){
 				  var each=true;
-				  $.each(this.$store.state.group_roles,function(i,n){
+				  $.each(this.group_roles,function(i,n){
 					 if (n.roleId==id){
-						 alert("you already have this role");
+						 myAlert("you already have this role");
 						 each=false;
 						 return false;
 					 }
 				  });
 				  if(each){
-						var url=ctx+"/e/CsmUserGroupRole/post";
+						var url1=ctx+"/admin/userGroup/postUserGroupRole";
 						var savedata = {
 								userGroupId:this.$route.query.id,
 								roleId:id,
 		    				};
-		    				ajaxcreate(savedata, url);
-		    				store.commit('group_role',{id:this.$route.query.id});
+		    				ajaxcreate(savedata, url1);
+		    				 this.getRoles(this.$route.query.id);
 				  };
 
 			  },
 			  remove:function(id){
-					url=ctx+ "/e/CsmUserGroupRole/delete/" + id;
+					url1=ctx+ "/admin/userGroup/deleteUserGroupRole/" + id;
 					$.ajax({
 						type : "GET",
-						url : url,
+						url : url1,
 						async : false,
 						success : function(result) {
-							alert("DELETE OK ");
+							myAlert("DELETE OK ");
 						},
 						timeout : 3000,
 						error :handleError
 					});
-					store.commit('group_role',{id:this.$route.query.id});
+   				 this.getRoles(this.$route.query.id);
+			  },
+			  getRoles:function(id){
+					let url = ctx+ "/admin/userGroup/listUserGroupRoleForm/"+id;
+			    	let checkKey = {};
+			    	let result = ajaxFind(checkKey, url);
+			    	this.group_roles = result.data.userGroupRoleList;    		
+			    	this.roles = result.data.roleList;
 			  },
 			  back:function(){
 				  router.push({path:'/group'});
@@ -501,45 +598,45 @@ const user={
 		  template:'#user',
 		  data:function(){
 			  return{
+				  users:[],
+				  user:[],
 				  showKey:false,
 				  username:"",
 				  userId:"",
 				  sele:"",
 				  groupOptions: [ ],
 				  checked:false, 
-				  
+				  modalTitle:"",
+				  pageSize: 10,
+				  curPage: 1,
+				  total:0,
+				  totalPage:0,
+				  pageShowKey:false,
+  
 			  }
 		  },
 		  created:function(){
-			  store.commit('users');
-			  
+			 this.getUsers();
 		  },
-		  computed:{
-			  users:function(){
-				  return this.$store.state.users;
-			  },
 
-		  },
 		methods:{
-
 			addNew:function(){
-				store.commit('groups');
-		    	this.groupOptions = this.$store.state.groups;
+				this.getGroups();
 				this.showKey=false;
 				this.username="";
 				this.checked=false;
 				this.sele="";
 				this.userId="";
+				this.modalTitle="ADD NEW USER";
 				$("#myModal1").modal('show');
 				},
-			
 
 			addNewSubmit:function(){
 				if(this.userId.length==0){
 					if(this.username.length==0||this.sele.length==0){
-					alert('Please enter name and select group');
+					myAlert('Please enter name and select group');
 					}else{
-						var url=ctx+"/e/CsmUser/post";
+						var url1=ctx+"/admin/user/post";
 						var savedata = {
 							username:this.username,
 							active:true,
@@ -547,59 +644,104 @@ const user={
 							plainPassword:plainPassword,
 							};
 
-						ajaxcreate(savedata, url);
+						ajaxcreate(savedata, url1);
 						this.username="";
 						this.sele="";
 						this.groupOptions= [];
-						$("#myModal1").modal('hide')
-						store.commit('users');
+						$("#myModal1").modal('hide');
+						 this.getUsers();
 					}
 				}
 				if(this.userId.length>0){
-					 var url = ctx + "/e/CsmUser/put/" + this.userId;
+					 var url1 = ctx + "/admin/user/put" ;
 					 var putdata = {
 								active:this.checked,
 								userGroupId:this.sele,
+								id:this.userId
 					 }
-					 ajaxPut(putdata, url);
+					 ajaxPut(putdata, url1);
 					$("#myModal").modal('hide')
 						this.username="";
 						this.checked=false;
 						this.sele="";
 						this.groupOptions= [];
 						$("#myModal1").modal('hide')
-					store.commit('users');
+						this.getUsers();
 				}
 			},
 
 			del:function(id){
 						var conf=confirm("are you sure?");
 						if (conf){
-							url=ctx+ "/e/CsmUser/delete/" + id;
+							url1=ctx+ "/admin/user/delete/" + id;
 							$.ajax({
 								type : "GET",
-								url : url,
+								url : url1,
 								async : false,
 								success : function(result) {
-									alert("DELETE OK ");
+									myAlert("DELETE OK ");
 								},
 								timeout : 3000,
 								error :handleError
 							});
-							store.commit('users');
+							this.getUsers();
 					}
 
 			},
-			mod:function(id,name,active,groupId){
-				store.commit('groups');
-		    	this.groupOptions = this.$store.state.groups;
-				this.username=name;
-				this.checked=active;
-				this.sele=groupId;
+			mod:function(id){
+				this.getUser(id)
+				this.username=this.user.username;
+				this.checked=this.user.active;
+				this.sele=this.user.userGroupId;
 				this.userId=id;
 				this.showKey=true;
+				this.modalTitle="MODIFY USER";
 				$("#myModal1").modal('show');
 			},
+			getUsers:function(){
+				let url1 = ctx+ "/admin/user/listForm";
+		    	let checkKey = {
+		    			page_no:this.curPage,
+		    			page_size:this.pageSize
+		    			
+		    	};
+		    	let result = ajaxFind(checkKey, url1);
+		    	if (result.data.userList.content!=undefined){
+			    	this.users = result.data.userList.content;
+			    	this.totalPage=result.data.userList.totalPages;
+			    	if (this.totalPage>0){
+			    		this.pageShowKey=true;
+			    	}
+		    	}
+			},
+			
+			getUser:function(id){
+				let url1 = ctx+ "/admin/user/putForm/"+id;
+		    	let checkKey = {};
+		    	let result = ajaxFind(checkKey, url1);
+			    	this.user = result.data.user;
+			    	this.groupOptions = result.data.userGroupList;
+			},
+			getGroups:function(){
+				let url1 = ctx+ "/admin/user/postForm";
+		    	let checkKey = { 	};
+		    	let result = ajaxFind(checkKey, url1);
+		    	if (result.data.userGroupList!=undefined){
+		    		this.groupOptions = result.data.userGroupList;    		
+		    	}
+			},
+         	changePage:function(page){
+      			if (this.curPage != page) {
+        				if (page > this.totalPage) {
+        					this.curPage = this.totalPage;
+        				} else if (page <= 0) {
+        					this.curPage = 1;
+        				} else {
+        					this.curPage = page;
+        				}
+        				this.getUsers();
+        			}
+             	},
 			}
 		};
 
@@ -623,10 +765,17 @@ const faq = {
 
 const showFaqList = {
 		template : '#FaqDetail',
+		data:function(){
+			return{
+				cssId:"",
+			}
+		},
 		watch:{
 			'$route':function(to,from){
 				var id=this.$route.query.id;
+				$("#"+this.cssId).css("color","#337ab7");
 		    	$("#"+id).css("color","red");
+		    	this.cssId=id;
 				this.$store.state.curPage=1;
 		    	store.commit('getFaq',{id : id});
 			}
@@ -639,6 +788,7 @@ const showFaqList = {
 	    created:function(){
 	    	var id=this.$route.query.id;
 	    	$("#"+id).css("color","red");
+	    	this.cssId=id;
             store.commit('getFaq',{id : id});
 	    },
 
@@ -663,7 +813,7 @@ const faqAddNew = {
 	    		let id=this.$route.query.id;
 	    		let url1 = url + "CsmFaq" + "/post";
 	    		if ($.trim(this.question).length == 0) {
-	    			alert("Please input question");
+	    			myAlert("Please input question");
 	    		} else {
 	    			var fileData = $("input[name='uploadFile']").get(0);
 	    			if (fileData.files.length == 0) {
@@ -773,7 +923,7 @@ const faqModify = {
 	    		let id1=this.$route.query.id;
 	    		let attachs="";
 	    		if (this.question.trim().length == 0) {
-	    			alert("Please input question");
+	    			myAlert("Please input question");
 	    		} else {
 	    			var fileData = $("input[name='uploadFile']").get(0);
 	    			
@@ -823,11 +973,11 @@ const faqModify = {
 	    			url : url1,
 	    			async : false,
 	    			success : function(result) {
-	    				alert("DELETE OK ");
+	    				myAlert("DELETE OK ");
 	    			},
 	    			timeout : 3000,
 	    			error : function(xhr) {
-	    				alert("error： " + xhr.status + " " + xhr.statusText);
+	    				myAlert("error： " + xhr.status + " " + xhr.statusText);
 	    			},
 	    		});
 
@@ -868,7 +1018,7 @@ const category = {
 				if(this.id.length==0){
 					var url1 = url + "CsmFaqCategory" + "/post";
 					if ($.trim(this.name).length == 0) {
-						alert("Please input name");
+						myAlert("Please input name");
 					} else {
 						var modify_date1 = getNowFormatDate();
 						var savedata = {
@@ -885,7 +1035,7 @@ const category = {
 				};
 				if(this.id.length>0){
 					if ($.trim(this.name).length == 0) {
-						alert("Please input name");
+						myAlert("Please input name");
 					} else {
 						var url1 = url + "CsmFaqCategory" + "/put/" + this.id;
 						var putdata = {
@@ -918,16 +1068,16 @@ const category = {
 								url : url1,
 								async : false,
 								success : function(result) {
-									alert("DELETE OK ");
+									myAlert("DELETE OK ");
 								},
 								timeout : 3000,
 								error : function(xhr) {
-									alert("error： " + xhr.status + " " + xhr.statusText);
+									myAlert("error： " + xhr.status + " " + xhr.statusText);
 								},
 							});
 							store.commit('getCategory');
 						} else {
-							alert("you can't delete this category");
+							myAlert("you can't delete this category");
 						}
 					}
 				},
@@ -972,8 +1122,7 @@ const pageChange = {
     	    	}else{
     	    		return true
     	    	}
-    	    	
-    	    },
+     	    },
         },
         methods:{
          	changePage:function(page){
@@ -993,6 +1142,52 @@ const pageChange = {
         }
 		
 };
+
+const profile={
+		template:"#profile",
+		data:function(){
+			return{
+			name:"",
+			password1:"",
+			password2:"",
+			}
+		},
+		computed:{
+			name:function(){
+				return username;
+			}
+		},
+		mounted:function(){
+
+ 			$("#profileModal").modal('show');
+
+		},
+		methods:{
+			addNewSubmit:function(){
+				if(this.password1===this.password2 && this.password1.trim().length>0 ){
+					 var url1 = ctx + "/profile/put" ;
+					 var putdata = {
+							 plainPassword:this.password1,
+					 }
+					 ajaxPut(putdata, url1);
+
+					$("#profileModal").modal('hide')
+						this.password1="";
+						this.password2="";
+				}else{
+					if(this.password1.trim().length==0 && this.password2.trim().length==0){
+						myAlert("NO password ")
+					}else{
+						myAlert("The two password is different,please try again")
+					}
+				
+					this.password1="";
+					this.password2="";
+				}
+			},
+		},
+}
+
 
 const
 router = new VueRouter({
@@ -1035,6 +1230,13 @@ router = new VueRouter({
 	},
 	 { path: '/user', 
 	      components:{mainRouter : user,},
+	      children : [{
+				path : '',
+				components : {
+				default : faq,
+				},
+			} 
+	                  ]
 	},
 	
 	 { path: '/faq', 
@@ -1070,6 +1272,10 @@ router = new VueRouter({
 	 { path: '/category', 
 	      components:{mainRouter : category,},
 	},
+	 { path: '/profile', 
+	      components:{mainRouter:profile, },
+	},
+	
 	],
 });
 
@@ -1080,6 +1286,21 @@ new Vue({
 	router : router,
 	el : '#wrapper',
 });
+
+var vm=new Vue({
+	el : '#myAlertModal',
+	data :{
+		message:"",
+		modalTitle:"",
+	},
+	methods:{
+		showMsg:function(){
+			this.modalTitle=username;
+			$("#myAlertModal").modal("show");
+		},
+	},
+
+})
 
 
 
@@ -1093,22 +1314,54 @@ function connect1() {
 	stompClient.connect(headers, function(frame) {
 		subscribeList = [];
 		stompClient.subscribe('/app/chatAInit', function(message) {
-			showCustomerSet(JSON.parse(message.body));
+			showCustomerSet(JSON.parse(message.body).data.customerList);
+			store.state.currentUserGroup=JSON.parse(message.body).data.currentUserGroup;
+			$.each(JSON.parse(message.body).data.customerUserGroupList,function(i,n){
+				store.state.customerUserGroupList.push(n.customerUserId);
+			});
+			if(!store.state.currentUserGroup.userGroup.chat){
+				stompClient.subscribe('/topic/chat/addCustomerUserGroup',
+						function(message) {
+							var data=JSON.parse(message.body);
+							store.commit('getService',{id:data.data.customerId});
+							if (data.data.userGroupId==store.state.currentUserGroup.userGroup.id){
+								store.state.customerUserGroupList.push(data.data.customerId);
+								showUnhandledCustomer(data.data.customerId);
+								if(store.state.customerId==data.data.customerId){
+									showMsg(data.data.customerId);
+								}
+							}
+
+							});
+				stompClient.subscribe('/topic/chat/removeCustomerUserGroup',
+						function(message) {
+					var data=JSON.parse(message.body);
+					store.commit('getService',{id:data.data.customerId});
+					if (data.data.userGroupId==store.state.currentUserGroup.userGroup.id){
+							var indexNo=store.state.customerUserGroupList.indexOf(data.data.customerId);
+							store.state.customerUserGroupList.splice(indexNo,1);
+							removeUnhandledCustomer(data.data.customerId);
+							
+					}
+						});	
+			}
+			
 		});
 		stompClient.subscribe('/topic/chat/login', function(message) {
-			showOnlineCustomer(JSON.parse(message.body));
+			showOnlineCustomer(JSON.parse(message.body).data);
 		});
 		stompClient.subscribe('/topic/chat/logout', function(message) {
-			removeOnlineCustomer(JSON.parse(message.body));
+			removeOnlineCustomer(JSON.parse(message.body).data);
 		});
 		stompClient.subscribe('/topic/chat/addUnhandledCustomer',
 				function(message) {
-					showUnhandledCustomer(JSON.parse(message.body));
+					showUnhandledCustomer(JSON.parse(message.body).data.userId);
 				});
 		stompClient.subscribe('/topic/chat/removeUnhandledCustomer',
 				function(message) {
-					removeUnhandledCustomer(JSON.parse(message.body));
+					removeUnhandledCustomer(JSON.parse(message.body).data.userId);
 				});	
+
 	});
 }
 function showCustomerSet(customerSet) {
@@ -1119,13 +1372,13 @@ function showCustomerSet(customerSet) {
 }
 
 function showCustomer(customer) {
-	var customerName = customer.userId;
+	var customerId = customer.userId;
 	store.state.customers.push(customer);
 	if (customer.online) {
 		setTimeout(function(){showOnlineCustomer(customer);}, 200);
 	}
 	if (customer.unhandled) {
-		setTimeout(function(){showUnhandledCustomer(customer);}, 200);
+		setTimeout(function(){showUnhandledCustomer(customerId);}, 200);
 	}
 }
 
@@ -1141,8 +1394,19 @@ function removeOnlineCustomer(customer) {
 
 var intervalMap = new Map();
 
-function showUnhandledCustomer(customer) {
-	var userId = customer.userId;
+function showUnhandledCustomer(customerId) {
+	var userId = customerId;
+	var canSendMsg=false;
+	if(store.state.currentUserGroup.userGroup.chat){
+		canSendMsg=true;
+	}else{
+		if(store.state.customerUserGroupList.indexOf(userId)!=-1){
+			canSendMsg=true;
+		}
+	}
+	if(!canSendMsg){
+		return;
+	}
 	if (!intervalMap.has(userId)) {
 		var interval = setInterval(function() {
 			$("#" + userId).fadeOut(100).fadeIn(100);
@@ -1151,8 +1415,8 @@ function showUnhandledCustomer(customer) {
 	}
 }
 
-function removeUnhandledCustomer(customer) {
-	var roomId = customer.userId;
+function removeUnhandledCustomer(customerId) {
+	var roomId = customerId;
 	if(intervalMap.has(roomId)){
 		clearInterval(intervalMap.get(roomId));
 		intervalMap.delete(roomId);
@@ -1161,22 +1425,32 @@ function removeUnhandledCustomer(customer) {
 
 function showMsg(customerId){
 	$("#sentence").empty();
-
-	for (var i = 0; i < subscribeList.length; i++) {
-		subscribeList[i].unsubscribe();
+	var canSendMsg=false;
+	if(store.state.currentUserGroup.chatOrSuper){
+		canSendMsg=true;
+	}else{
+		if(store.state.customerUserGroupList.indexOf(customerId)!=-1){
+			canSendMsg=true;
+		}
 	}
-	subscribeList = [];
-	var subApp = stompClient.subscribe('/app/chatAInitMessage/'
-			+ customerId, function(message) {
-		showMessages(JSON.parse(message.body));
-	});
-	var subTopic = stompClient.subscribe('/topic/chat/message/'
-			+ customerId, function(message) {
-		showMessage(JSON.parse(message.body));
-		document.getElementById ( 'sentence').scrollTop=document.getElementById ( 'sentence').scrollHeight ;
-	});
-	subscribeList.push(subApp);
-	subscribeList.push(subTopic);
+	if (canSendMsg)	{
+		for (var i = 0; i < subscribeList.length; i++) {
+			subscribeList[i].unsubscribe();
+		}
+		subscribeList = [];
+		var subApp = stompClient.subscribe('/app/chatAInitMessage/'
+				+ customerId, function(message) {
+			showMessages(JSON.parse(message.body).data.messageList);
+	
+		});
+		var subTopic = stompClient.subscribe('/topic/chat/message/'
+				+ customerId, function(message) {
+			showMessage(JSON.parse(message.body));
+			document.getElementById ( 'sentence').scrollTop=document.getElementById ( 'sentence').scrollHeight ;
+		});
+		subscribeList.push(subApp);
+		subscribeList.push(subTopic);
+	}
 }
 
 function showMessages(messageList) {
@@ -1187,14 +1461,26 @@ function showMessages(messageList) {
 }
 
 function showMessage(message) {
+	var canSendMsg=false;
+	if(store.state.currentUserGroup.chatOrSuper){
+		canSendMsg=true;
+	}else{
+		if(store.state.customerUserGroupList.indexOf(store.state.customerId)!=-1){
+			canSendMsg=true;
+		}
+	}
+	if(!canSendMsg){
+		return;
+	}
+	
 	var timeStr="";
 	var num=message.createDateTime.indexOf("T");
 	timeStr=message.createDateTime.substring(0,num)+" "+message.createDateTime.substring(num+1,19);
 	if (message.fromAdmin){
-	$("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:600px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >"+message.senderName+"</div><div class='panel-body'>"+message.message+" </div><div class='panel-footer' style='padding: 2px 0px 2px 250px' >"+timeStr+"</div></div>"
+	$("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:600px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+message.message+" </div></div>"
 );
 	}else{
-		$("#sentence").append("<div class='panel panel-info' style='clear:both;float:left;width:600px'><div class='panel-heading' style='padding: 2px 0px ' >"+message.senderName+"</div><div class='panel-body'>"+message.message+" </div><div class='panel-footer' style='padding:2px 0px' >"+timeStr+"</div></div>"
+		$("#sentence").append("<div class='panel panel-info' style='clear:both;float:left;width:600px'><div class='panel-heading' style='padding: 2px 0px ' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+message.message+" </div></div>"
 		);
 	}
 
@@ -1207,7 +1493,7 @@ function ajaxcreate(savedata, url1) {
 		data : savedata,
 		async : false,
 		success : function(result) {
-			alert("ADD NEW SUCCESS");
+			myAlert("ADD NEW SUCCESS");
 		},
 		timeout : 3000,
 		error :handleError
@@ -1223,9 +1509,6 @@ function ajaxFind(checkKey, url1) {
 		data : checkKey,
 		async : false,
 		success : function(result) {
-			if (result.data.content == undefined) {
-				// alert("No Result");
-			} 
 				checkList = result;
 		},
 		timeout : 3000,
@@ -1234,6 +1517,8 @@ function ajaxFind(checkKey, url1) {
 	return (checkList);
 }
 
+
+
 function ajaxPut(putdata, url1) {
 	$.ajax({
 		type : "POST",
@@ -1241,7 +1526,7 @@ function ajaxPut(putdata, url1) {
 		data : putdata,
 		async : false,
 		success : function(result) {
-			alert("PUT OK ");
+			myAlert("PUT OK ");
 		},
 		timeout : 3000,
 		error : handleError,
@@ -1257,7 +1542,7 @@ function ajaxGet(url1) {
 		async : false,
 		success : function(result) {
 			if (result.data == undefined) {
-				alert("No Result");
+				myAlert("No Result");
 			} else {
 				checkList = result.data;
 			}
@@ -1270,9 +1555,9 @@ function ajaxGet(url1) {
 
 function handleError(xhr){
 	if(xhr.status == 499){
-		window.location.replace("/csm" + xhr.statusText);
+		window.location.replace("${ctx}" + xhr.statusText);
 	}else{
-		alert(" error： " + xhr.status + " " + xhr.statusText);
+		myAlert("error： " + xhr.status + " " + xhr.statusText);
 	}
 }
 
@@ -1313,7 +1598,7 @@ function ajaxcreateUpload(savedata, url1) {
 		contentType : false,
 		processData : false,
 		success : function(result) {
-			alert("ADD NEW SUCCESS");
+			myAlert("ADD NEW SUCCESS");
 		},
 		timeout : 3000,
 		error : function(xhr) {
@@ -1333,12 +1618,17 @@ function ajaxPutUpload(putdata, url1) {
 		contentType : false,
 		processData : false,
 		success : function(result) {
-			alert("PUT OK ");
+			myAlert("PUT OK ");
 		},
 		timeout : 3000,
 		error : function(xhr) {
-			alert("error： " + xhr.status + " " + xhr.statusText);
+			myalert("error： " + xhr.status + " " + xhr.statusText);
 		},
-
 	});
 }
+
+function myAlert(msg){
+	vm.message=msg;
+	vm.showMsg();
+}
+
