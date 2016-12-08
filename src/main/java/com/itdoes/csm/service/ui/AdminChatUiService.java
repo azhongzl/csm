@@ -210,7 +210,7 @@ public class AdminChatUiService extends BaseService {
 
 		final List<CsmUserGroup> userGroupList = Lists.newArrayList();
 		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
-			if (!ROOT.isRootById(userGroup.getId()) && !userGroup.getChat()) {
+			if (!ROOT.isRootById(userGroup.getId()) && !userGroup.getChat() && userGroup.getAdmin()) {
 				userGroupList.add(userGroup);
 			}
 		}
