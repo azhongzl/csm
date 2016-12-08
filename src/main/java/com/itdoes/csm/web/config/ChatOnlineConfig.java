@@ -38,8 +38,7 @@ public class ChatOnlineConfig {
 		if (!SpringMessagings.getNativeHeaders(message).containsKey(KEY_ADMIN)) {
 			final StompHeaderAccessor sha = StompHeaderAccessor.wrap(message);
 			final String userId = sha.getUser().getName();
-			final ChatEvent loginEvent = new ChatEvent(ChatOnlineConfig.class.getSimpleName()).addData("userId",
-					userId);
+			final ChatEvent loginEvent = new ChatEvent(ChatOnlineConfig.class.getSimpleName()).addUserId(userId);
 			template.convertAndSend(TOPIC_LOGIN, loginEvent);
 			onlineService.addOnlineSession(sha.getSessionId(), loginEvent);
 		}
@@ -48,8 +47,8 @@ public class ChatOnlineConfig {
 	@EventListener
 	private void handleSessionDisconnect(SessionDisconnectEvent event) {
 		Optional.ofNullable(onlineService.getOnlineSession(event.getSessionId())).ifPresent(login -> {
-			template.convertAndSend(TOPIC_LOGOUT, new ChatEvent(ChatOnlineConfig.class.getSimpleName())
-					.addData("userId", login.getData().get("userId")));
+			template.convertAndSend(TOPIC_LOGOUT,
+					new ChatEvent(ChatOnlineConfig.class.getSimpleName()).addUserId(login.getUserId()));
 			onlineService.removeOnlineSession(event.getSessionId());
 		});
 	}
