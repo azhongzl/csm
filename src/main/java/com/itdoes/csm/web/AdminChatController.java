@@ -64,7 +64,7 @@ public class AdminChatController extends BaseController {
 
 	@RequestMapping(value = "listCustomerUserGroups/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public Result listCustomerUserGroups(String id, Principal principal) {
+	public Result listCustomerUserGroups(@PathVariable("id") String id, Principal principal) {
 		return chatService.listCustomerUserGroups(id, principal);
 	}
 
