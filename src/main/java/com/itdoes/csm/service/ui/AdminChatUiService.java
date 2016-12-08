@@ -1,6 +1,5 @@
 package com.itdoes.csm.service.ui;
 
-import java.io.Serializable;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -74,6 +73,26 @@ public class AdminChatUiService extends BaseService {
 		}
 	}
 
+	private static class UserGroupDto {
+		private final CsmUserGroup userGroup;
+		private final boolean chatOrSuper;
+
+		public UserGroupDto(CsmUserGroup userGroup, boolean chatOrSuper) {
+			this.userGroup = userGroup;
+			this.chatOrSuper = chatOrSuper;
+		}
+
+		@SuppressWarnings("unused")
+		public CsmUserGroup getUserGroup() {
+			return userGroup;
+		}
+
+		@SuppressWarnings("unused")
+		public boolean isChatOrSuper() {
+			return chatOrSuper;
+		}
+	}
+
 	private static final Root ROOT = Root.getInstance();
 
 	private static final int MESSAGE_PAGE_SIZE = 10;
@@ -138,11 +157,6 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	public Result listCustomerUserGroups(String customerId, Principal principal) {
-		final ShiroUser shiroUser = getShiroUser(principal);
-		if (!canAssignCustomerUserGroup(shiroUser.getId())) {
-			return Result.fail(1, "You have no right to assign UserGroup");
-		}
-
 		final List<CsmChatCustomerUserGroup> customerUserGroupList = getCustomerUserGroupListByCustomer(customerId);
 		final List<CustomerUserGroupDto> customerUserGroupDtoList = Lists
 				.newArrayListWithCapacity(customerUserGroupList.size());
@@ -168,32 +182,23 @@ public class AdminChatUiService extends BaseService {
 
 	public Result postCustomerUserGroup(CsmChatCustomerUserGroup customerUserGroup, Principal principal,
 			SimpMessagingTemplate template) {
-		final ShiroUser shiroUser = getShiroUser(principal);
-		if (!canAssignCustomerUserGroup(shiroUser.getId())) {
-			return Result.fail(1, "You have no right to assign UserGroup");
-		}
-
 		final String customerId = customerUserGroup.getCustomerUserId().toString();
 		final String userGroupId = customerUserGroup.getUserGroupId().toString();
 		if (isCustomerUserGroupExist(customerId, userGroupId)) {
 			return Result.fail(1, "CustomerUserGroup exists");
 		}
 
+		final ShiroUser shiroUser = getShiroUser(principal);
 		customerUserGroup.setOperatorUserId(UUID.fromString(shiroUser.getId()));
-		final Serializable id = customerUserGroupPair.db().post(customerUserGroupPair, customerUserGroup);
+		customerUserGroup = customerUserGroupPair.db().post(customerUserGroupPair, customerUserGroup);
 
 		final ChatEvent messageEvent = new ChatEvent(customerId);
 		template.convertAndSend("/topic/chat/addCustomerUserGroup/" + userGroupId, messageEvent);
 
-		return Result.success().addData("id", id);
+		return Result.success().addData("id", customerUserGroup.getId());
 	}
 
 	public Result deleteCustomerUserGroup(String id, Principal principal, SimpMessagingTemplate template) {
-		final ShiroUser shiroUser = getShiroUser(principal);
-		if (!canAssignCustomerUserGroup(shiroUser.getId())) {
-			return Result.fail(1, "You have no right to assign UserGroup");
-		}
-
 		final CsmChatCustomerUserGroup customerUserGroup = customerUserGroupPair.db().get(customerUserGroupPair,
 				UUID.fromString(id));
 		customerUserGroupPair.db().delete(customerUserGroupPair, UUID.fromString(id));
@@ -207,6 +212,7 @@ public class AdminChatUiService extends BaseService {
 	public Result init(Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
 		final CsmUserGroup curAdminUserGroup = userCacheService.getUserGroupByUser(shiroUser.getId());
+		final UserGroupDto curAdminUserGroupDto = new UserGroupDto(curAdminUserGroup, isChatOrSuper(curAdminUserGroup));
 		List<CsmChatCustomerUserGroup> customerUserGroupList = Collections.emptyList();
 		if (!curAdminUserGroup.getChat()) {
 			customerUserGroupList = getCustomerUserGroupListByUserGroup(curAdminUserGroup.getId().toString());
@@ -226,20 +232,17 @@ public class AdminChatUiService extends BaseService {
 			}
 		}
 		Collections.sort(customerList, ChatUserComparator.INSTANCE);
-		return Result.success().addData("currentUserGroup", curAdminUserGroup)
+		return Result.success().addData("currentUserGroup", curAdminUserGroupDto)
 				.addData("customerUserGroupList", customerUserGroupList).addData("customerList", customerList);
 	}
 
 	public Result initMessage(String roomId, Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
-		final boolean canSendMessage = canSendMessage(shiroUser.getId(), roomId);
 
-		final Result result = Result.success().addData("canSendMessage", canSendMessage)
-				.addData("canAssignCustomerUserGroup", canAssignCustomerUserGroup(shiroUser.getId()));
-		if (canSendMessage) {
+		final Result result = Result.success();
+		if (canSendMessage(shiroUser.getId(), roomId)) {
 			result.addData("messageList", getLatestMessageList(roomId, principal));
 		}
-
 		return result;
 	}
 
@@ -338,8 +341,20 @@ public class AdminChatUiService extends BaseService {
 						null);
 	}
 
-	private boolean canAssignCustomerUserGroup(String adminId) {
+	private boolean canSendMessage(String adminId, String customerId) {
 		final CsmUserGroup userGroup = userCacheService.getUserGroupByUser(adminId);
+		if (userGroup == null) {
+			return false;
+		}
+
+		if (isChatOrSuper(userGroup)) {
+			return true;
+		}
+
+		return isCustomerUserGroupExist(customerId, userGroup.getId().toString());
+	}
+
+	private boolean isChatOrSuper(CsmUserGroup userGroup) {
 		if (userGroup == null) {
 			return false;
 		}
@@ -358,30 +373,6 @@ public class AdminChatUiService extends BaseService {
 		}
 
 		return false;
-	}
-
-	private boolean canSendMessage(String adminId, String customerId) {
-		final CsmUserGroup userGroup = userCacheService.getUserGroupByUser(adminId);
-		if (userGroup == null) {
-			return false;
-		}
-
-		if (userGroup.getChat()) {
-			return true;
-		}
-
-		final String userGroupIdString = userGroup.getId().toString();
-
-		final Set<CsmUserGroup> subUserGroupList = userCacheService.getSubUserGroupSet(userGroupIdString);
-		if (!Collections3.isEmpty(subUserGroupList)) {
-			for (CsmUserGroup subUserGroup : subUserGroupList) {
-				if (subUserGroup.getChat()) {
-					return true;
-				}
-			}
-		}
-
-		return isCustomerUserGroupExist(customerId, userGroupIdString);
 	}
 
 	private ShiroUser getShiroUser(Principal principal) {
