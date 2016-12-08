@@ -180,7 +180,7 @@ public class AdminUserGroupUiService extends BaseService {
 		}
 		Collections.sort(userGroupRoleDtoList, UserGroupRoleDtoComparator.INSTANCE);
 
-		return Result.success().addData("roleList", roleList).addData("userGroupRoleDtoList", userGroupRoleDtoList);
+		return Result.success().addData("roleList", roleList).addData("userGroupRoleList", userGroupRoleDtoList);
 	}
 
 	public Result postUserGroupRole(CsmUserGroupRole userGroupRole) {

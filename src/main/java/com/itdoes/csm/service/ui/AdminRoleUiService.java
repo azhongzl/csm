@@ -167,7 +167,7 @@ public class AdminRoleUiService extends BaseService {
 		}
 		Collections.sort(rolePermissionDtoList, RolePermissionDtoComparator.INSTANCE);
 
-		return Result.success().addData("roleList", permissionList).addData("rolePermissionDtoList",
+		return Result.success().addData("roleList", permissionList).addData("rolePermissionList",
 				rolePermissionDtoList);
 	}
 
