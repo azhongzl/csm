@@ -9,21 +9,23 @@ import com.google.common.collect.Maps;
  * @author Jalen Zhong
  */
 public class ChatEvent {
-	private final String userId;
+	private static final String USER_ID_KEY = "userId";
+
+	private final String operatorId;
 	private final LocalDateTime dateTime;
 	private final Map<Object, Object> data = Maps.newHashMap();
 
-	public ChatEvent(String userId) {
-		this(userId, LocalDateTime.now());
+	public ChatEvent(String operatorId) {
+		this(operatorId, LocalDateTime.now());
 	}
 
-	public ChatEvent(String userId, LocalDateTime dateTime) {
-		this.userId = userId;
+	public ChatEvent(String operatorId, LocalDateTime dateTime) {
+		this.operatorId = operatorId;
 		this.dateTime = dateTime;
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getOperatorId() {
+		return operatorId;
 	}
 
 	public LocalDateTime getDateTime() {
@@ -37,5 +39,13 @@ public class ChatEvent {
 	public ChatEvent addData(Object key, Object value) {
 		data.put(key, value);
 		return this;
+	}
+
+	public String getUserId() {
+		return (String) data.get(USER_ID_KEY);
+	}
+
+	public ChatEvent addUserId(String userId) {
+		return addData(USER_ID_KEY, userId);
 	}
 }

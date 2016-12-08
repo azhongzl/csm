@@ -43,7 +43,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 
 		for (CsmChatUnhandledCustomer unhandledCustomer : unhandledCustomerList) {
 			final ChatEvent event = new ChatEvent(ChatUnhandledCustomerService.class.getSimpleName(),
-					unhandledCustomer.getCreateDateTime()).addData("userId", unhandledCustomer.getUserId().toString());
+					unhandledCustomer.getCreateDateTime()).addUserId(unhandledCustomer.getUserId().toString());
 			addUnhandledCustomer(event);
 		}
 
@@ -60,7 +60,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 				.newArrayListWithCapacity(unhandledCustomerMap.size());
 		for (ChatEvent event : unhandledCustomerMap.values()) {
 			final CsmChatUnhandledCustomer unhandledCustomer = new CsmChatUnhandledCustomer();
-			unhandledCustomer.setUserId(UUID.fromString(event.getData().get("user_id").toString()));
+			unhandledCustomer.setUserId(UUID.fromString(event.getUserId()));
 			unhandledCustomer.setCreateDateTime(event.getDateTime());
 			unhandledCustomerList.add(unhandledCustomer);
 		}
@@ -77,7 +77,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 	}
 
 	public void addUnhandledCustomer(ChatEvent event) {
-		unhandledCustomerMap.put(event.getData().get("userId").toString(), event);
+		unhandledCustomerMap.put(event.getUserId(), event);
 	}
 
 	public void removeUnhandledCustomer(String userId) {

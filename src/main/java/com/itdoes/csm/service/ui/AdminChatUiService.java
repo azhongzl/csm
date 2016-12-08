@@ -268,7 +268,7 @@ public class AdminChatUiService extends BaseService {
 		messagePair.db().post(messagePair, message);
 		template.convertAndSend("/topic/chat/message/" + roomIdString, message);
 
-		final ChatEvent messageEvent = new ChatEvent(curUserIdString).addData("userId", roomIdString);
+		final ChatEvent messageEvent = new ChatEvent(curUserIdString).addUserId(roomIdString);
 		unhandledCustomerService.removeUnhandledCustomer(roomIdString);
 		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
 	}
