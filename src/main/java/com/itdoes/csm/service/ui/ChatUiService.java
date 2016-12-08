@@ -92,10 +92,10 @@ public class ChatUiService extends BaseService {
 		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
 	}
 
-	private List<CsmChatMessage> getLatestMessageList(String userId) {
+	private List<CsmChatMessage> getLatestMessageList(String roomId) {
 		final List<CsmChatMessage> dbMessageList = messagePair.external().find(messagePair,
 				Specifications.build(CsmChatMessage.class,
-						Lists.newArrayList(new FindFilter("roomId", Operator.EQ, userId))),
+						Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId))),
 				MESSAGE_PAGE_REQUEST).getContent();
 		if (Collections3.isEmpty(dbMessageList)) {
 			return Collections.emptyList();
@@ -107,7 +107,7 @@ public class ChatUiService extends BaseService {
 
 			final String senderId = message.getSenderId().toString();
 			final String senderName;
-			if (!userId.equals(senderId)) {
+			if (message.getFromAdmin()) {
 				senderName = CUSTOMER_SERVICE_NAME;
 			} else {
 				final CsmUser user = userCacheService.getUser(senderId);
