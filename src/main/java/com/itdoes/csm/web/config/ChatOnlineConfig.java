@@ -48,8 +48,8 @@ public class ChatOnlineConfig {
 	@EventListener
 	private void handleSessionDisconnect(SessionDisconnectEvent event) {
 		Optional.ofNullable(onlineService.getOnlineSession(event.getSessionId())).ifPresent(login -> {
-			template.convertAndSend(TOPIC_LOGOUT,
-					new ChatEvent(ChatOnlineConfig.class.getSimpleName()).addData("userId", login.getUserId()));
+			template.convertAndSend(TOPIC_LOGOUT, new ChatEvent(ChatOnlineConfig.class.getSimpleName())
+					.addData("userId", login.getData().get("userId")));
 			onlineService.removeOnlineSession(event.getSessionId());
 		});
 	}

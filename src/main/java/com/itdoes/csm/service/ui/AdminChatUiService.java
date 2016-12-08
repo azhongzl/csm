@@ -269,7 +269,7 @@ public class AdminChatUiService extends BaseService {
 		template.convertAndSend("/topic/chat/message/" + roomIdString, message);
 
 		final ChatEvent messageEvent = new ChatEvent(curUserIdString).addData("userId", roomIdString);
-		unhandledCustomerService.removeUnhandledCustomer(messageEvent.getUserId());
+		unhandledCustomerService.removeUnhandledCustomer(roomIdString);
 		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
 	}
 

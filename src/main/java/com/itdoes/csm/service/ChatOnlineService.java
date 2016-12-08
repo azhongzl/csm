@@ -20,12 +20,12 @@ public class ChatOnlineService extends BaseService {
 
 	public void addOnlineSession(String sessionId, ChatEvent event) {
 		onlineSessionMap.put(sessionId, event);
-		onlineUserIdSet.add(event.getUserId());
+		onlineUserIdSet.add(event.getData().get("userId").toString());
 	}
 
 	public void removeOnlineSession(String sessionId) {
 		final ChatEvent event = onlineSessionMap.remove(sessionId);
-		onlineUserIdSet.remove(event.getUserId());
+		onlineUserIdSet.remove(event.getData().get("userId").toString());
 	}
 
 	public ChatEvent getOnlineSession(String sessionId) {
