@@ -66,24 +66,24 @@ public class ChatUiService extends BaseService {
 		}
 
 		final CsmChatMessage message = new CsmChatMessage();
-		message.setSenderName(CUSTOMER_SERVICE_NAME);
-		message.setCreateDateTime(LocalDateTime.now());
 		message.setMessage("Welcome, " + shiroUser.getUsername() + "! Our agent will contact you soon. Please wait...");
+		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(true);
+		message.setSenderName(CUSTOMER_SERVICE_NAME);
 		messageList.add(message);
 
 		return Result.success().addData("messageList", messageList);
 	}
 
-	public void customerSendMessage(CsmChatMessage message, Principal principal, SimpMessagingTemplate template) {
+	public void sendMessage(CsmChatMessage message, Principal principal, SimpMessagingTemplate template) {
 		final ShiroUser shiroUser = getShiroUser(principal);
 		final String curUserIdString = shiroUser.getId();
 		final UUID curUserId = UUID.fromString(curUserIdString);
 		message.setRoomId(curUserId);
 		message.setSenderId(curUserId);
-		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(false);
+		message.setSenderName(shiroUser.getUsername());
 		messagePair.external().post(messagePair, message);
 		template.convertAndSend("/topic/chat/message/" + curUserIdString, message);
 

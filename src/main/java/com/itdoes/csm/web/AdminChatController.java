@@ -62,6 +62,12 @@ public class AdminChatController extends BaseController {
 		return chatService.hasUnhandledCustomers(principal);
 	}
 
+	@RequestMapping(value = "listCustomerUserGroups/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public Result listCustomerUserGroups(String id, Principal principal) {
+		return chatService.listCustomerUserGroups(id, principal);
+	}
+
 	@RequestMapping(value = "postCustomerUserGroup", method = RequestMethod.POST)
 	@ResponseBody
 	public Result postCustomerUserGroup(@Valid CsmChatCustomerUserGroup chatCustomerUserGroup, Principal principal) {

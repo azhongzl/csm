@@ -44,6 +44,34 @@ import com.itdoes.csm.service.UserCacheService;
  */
 @Service
 public class AdminChatUiService extends BaseService {
+	private static class CustomerUserGroupDtoComparator implements Comparator<CustomerUserGroupDto> {
+		private static final CustomerUserGroupDtoComparator INSTANCE = new CustomerUserGroupDtoComparator();
+
+		@Override
+		public int compare(CustomerUserGroupDto o1, CustomerUserGroupDto o2) {
+			return o1.getUserGroup().getName().toLowerCase().compareTo(o2.getUserGroup().getName().toLowerCase());
+		}
+	}
+
+	private static class CustomerUserGroupDto {
+		private final CsmChatCustomerUserGroup customerUserGroup;
+		private final CsmUserGroup userGroup;
+
+		private CustomerUserGroupDto(CsmChatCustomerUserGroup customerUserGroup, CsmUserGroup userGroup) {
+			this.customerUserGroup = customerUserGroup;
+			this.userGroup = userGroup;
+		}
+
+		@SuppressWarnings("unused")
+		public CsmChatCustomerUserGroup getCustomerUserGroup() {
+			return customerUserGroup;
+		}
+
+		public CsmUserGroup getUserGroup() {
+			return userGroup;
+		}
+	}
+
 	private static final Root ROOT = Root.getInstance();
 
 	private static final int MESSAGE_PAGE_SIZE = 10;
@@ -111,6 +139,20 @@ public class AdminChatUiService extends BaseService {
 		}
 	}
 
+	public Result listCustomerUserGroups(String customerId, Principal principal) {
+		final List<CsmChatCustomerUserGroup> customerUserGroupList = customerUserGroupPair.external()
+				.findAll(customerUserGroupPair, Specifications.build(CsmChatCustomerUserGroup.class,
+						Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerId))), null);
+		final List<CustomerUserGroupDto> customerUserGroupDtoList = Lists
+				.newArrayListWithCapacity(customerUserGroupList.size());
+		for (CsmChatCustomerUserGroup customerUserGroup : customerUserGroupList) {
+			customerUserGroupDtoList.add(new CustomerUserGroupDto(customerUserGroup,
+					userCacheService.getUserGroup(customerUserGroup.getUserGroupId().toString())));
+		}
+		Collections.sort(customerUserGroupDtoList, CustomerUserGroupDtoComparator.INSTANCE);
+		return Result.success().addData("customerUserGroupList", customerUserGroupDtoList);
+	}
+
 	public Result postCustomerUserGroup(CsmChatCustomerUserGroup customerUserGroup, Principal principal,
 			SimpMessagingTemplate template) {
 		final String customerId = customerUserGroup.getCustomerUserId().toString();
@@ -173,12 +215,7 @@ public class AdminChatUiService extends BaseService {
 			}
 		}
 
-		final List<CsmChatCustomerUserGroup> chatCustomerUserGroupList = customerUserGroupPair.external()
-				.findAll(customerUserGroupPair, Specifications.build(CsmChatCustomerUserGroup.class,
-						Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, roomId))), null);
-
-		return Result.success().addData("messageList", messageList).addData("userGroupList", userGroupList)
-				.addData("chatCustomerUserGroupList", chatCustomerUserGroupList);
+		return Result.success().addData("messageList", messageList).addData("userGroupList", userGroupList);
 	}
 
 	public void sendMessage(CsmChatMessage message, Principal principal, SimpMessagingTemplate template) {
@@ -190,9 +227,9 @@ public class AdminChatUiService extends BaseService {
 		final String curUserIdString = shiroUser.getId();
 		final UUID curUserId = UUID.fromString(curUserIdString);
 		message.setSenderId(curUserId);
-		message.setSenderName(shiroUser.getUsername());
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(true);
+		message.setSenderName(shiroUser.getUsername());
 		messagePair.external().post(messagePair, message);
 		template.convertAndSend("/topic/chat/message/" + roomIdString, message);
 

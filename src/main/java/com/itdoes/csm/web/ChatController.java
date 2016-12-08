@@ -36,12 +36,12 @@ public class ChatController extends BaseController {
 	}
 
 	@SubscribeMapping("/chatCInitMessage")
-	public Result customerInitMessage(Principal principal) {
+	public Result initMessage(Principal principal) {
 		return chatService.initMessage(principal);
 	}
 
 	@MessageMapping("/chatCSendMessage")
 	public void sendMessage(CsmChatMessage message, Principal principal) {
-		chatService.customerSendMessage(message, principal, template);
+		chatService.sendMessage(message, principal, template);
 	}
 }
