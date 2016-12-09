@@ -3,10 +3,10 @@ package com.itdoes.csm.web;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
@@ -17,7 +17,7 @@ import com.itdoes.csm.service.ui.AdminFaqCategoryUiService;
 /**
  * @author Jalen Zhong
  */
-@Controller
+@RestController
 @RequestMapping(value = "/admin/faqCategory", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class AdminFaqCategoryController extends BaseController {
 	@Autowired
