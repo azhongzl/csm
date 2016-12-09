@@ -70,14 +70,4 @@
 		<!-- the maximum file size in bytes (I set it 10M = 10 * 1024 * 1024 -->
 		<property name="maxUploadSize" value="10485760" />
 	</bean>
-
-	<!-- 支持 Shiro对Controller的方法级AOP安全控制 begin -->
-	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
-		<property name="proxyTargetClass" value="true" />
-	</bean>
-
-	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-		<property name="securityManager" ref="shiroSecurityManager" />
-	</bean>
-	<!-- end -->
 </beans>
