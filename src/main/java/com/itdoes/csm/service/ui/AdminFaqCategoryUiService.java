@@ -8,17 +8,13 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
-import com.itdoes.common.core.jpa.Specifications;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
-import com.itdoes.common.core.spring.SpringDatas;
 import com.itdoes.csm.entity.CsmFaq;
 import com.itdoes.csm.entity.CsmFaqCategory;
 
@@ -40,8 +36,7 @@ public class AdminFaqCategoryUiService extends BaseService {
 	}
 
 	public Result listForm() {
-		return Result.success().addData("faqCategoryList", faqCategoryPair.db().findAll(faqCategoryPair,
-				Specifications.build(CsmFaqCategory.class, null), SpringDatas.newSort("name", true)));
+		return Result.success().addData("faqCategoryList", faqCategoryPair.db().sort("name", true).exeFindAll());
 	}
 
 	public Result postForm() {
@@ -55,7 +50,7 @@ public class AdminFaqCategoryUiService extends BaseService {
 		faqCategory.setModifyUserId(faqCategory.getCreateUserId());
 		faqCategory.setModifyDateTime(faqCategory.getCreateDateTime());
 
-		faqCategory = faqCategoryPair.db().post(faqCategoryPair, faqCategory);
+		faqCategory = faqCategoryPair.db().exePost(faqCategory);
 		return Result.success().addData("id", faqCategory.getId());
 	}
 
@@ -64,25 +59,24 @@ public class AdminFaqCategoryUiService extends BaseService {
 	}
 
 	public CsmFaqCategory getEntity(String id) {
-		return faqCategoryPair.db().get(faqCategoryPair, UUID.fromString(id));
+		return faqCategoryPair.db().exeGet(UUID.fromString(id));
 	}
 
 	public Result put(CsmFaqCategory faqCategory, CsmFaqCategory oldFaqCategory) {
 		final ShiroUser shiroUser = Shiros.getShiroUser();
 		faqCategory.setModifyUserId(UUID.fromString(shiroUser.getId()));
 		faqCategory.setModifyDateTime(LocalDateTime.now());
-		faqCategoryPair.db().put(faqCategoryPair, faqCategory, oldFaqCategory);
+		faqCategoryPair.db().exePut(faqCategory, oldFaqCategory);
 		return Result.success();
 	}
 
 	public Result delete(String id) {
-		final long count = faqPair.db().count(faqPair,
-				Specifications.build(CsmFaq.class, Lists.newArrayList(new FindFilter("categoryId", Operator.EQ, id))));
+		final long count = faqPair.db().filter("categoryId", Operator.EQ, id).exeCount();
 		if (count > 0) {
 			return Result.fail(1, "Cannot delete FaqCategory since it is used by Faq");
 		}
 
-		faqCategoryPair.db().delete(faqCategoryPair, UUID.fromString(id));
+		faqCategoryPair.db().exeDelete(UUID.fromString(id));
 		return Result.success();
 	}
 }

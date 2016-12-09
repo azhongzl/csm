@@ -111,7 +111,7 @@ public class AdminRoleUiService extends BaseService {
 		Validate.isTrue(StringUtils.isNotBlank(role.getName()), "Role name should not be blank");
 		Validate.isTrue(!ROOT.isRootByName(role.getName()), "Cannot create root Role");
 
-		role = rolePair.db().post(rolePair, role);
+		role = rolePair.db().exePost(role);
 		userCacheService.addRole(role);
 		return Result.success().addData("id", role.getId());
 	}
@@ -128,7 +128,7 @@ public class AdminRoleUiService extends BaseService {
 		Validate.isTrue(!ROOT.isRootByName(role.getName()) && !ROOT.isRootById(role.getId()),
 				"Cannot modify root Role");
 
-		rolePair.db().put(rolePair, role, oldRole);
+		rolePair.db().exePut(role, oldRole);
 		userCacheService.modifyRole(role);
 		return Result.success();
 	}
@@ -142,7 +142,7 @@ public class AdminRoleUiService extends BaseService {
 			}
 		}
 
-		rolePair.db().delete(rolePair, UUID.fromString(id));
+		rolePair.db().exeDelete(UUID.fromString(id));
 		userCacheService.removeRole(id);
 		return Result.success();
 	}
@@ -178,7 +178,7 @@ public class AdminRoleUiService extends BaseService {
 				!ROOT.isRootById(rolePermission.getRoleId()) && !ROOT.isRootById(rolePermission.getPermissionId()),
 				"Cannot create root RolePermission");
 
-		rolePermission = rolePermissionPair.db().post(rolePermissionPair, rolePermission);
+		rolePermission = rolePermissionPair.db().exePost(rolePermission);
 		userCacheService.addRolePermission(rolePermission);
 		return Result.success().addData("id", rolePermission.getId());
 	}
@@ -186,7 +186,7 @@ public class AdminRoleUiService extends BaseService {
 	public Result deleteRolePermission(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root RolePermission");
 
-		rolePermissionPair.db().delete(rolePermissionPair, UUID.fromString(id));
+		rolePermissionPair.db().exeDelete(UUID.fromString(id));
 		userCacheService.removeRolePermission(id);
 		return Result.success();
 	}

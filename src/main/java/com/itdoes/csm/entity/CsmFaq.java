@@ -44,12 +44,10 @@ public class CsmFaq extends BaseEntity {
 	@javax.validation.constraints.NotNull
 	@Column(name = "active")
 	private Boolean active;
-	@javax.validation.constraints.NotNull
 	@Column(name = "create_user_id")
 	private java.util.UUID createUserId;
 	@Column(name = "create_date_time")
 	private java.time.LocalDateTime createDateTime;
-	@javax.validation.constraints.NotNull
 	@Column(name = "modify_user_id")
 	private java.util.UUID modifyUserId;
 	@Column(name = "modify_date_time")

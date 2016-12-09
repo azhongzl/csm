@@ -30,12 +30,10 @@ public class CsmFaqCategory extends BaseEntity {
 	private String name;
 	@Column(name = "description")
 	private String description;
-	@javax.validation.constraints.NotNull
 	@Column(name = "create_user_id")
 	private java.util.UUID createUserId;
 	@Column(name = "create_date_time")
 	private java.time.LocalDateTime createDateTime;
-	@javax.validation.constraints.NotNull
 	@Column(name = "modify_user_id")
 	private java.util.UUID modifyUserId;
 	@Column(name = "modify_date_time")

@@ -7,15 +7,10 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.jpa.FindFilter;
-import com.itdoes.common.core.jpa.FindFilter.Operator;
-import com.itdoes.common.core.jpa.Specifications;
-import com.itdoes.common.core.spring.SpringDatas;
 import com.itdoes.csm.entity.CsmFaqCategory;
 
 /**
@@ -34,10 +29,6 @@ public class FaqCategoryUiService extends BaseService {
 	}
 
 	public Result listForm() {
-		return Result.success().addData("faqCategoryList",
-				faqCategoryPair.db().findAll(faqCategoryPair,
-						Specifications.build(CsmFaqCategory.class,
-								Lists.newArrayList(new FindFilter("active", Operator.EQ, true))),
-						SpringDatas.newSort("name", true)));
+		return Result.success().addData("faqCategoryList", faqCategoryPair.db().sort("name", true).exeFindAll());
 	}
 }

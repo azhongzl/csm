@@ -13,7 +13,6 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.Validate;
 import org.assertj.core.util.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +21,9 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
-import com.itdoes.common.core.jpa.Specifications;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
-import com.itdoes.common.core.spring.SpringDatas;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.dto.ChatUser;
@@ -96,8 +92,6 @@ public class AdminChatUiService extends BaseService {
 	private static final Root ROOT = Root.getInstance();
 
 	private static final int MESSAGE_PAGE_SIZE = 10;
-	private static final PageRequest MESSAGE_PAGE_REQUEST = SpringDatas.newPageRequest(1, MESSAGE_PAGE_SIZE,
-			SpringDatas.newSort("createDateTime", false));
 
 	private static class ChatUserComparator implements Comparator<ChatUser> {
 		private static final ChatUserComparator INSTANCE = new ChatUserComparator();
@@ -190,7 +184,7 @@ public class AdminChatUiService extends BaseService {
 
 		final ShiroUser shiroUser = getShiroUser(principal);
 		customerUserGroup.setOperatorUserId(UUID.fromString(shiroUser.getId()));
-		customerUserGroup = customerUserGroupPair.db().post(customerUserGroupPair, customerUserGroup);
+		customerUserGroup = customerUserGroupPair.db().exePost(customerUserGroup);
 
 		final ChatEvent messageEvent = new ChatEvent(shiroUser.getId()).addData("customerId", customerId)
 				.addData("userGroupId", userGroupId);
@@ -200,9 +194,8 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	public Result deleteCustomerUserGroup(String id, Principal principal, SimpMessagingTemplate template) {
-		final CsmChatCustomerUserGroup customerUserGroup = customerUserGroupPair.db().get(customerUserGroupPair,
-				UUID.fromString(id));
-		customerUserGroupPair.db().delete(customerUserGroupPair, UUID.fromString(id));
+		final CsmChatCustomerUserGroup customerUserGroup = customerUserGroupPair.db().exeGet(UUID.fromString(id));
+		customerUserGroupPair.db().exeDelete(UUID.fromString(id));
 
 		final ShiroUser shiroUser = getShiroUser(principal);
 		final ChatEvent messageEvent = new ChatEvent(shiroUser.getId())
@@ -265,7 +258,7 @@ public class AdminChatUiService extends BaseService {
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(true);
 		message.setSenderName(shiroUser.getUsername());
-		messagePair.db().post(messagePair, message);
+		messagePair.db().exePost(message);
 		template.convertAndSend("/topic/chat/message/" + roomIdString, message);
 
 		final ChatEvent messageEvent = new ChatEvent(curUserIdString).addUserId(roomIdString);
@@ -274,10 +267,9 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getLatestMessageList(String roomId, Principal principal) {
-		final List<CsmChatMessage> dbMessageList = messagePair.db().findPage(messagePair,
-				Specifications.build(CsmChatMessage.class,
-						Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId))),
-				MESSAGE_PAGE_REQUEST).getContent();
+		final List<CsmChatMessage> dbMessageList = messagePair.db().filter("roomId", Operator.EQ, roomId)
+				.page(1, MESSAGE_PAGE_SIZE, MESSAGE_PAGE_SIZE).sort("createDateTime", false).exeFindPage().getContent();
+
 		if (Collections3.isEmpty(dbMessageList)) {
 			return Collections.emptyList();
 		}
@@ -301,10 +293,8 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	private boolean isCustomerUserGroupExist(String customerId, String userGroupId) {
-		return customerUserGroupPair.db().count(customerUserGroupPair,
-				Specifications.build(CsmChatCustomerUserGroup.class,
-						Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerId),
-								new FindFilter("userGroupId", Operator.EQ, userGroupId)))) > 0;
+		return customerUserGroupPair.db().filter("customerUserId", Operator.EQ, customerId)
+				.filter("userGroupId", Operator.EQ, userGroupId).exeCount() > 0;
 	}
 
 	private boolean isUnhandledCustomer(String customerId, CsmUserGroup adminUserGroup,
@@ -330,18 +320,11 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	private List<CsmChatCustomerUserGroup> getCustomerUserGroupListByUserGroup(String userGroupId) {
-		return customerUserGroupPair.db().findAll(customerUserGroupPair,
-				Specifications.build(CsmChatCustomerUserGroup.class,
-						Lists.newArrayList(new FindFilter("userGroupId", Operator.EQ, userGroupId))),
-				null);
+		return customerUserGroupPair.db().filter("userGroupId", Operator.EQ, userGroupId).exeFindAll();
 	}
 
 	private List<CsmChatCustomerUserGroup> getCustomerUserGroupListByCustomer(String customerUserId) {
-		return customerUserGroupPair.db()
-				.findAll(customerUserGroupPair,
-						Specifications.build(CsmChatCustomerUserGroup.class,
-								Lists.newArrayList(new FindFilter("customerUserId", Operator.EQ, customerUserId))),
-						null);
+		return customerUserGroupPair.db().filter("customerUserId", Operator.EQ, customerUserId).exeFindAll();
 	}
 
 	private boolean canSendMessage(String adminId, String customerId) {

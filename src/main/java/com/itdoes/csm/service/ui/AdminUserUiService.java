@@ -17,10 +17,7 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
-import com.itdoes.common.core.jpa.Specifications;
-import com.itdoes.common.core.spring.SpringDatas;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmUser;
 import com.itdoes.csm.entity.CsmUserGroup;
@@ -56,12 +53,8 @@ public class AdminUserUiService extends BaseService {
 	}
 
 	public Result listForm(int pageNo, int pageSize) {
-		return Result.success().addData("userList",
-				userPair.db().findPage(userPair,
-						Specifications.build(CsmUser.class,
-								Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
-						SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,
-								SpringDatas.newSort("username", true))));
+		return Result.success().addData("userList", userPair.db().filter("id", Operator.NEQ, ROOT.getIdString())
+				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).sort("username", true).exeFindPage());
 	}
 
 	public Result postForm() {
@@ -76,7 +69,7 @@ public class AdminUserUiService extends BaseService {
 		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
 
 		user.populatePassword();
-		user = userPair.db().post(userPair, user);
+		user = userPair.db().exePost(user);
 		userCacheService.addUser(user);
 		return Result.success().addData("id", user.getId());
 	}
@@ -99,7 +92,7 @@ public class AdminUserUiService extends BaseService {
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
 		}
-		userPair.db().put(userPair, user, oldUser);
+		userPair.db().exePut(user, oldUser);
 		userCacheService.modifyUser(user);
 		return Result.success();
 	}
@@ -107,7 +100,7 @@ public class AdminUserUiService extends BaseService {
 	public Result delete(String id) {
 		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root User");
 
-		userPair.db().delete(userPair, UUID.fromString(id));
+		userPair.db().exeDelete(UUID.fromString(id));
 		userCacheService.removeUser(id);
 		return Result.success();
 	}

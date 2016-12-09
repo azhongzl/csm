@@ -9,7 +9,6 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +17,9 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.jpa.FindFilter;
 import com.itdoes.common.core.jpa.FindFilter.Operator;
-import com.itdoes.common.core.jpa.Specifications;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
-import com.itdoes.common.core.spring.SpringDatas;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.dto.ChatEvent;
 import com.itdoes.csm.entity.CsmChatMessage;
@@ -39,8 +35,6 @@ public class ChatUiService extends BaseService {
 	private static final String CUSTOMER_SERVICE_NAME = "Customer Service";
 
 	private static final int MESSAGE_PAGE_SIZE = 10;
-	private static final PageRequest MESSAGE_PAGE_REQUEST = SpringDatas.newPageRequest(1, MESSAGE_PAGE_SIZE,
-			SpringDatas.newSort("createDateTime", false));
 
 	@Autowired
 	private EntityEnv env;
@@ -84,7 +78,7 @@ public class ChatUiService extends BaseService {
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(false);
 		message.setSenderName(shiroUser.getUsername());
-		messagePair.db().post(messagePair, message);
+		messagePair.db().exePost(message);
 		template.convertAndSend("/topic/chat/message/" + curUserIdString, message);
 
 		final ChatEvent messageEvent = new ChatEvent(curUserIdString).addUserId(curUserIdString);
@@ -93,10 +87,8 @@ public class ChatUiService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getLatestMessageList(String roomId) {
-		final List<CsmChatMessage> dbMessageList = messagePair.db().findPage(messagePair,
-				Specifications.build(CsmChatMessage.class,
-						Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId))),
-				MESSAGE_PAGE_REQUEST).getContent();
+		final List<CsmChatMessage> dbMessageList = messagePair.db().filter("roomId", Operator.EQ, roomId)
+				.page(1, MESSAGE_PAGE_SIZE, MESSAGE_PAGE_SIZE).sort("createDateTime", false).exeFindPage().getContent();
 		if (Collections3.isEmpty(dbMessageList)) {
 			return Collections.emptyList();
 		}
