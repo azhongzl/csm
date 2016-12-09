@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
+import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.service.ui.AdminFaqUiService;
 
 /**
  * @author Jalen Zhong
  */
 @Controller
-@RequestMapping("/faqCategory")
+@RequestMapping(value = "admin/faq", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class AdminFaqController extends BaseController {
 	@Autowired
 	private AdminFaqUiService faqService;

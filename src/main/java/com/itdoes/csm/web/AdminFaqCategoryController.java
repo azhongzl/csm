@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
+import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmFaqCategory;
 import com.itdoes.csm.service.ui.AdminFaqCategoryUiService;
 
@@ -17,7 +18,7 @@ import com.itdoes.csm.service.ui.AdminFaqCategoryUiService;
  * @author Jalen Zhong
  */
 @Controller
-@RequestMapping("/admin/faqCategory")
+@RequestMapping(value = "/admin/faqCategory", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class AdminFaqCategoryController extends BaseController {
 	@Autowired
 	private AdminFaqCategoryUiService faqCategoryService;
