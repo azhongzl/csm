@@ -28,7 +28,7 @@ public class FaqUiService extends BaseService {
 	public void myInit() {
 		faqPair = env.getPair(CsmFaq.class.getSimpleName());
 	}
-	
+
 	public Result listForm(String categoryId, int pageNo, int pageSize) {
 		return Result.success().addData("faqList", faqPair.db().filter("categoryId", Operator.EQ, categoryId)
 				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).sort("question", true).exeFindPage());
