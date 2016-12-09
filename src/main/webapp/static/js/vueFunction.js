@@ -1,4 +1,4 @@
-var url = "http://localhost:8080/csm/e/";
+
 
 var vmSidebar = new Vue({
 	el : '#sidebar_container',
@@ -7,7 +7,7 @@ var vmSidebar = new Vue({
 	},
 	computed : {
 		categorys : function() {
-			var url1 = url + "CsmFaqCategory" + "/find";
+			var url1 = ctx + "/admin/faqCategory/listForm";
 			var checkKey = "";
 			var result = ajaxFind(checkKey, url1);
 			return result.data.content;

@@ -22,8 +22,7 @@
 <!-- Custom Fonts -->
 <link href="${ctx}/static/test/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 <link href="${ctx}/static/css/test.css" rel="stylesheet">
-<script src="${ctx}/static/js/lib/sockjs.js"></script>
-<script src="${ctx}/static/js/lib/stomp.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/lib/polyfill.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
 <script src="${ctx}/static/js/lib/sockjs.js"></script>
