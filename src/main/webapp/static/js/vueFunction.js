@@ -1,27 +1,19 @@
-
-
+var ctx;
 var vmSidebar = new Vue({
 	el : '#sidebar_container',
 	data : {
 		categorys : [],
 	},
-	computed : {
-		categorys : function() {
-			var url1 = ctx + "/admin/faqCategory/listForm";
-			var checkKey = "";
-			var result = ajaxFind(checkKey, url1);
-			return result.data.content;
-		},
+	created :function() {
+		this.getCategory();
 	},
 
 	methods : {
 		showCategoryDetail : function(id) {
 			vmContent.faqs = [];
 			vmPagecount.id = id;
-			var url1 = url + "CsmFaq" + "/find";
+			var url1 =  ctx + "/faq/listForm/"+id;
 			var checkKey = {
-				ff_categoryId : id,
-				page_size : vmPagecount.pageSize,
 				page_no : 1,
 			};
 			var result1 = ajaxFind(checkKey, url1);
@@ -29,16 +21,24 @@ var vmSidebar = new Vue({
 				vmPagecount.total = 0;
 				vmPagecount.showKey = false;
 			} else {
-				vmPagecount.total = result1.data.totalElements;
-				vmPagecount.pageSize = result1.data.size;
-				vmPagecount.totalPage = result1.data.totalPages;
+				vmPagecount.total = result1.data.faqList.totalElements;
+				vmPagecount.totalPage = result1.data.faqList.totalPages;
 				vmPagecount.showKey = true;
 				vmSearch.label = "";
 				vmContent.label = "Faq";
-				vmContent.faqs = result1.data.content;
+				vmContent.faqs = result1.data.faqList.content;
 				
 			};
 		},
+		getCategory : function(){
+			var url1 = ctx + "/faqCategory/listForm";
+			var checkKey = "";
+			var result = ajaxFind(checkKey, url1);
+			if (result.length==0){
+				return false;
+			}
+			this.categorys = result.data.faqCategoryList;
+		}
 	}
 })
 
@@ -50,11 +50,7 @@ function ajaxFind(checkKey, url1) {
 		data : checkKey,
 		async : false,
 		success : function(result) {
-			if (result.data.content == undefined) {
-				alert("No Result");
-			} else {
 				checkList = result;
-			}
 		},
 		timeout : 3000,
 		error : function(xhr) {
@@ -100,7 +96,6 @@ var vmPagecount = new Vue({
 	el : '#pagecount',
 	data : {
 		curPage : 1,
-		pageSize : 5,
 		total : 0,
 		totalPage : 0,
 		id : "",
@@ -118,10 +113,8 @@ var vmPagecount = new Vue({
 				this.curPage = page;
 				vmContent.faqs = [];
 				if(vmContent.label=="Faq"){
-					var url1 = url + "CsmFaq" + "/find";
+					var url1 =  ctx + "/faq/listForm/"+this.id;
 					var checkKey = {
-						ff_categoryId : this.id,
-						page_size : this.pageSize,
 						page_no : this.curPage,
 					};
 					var result1 = ajaxFind(checkKey, url1);
@@ -129,10 +122,9 @@ var vmPagecount = new Vue({
 				}
 				if(vmContent.label=="Search"){
 		    		vmContent.faqs=[];
-					var url1 ="http://localhost:8080/csm/search/CsmFaq";
+					var url1 ="http://localhost:8080/csm/search/faq";
 					var checkKey = {
 							ss : this.search,
-							page_size : this.pageSize,
 							page_no : this.curPage,
 						};
 		    		var checkList = [];
@@ -158,7 +150,6 @@ var vmPagecount = new Vue({
 						vmPagecount.showKey = false;
 					} else {
 						vmPagecount.total = checkList.data.totalElements;
-						vmPagecount.pageSize = checkList.data.size;
 						vmPagecount.totalPage = checkList.data.totalPages;
 						vmPagecount.showKey = true;
 						vmContent.label = "";
@@ -179,9 +170,10 @@ var vmSearch = new Vue({
     methods:{
     	ajaxSearch:function(){
     		vmContent.faqs=[];
- 			var url1 ="http://localhost:8080/csm/search/CsmFaq";
+ 			var url1 ="http://localhost:8080/csm/search/faq";
 			var checkKey = {
 					ss : this.search,
+					page_no : vmPagecount.curPage,
 				};
     		var checkList = [];
     		$.ajax({
@@ -190,7 +182,7 @@ var vmSearch = new Vue({
     			data : checkKey,
     			async : false,
     			success : function(result) {
-    				if (result.data.content == undefined) {
+    				if (result.data.searchList.content == undefined) {
     					alert("No Result");
     				} else {
     					checkList = result;
@@ -205,13 +197,12 @@ var vmSearch = new Vue({
 				vmPagecount.total = 0;
 				vmPagecount.showKey = false;
 			} else {
-				vmPagecount.total = checkList.data.totalElements;
-				vmPagecount.pageSize = checkList.data.size;
-				vmPagecount.totalPage = checkList.data.totalPages;
+				vmPagecount.total = checkList.data.searchList.totalElements;
+				vmPagecount.totalPage = checkList.data.searchList.totalPages;
 				vmPagecount.showKey = true;
 				vmContent.label = "";
 				this.label = "Search";
-	    		vmContent.faqs = checkList.data.content;
+	    		vmContent.faqs = checkList.data.searchList.content;
 			};
 
     		

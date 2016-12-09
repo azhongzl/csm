@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE HTML>
 <html>
@@ -68,11 +69,15 @@
 	<div>
 		<a href="#" v-on:click="showAnswer(faq.id)">{{faq.question}} </a>
 		<div v-show="answerKey">{{faq.answer}}<br> 
-			<a v-for="attachment in attachments" v-bind:href="'${ctx}/uploads/Faq/'+faq.id+'/'+attachment" >{{attachment}}	</a>
+			<a v-for="attachment in attachments" v-bind:href="'${ctx}/uploads/CsmFaq/'+faq.id+'/'+attachment" >{{attachment}}	</a>
 		</div>
 	</div>
 	</template>
-
+    	<script type=text/javascript>
+		userId = "<shiro:principal property="id" />";
+		username = "<shiro:principal property="username" />";
+		ctx = "${ctx}";
+	</script>
 	<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/vueFunction.js"></script>
 
