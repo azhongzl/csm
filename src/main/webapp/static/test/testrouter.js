@@ -47,7 +47,7 @@ service = {
 	methods : {
 		removeGroup : function(id, index) {
 			var canSendMsg=false;
-			if(store.state.currentUserGroup.userGroup.chat){
+			if(store.state.currentUserGroup.chatOrSuper){
 				canSendMsg=true;
 			}else{
 				if(store.state.customerUserGroupList.indexOf(this.$route.query.id)!=-1){
@@ -75,7 +75,7 @@ service = {
 			let	id = this.$route.query.id;
 			res.customer = id;
 			var canSendMsg=false;
-			if(store.state.currentUserGroup.userGroup.chat){
+			if(store.state.currentUserGroup.chatOrSuper){
 				canSendMsg=true;
 			}else{
 				if(store.state.customerUserGroupList.indexOf(id)!=-1){
