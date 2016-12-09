@@ -22,7 +22,7 @@ public class SearchController extends BaseController {
 	@Autowired
 	private SearchUiService searchService;
 
-	@RequestMapping(value = "CsmFaq", method = RequestMethod.GET)
+	@RequestMapping(value = "faq", method = RequestMethod.GET)
 	public Result searchFaq(@RequestParam(value = "ss") String searchString,
 			@RequestParam(value = BaseController.PAGE_NO, defaultValue = "1") int pageNo,
 			@RequestParam(value = BaseController.PAGE_SIZE, defaultValue = "-1") int pageSize, ServletRequest request) {
