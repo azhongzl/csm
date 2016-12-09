@@ -31,7 +31,7 @@ public class AdminFaqPutController extends BasePutController {
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
 	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmFaq faq,
-			@RequestParam(UPLOAD_FILE_PARAM) List<MultipartFile> uploadFileList, ServletRequest request) {
+			@RequestParam(UPLOAD_FILE) List<MultipartFile> uploadFileList, ServletRequest request) {
 		return faqService.put(faq, getOldEntity(request), uploadFileList);
 	}
 

@@ -40,7 +40,7 @@ public class AdminFaqController extends BaseController {
 	}
 
 	@RequestMapping(value = "post", method = RequestMethod.POST)
-	public Result post(@Valid CsmFaq faq, @RequestParam(UPLOAD_FILE_PARAM) List<MultipartFile> uploadFileList) {
+	public Result post(@Valid CsmFaq faq, @RequestParam(UPLOAD_FILE) List<MultipartFile> uploadFileList) {
 		return faqService.post(faq, uploadFileList);
 	}
 
