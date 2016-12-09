@@ -436,7 +436,7 @@
 <div class="list-group" style="max-height: 650px; overflow: auto">
 	<a class="list-group-item  active">Categories</a>
 	<ul class="list-group-item">
-		<li v-for="n in list" class="list-group-item"><router-link :to="{path: '/faq/showFaqList', query: { id: n.id }}"
+		<li v-for="n in categoryList" class="list-group-item"><router-link :to="{path: '/faq/showFaqList', query: { id: n.id }}"
 				v-bind:id=" n.id "> {{n.name}} </router-link></li>
 	</ul>
 </div>
@@ -446,7 +446,7 @@
 <div class="list-group">
 	<a href="javascript:void(0)" class="list-group-item  active" v-on:click="faqAddNewUi()">ADD NEW FAQ</a>
 
-	<div v-for="n in list1" class="list-group-item">
+	<div v-for="n in faqList" class="list-group-item">
 		<span><router-link :to="{path: '/faq/faqModify', query: { id: n.id }}">{{n.question}}</router-link></span>
 	</div>
 
@@ -544,7 +544,7 @@
 			</div>
 			<!-- /.modal -->
 		</div>
-		<template v-for="n in list">
+		<template v-for="n in categoryList">
 		<div class="list-group-item">
 			<span>{{n.name}}</span>
 			<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;" v-on:click="del(n.id)">delete</button>

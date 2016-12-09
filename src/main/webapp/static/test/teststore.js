@@ -7,7 +7,10 @@ const store = new Vuex.Store({
 		  serviceList:[],
 		  currentUserGroup:[],
 		  customerUserGroupList:[],
-		  
+		  pageSize: 10,
+		  curPage: 1,
+		  total:0,
+		  totalPage:0,
 
 	  },
 	  mutations: {

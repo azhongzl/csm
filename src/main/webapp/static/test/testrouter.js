@@ -213,7 +213,7 @@ const permission={
 							if (result.code===0){
 								myAlert("DELETE OK ");	
 							}
-							if (result.code===1 || result.code===2){
+							if (!result.success){
 								myAlert(result.message+" ,you can't delete it ");	
 							}
 
@@ -297,13 +297,10 @@ const role={
 						url : url1,
 						async : false,
 						success : function(result) {
-							if (result.code   ===0){
-								myAlert("DELETE OK ");	
-							}
 							if (result.code===0){
 								myAlert("DELETE OK ");	
 							}
-							if (result.code===1 || result.code===2){
+							if (!result.success){
 								myAlert(result.message+" ,you can't delete it ");	
 							}
 						},
@@ -486,7 +483,7 @@ const group={
 									if (result.code===0){
 										myAlert("DELETE OK ");	
 									}
-									if (result.code===1 || result.code===2){
+									if (!result.success){
 										myAlert(result.message+" ,you can't delete it ");	
 									}
 								},
@@ -752,14 +749,23 @@ faqMain = {
 
 const faq = {
 		template : '#FaqCategory',
-		computed:{
-			list :function() {
-				return this.$store.state.CategoryList
+		data:function(){
+			return{
+				categoryList:[],	
 			}
 		},
-
 	    created:function(){
-	    	store.commit('getCategory');
+	    	this.getCategory();
+	    },
+	    methods:{
+	    	getCategory:function(){
+			   	let url1 = ctx + "/admin/faqCategory/listForm";
+		    	let checkKey = "";
+		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.data.faqCategoryList!=undefined){
+			    	this.categoryList = result.data.faqCategoryList;		    		
+		    	}
+	    	},
 	    },
 	};
 
@@ -768,6 +774,7 @@ const showFaqList = {
 		data:function(){
 			return{
 				cssId:"",
+				faqList:[],
 			}
 		},
 		watch:{
@@ -777,26 +784,39 @@ const showFaqList = {
 		    	$("#"+id).css("color","red");
 		    	this.cssId=id;
 				this.$store.state.curPage=1;
-		    	store.commit('getFaq',{id : id});
+	            this.getFaq(id);
 			}
 		},
-		computed:{
-			list1:function() {
-				return this.$store.state.FaqList
-			}
-		},
+
 	    created:function(){
 	    	var id=this.$route.query.id;
 	    	$("#"+id).css("color","red");
 	    	this.cssId=id;
-            store.commit('getFaq',{id : id});
+            this.getFaq(id);
 	    },
 
 	    methods:{
 	    	faqAddNewUi:function(){
 	    		router.push({path:'/faq/faqAddNew',query:{id:this.$route.query.id}})
-	    	}
-	    }
+	    	},
+	    	getFaq:function(id){
+				let url1 = ctx + "/admin/faq/listForm/"+id;
+				let checkKey = {
+					page_size : this.$store.state.pageSize,
+					page_no : this.$store.state.curPage,
+				};
+		    	let result = ajaxFind(checkKey, url1);
+				if (result.data.faqList.content !== undefined) {
+			    	this.faqList = result.data.faqList.content;
+					this.$store.state.total = result.data.faqList.totalElements;
+					this.$store.state.totalPage = result.data.faqList.totalPages;
+				}else{
+					this.faqList =[];
+					this.$store.state.total = 0;
+					this.$store.state.totalPage = 0;
+				}
+	    	},
+	    },
 	};
 
 const faqAddNew = {
@@ -811,45 +831,21 @@ const faqAddNew = {
 	    methods:{
 	    	faqAddNew:function(){
 	    		let id=this.$route.query.id;
-	    		let url1 = url + "CsmFaq" + "/post";
 	    		if ($.trim(this.question).length == 0) {
 	    			myAlert("Please input question");
 	    		} else {
 	    			var fileData = $("input[name='uploadFile']").get(0);
-	    			if (fileData.files.length == 0) {
-	    				var savedata = {
-	    					categoryId : id,
-	    					question : this.question,
-
-	    					answer : this.answer,
-	    					active : "1",
-	    					createAccountId : userId,
-	    					createDateTime : getNowFormatDate(),
-	    					modifyAccountId : userId,
-	    					modifyDateTime : getNowFormatDate(),
-	    				};
-
-	    				ajaxcreate(savedata, url1);
-	    				router.push({path:'/faq/showFaqList', query:{id:id}})
-	    			} else {
-	    				url1 = url + "CsmFaq" + "/postUpload";
+	    				url1 = ctx + "/admin/faq/post";
 	    				var form_data = new FormData();
 	    				form_data.append("categoryId", id);
 	    				form_data.append("question", this.question);
+	    				form_data.append("active", true);
 	    				form_data.append("answer", this.answer);
-
-	    				form_data.append("active", "1");
-	    				form_data.append("createAccountId", userId);
-	    				form_data.append("createDateTime", getNowFormatDate());
-	    				form_data.append("modifyAccountId", userId);
-	    				form_data.append("modifyDateTime", getNowFormatDate());
 	    				for (var i = 0; i < (fileData.files.length); i++) {
 	    					form_data.append("uploadFile", fileData.files[i]);
 	    				}
 	    				ajaxcreateUpload(form_data, url1);
 	    				router.push({path:'/faq/showFaqList', query:{id:id}})
-
-	    			}
 
 	    		}
 		    	},
@@ -889,16 +885,16 @@ const faqModify = {
 			}
 		},
 		created:function(){
-			var id1=this.$route.query.id;
-			var url1 = url + "CsmFaq" + "/get/" + id1;
-			var checkResult1 = ajaxGet(url1);
-			if (checkResult1.attachments != undefined) {
-            	this.attachments = checkResult1.attachments.split(",");
+			var id=this.$route.query.id;
+			var url1 = ctx + "/admin/faq/putForm/" + id;
+			var result = ajaxGet(url1);
+			if (result.faq.attachments != undefined) {
+            	this.attachments = result.faq.attachments.split(",");
 			}
 			this.attach = this.attachments;
-			this.question = checkResult1.question;
-			this.answer = checkResult1.answer;
-			this.id = checkResult1.categoryId;
+			this.question = result.faq.question;
+			this.answer = result.faq.answer;
+			this.id = result.faq.categoryId;
 		},
 		methods:{
 		    showUploadFile:function(){
@@ -927,19 +923,6 @@ const faqModify = {
 	    		} else {
 	    			var fileData = $("input[name='uploadFile']").get(0);
 	    			
-	    			if ((fileData.files.length == 0) && (this.attach.length == 0)) {
-	    				var url1 = url + "CsmFaq" + "/put/" + id1;
-	    				var putdata = {
-	    					question : this.question,
-	    					answer : this.answer,
-	    					attachments:"",
-	    					modifyAccountId : userId,
-	    					modifyDateTime : getNowFormatDate(),
-	    				}
-	    				ajaxPut(putdata, url1);
-	    				router.push({path:'/faq/showFaqList', query:{id:this.id}});
-	    			} else {
-	    				if (this.attach.length != 0) {
 	    					var temp=this.attach
 	    					$.each(temp,function(i, n) {
 	    						if (i == (temp.length - 1)) {
@@ -948,26 +931,24 @@ const faqModify = {
 	    							attachs += n + ",";
 	    						}
 	    					});
-	    				}
-	    				url1 = url + "CsmFaq" + "/putUpload/"+id1;
+	    				url1 = ctx + "/admin/faq/put";
 	    				var form_data = new FormData();
+	    				form_data.append("id", id1);
 	    				form_data.append("question", this.question);
 	    				form_data.append("answer", this.answer);
 	    				form_data.append("attachments", attachs);
-	    				form_data.append("modifyAccountId", userId);
-	    				form_data.append("modifyDateTime", getNowFormatDate());
 	    				for (var i = 0; i < (fileData.files.length); i++) {
 	    					form_data.append("uploadFile", fileData.files[i]);
 	    				}
 	    				ajaxPutUpload(form_data, url1);
 	    				router.push({path:'/faq/showFaqList', query:{id:this.id}});
-	    			}
+
 	    		}
 	    	},
 
 	    	adminFaqDelete:function() {
 	    		let id1=this.$route.query.id;
-	    		var url1 = url + "CsmFaq" + "/delete/" + id1;
+	    		var url1 = ctx + "/admin/faq/delete/" + id1;
 	    		$.ajax({
 	    			type : "GET",
 	    			url : url1,
@@ -997,15 +978,11 @@ const category = {
 				id:"",
 				name:"",
 				description:"",
-			}
-		},
-		computed:{
-			list:function() {
-				return this.$store.state.CategoryList
+				categoryList:[],
 			}
 		},
 	    created:function(){
-	    	store.commit('getCategory');
+	    	this.getCategory();
 	    },
 	    methods:{
 			addNew:function(){
@@ -1016,19 +993,13 @@ const category = {
 
 			addNewSubmit:function(){
 				if(this.id.length==0){
-					var url1 = url + "CsmFaqCategory" + "/post";
+					var url1 = ctx + "/admin/faqCategory/post";
 					if ($.trim(this.name).length == 0) {
 						myAlert("Please input name");
 					} else {
-						var modify_date1 = getNowFormatDate();
 						var savedata = {
 							name : this.name,
 							description :  this.description,
-							active : "1",
-							createAccountId : userId,
-							createDateTime : modify_date1,
-							modifyAccountId : userId,
-							modifyDateTime : modify_date1,
 						}
 						ajaxcreate(savedata, url1);
 					}
@@ -1037,18 +1008,17 @@ const category = {
 					if ($.trim(this.name).length == 0) {
 						myAlert("Please input name");
 					} else {
-						var url1 = url + "CsmFaqCategory" + "/put/" + this.id;
+						var url1 = ctx + "/admin/faqCategory/put";
 						var putdata = {
+							id:this.id,
 							name : this.name,
 							description : this.describe,
-							modifyAccountId : userId,
-							modifyDateTime : getNowFormatDate(),
 						}
 						ajaxPut(putdata, url1);
 					}
 				};
 				$("#categoryModal").modal('hide');	
-		    	store.commit('getCategory');
+		    	this.getCategory();
 				router.push({path: '/category'});
 			
 				},
@@ -1056,29 +1026,25 @@ const category = {
 				del:function(id){
 					var conf=confirm("Are you sure?");
 					if (conf==true){
-						var url1 = url + "CsmFaq" + "/find";
-						var checkKey = {
-							ff_categoryId : id,
-						};
-						var checkResult = ajaxFind(checkKey, url1);
-						if (checkResult.data.content == undefined) {
-							url1 = url + "CsmFaqCategory" + "/delete/" + id;
+							url1 = ctx + "/admin/faqCategory/delete/" + id;
 							$.ajax({
 								type : "GET",
 								url : url1,
 								async : false,
 								success : function(result) {
-									myAlert("DELETE OK ");
+									if (result.code===0){
+										myAlert("DELETE OK ");	
+									}
+									if (!result.success){
+										myAlert(result.message+" ,you can't delete it ");	
+									}
 								},
 								timeout : 3000,
 								error : function(xhr) {
 									myAlert("error： " + xhr.status + " " + xhr.statusText);
 								},
 							});
-							store.commit('getCategory');
-						} else {
-							myAlert("you can't delete this category");
-						}
+					    	this.getCategory();
 					}
 				},
 				mod:function(id,name,description){
@@ -1087,6 +1053,15 @@ const category = {
 					this.description=description;
 					$("#categoryModal").modal('show');
 				},
+				
+		    	getCategory:function(){
+				   	let url1 = ctx + "/admin/faqCategory/listForm";
+			    	let checkKey = "";
+			    	let result = ajaxFind(checkKey, url1);
+			    	if(result.data.faqCategoryList!=undefined){
+				    	this.categoryList = result.data.faqCategoryList;		    		
+			    	}
+		    	},
 				
 	    }
 	};
@@ -1477,10 +1452,10 @@ function showMessage(message) {
 	var num=message.createDateTime.indexOf("T");
 	timeStr=message.createDateTime.substring(0,num)+" "+message.createDateTime.substring(num+1,19);
 	if (message.fromAdmin){
-	$("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:600px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+message.message+" </div></div>"
+	$("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:500px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+message.message+" </div></div>"
 );
 	}else{
-		$("#sentence").append("<div class='panel panel-info' style='clear:both;float:left;width:600px'><div class='panel-heading' style='padding: 2px 0px ' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+message.message+" </div></div>"
+		$("#sentence").append("<div class='panel panel-info' style='clear:both;float:left;width:500px'><div class='panel-heading' style='padding: 2px 0px ' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+message.message+" </div></div>"
 		);
 	}
 
