@@ -274,7 +274,7 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getLatestMessageList(String roomId, Principal principal) {
-		final List<CsmChatMessage> dbMessageList = messagePair.db().find(messagePair,
+		final List<CsmChatMessage> dbMessageList = messagePair.db().findPage(messagePair,
 				Specifications.build(CsmChatMessage.class,
 						Lists.newArrayList(new FindFilter("roomId", Operator.EQ, roomId))),
 				MESSAGE_PAGE_REQUEST).getContent();

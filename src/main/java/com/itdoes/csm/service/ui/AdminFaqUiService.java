@@ -40,7 +40,7 @@ public class AdminFaqUiService extends BaseService {
 
 	public Result listForm(String categoryId, int pageNo, int pageSize) {
 		return Result.success().addData("faqList",
-				faqPair.db().find(faqPair,
+				faqPair.db().findPage(faqPair,
 						Specifications.build(CsmFaq.class,
 								Lists.newArrayList(new FindFilter("categoryId", Operator.EQ, categoryId))),
 						SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,

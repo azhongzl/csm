@@ -57,7 +57,7 @@ public class AdminUserUiService extends BaseService {
 
 	public Result listForm(int pageNo, int pageSize) {
 		return Result.success().addData("userList",
-				userPair.db().find(userPair,
+				userPair.db().findPage(userPair,
 						Specifications.build(CsmUser.class,
 								Lists.newArrayList(new FindFilter("id", Operator.NEQ, ROOT.getIdString()))),
 						SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,
