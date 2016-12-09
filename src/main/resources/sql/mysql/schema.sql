@@ -55,7 +55,6 @@ create table csm_faq_category (
 	id binary(16) not null,
 	name varchar(100) not null,
 	description varchar(255),
-	active bit not null,
 	create_user_id binary(16) not null,
 	create_date_time timestamp not null,
 	modify_user_id binary(16) not null,

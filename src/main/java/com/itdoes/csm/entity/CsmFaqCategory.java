@@ -31,9 +31,6 @@ public class CsmFaqCategory extends BaseEntity {
 	@Column(name = "description")
 	private String description;
 	@javax.validation.constraints.NotNull
-	@Column(name = "active")
-	private Boolean active;
-	@javax.validation.constraints.NotNull
 	@Column(name = "create_user_id")
 	private java.util.UUID createUserId;
 	@Column(name = "create_date_time")
@@ -66,14 +63,6 @@ public class CsmFaqCategory extends BaseEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public java.util.UUID getCreateUserId() {

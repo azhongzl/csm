@@ -21,6 +21,6 @@ public class SearchUiService extends BaseService {
 
 	public Result searchFaq(String searchString, int pageNo, int pageSize) {
 		final Page<?> page = searchService.searchDefault(searchString, CsmFaq.class, FAQ_FIELDS, pageNo, pageSize);
-		return Result.success().addData("searchResult", page);
+		return Result.success().addData("searchList", page);
 	}
 }
