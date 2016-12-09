@@ -44,7 +44,7 @@ public class AdminFaqUiService extends BaseService {
 						Specifications.build(CsmFaq.class,
 								Lists.newArrayList(new FindFilter("categoryId", Operator.EQ, categoryId))),
 						SpringDatas.newPageRequest(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE,
-								SpringDatas.newSort("name", true))));
+								SpringDatas.newSort("question", true))));
 	}
 
 	public Result postForm() {
