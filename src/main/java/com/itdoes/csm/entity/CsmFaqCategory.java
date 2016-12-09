@@ -34,13 +34,13 @@ public class CsmFaqCategory extends BaseEntity {
 	@Column(name = "active")
 	private Boolean active;
 	@javax.validation.constraints.NotNull
-	@Column(name = "create_account_id")
-	private java.util.UUID createAccountId;
+	@Column(name = "create_user_id")
+	private java.util.UUID createUserId;
 	@Column(name = "create_date_time")
 	private java.time.LocalDateTime createDateTime;
 	@javax.validation.constraints.NotNull
-	@Column(name = "modify_account_id")
-	private java.util.UUID modifyAccountId;
+	@Column(name = "modify_user_id")
+	private java.util.UUID modifyUserId;
 	@Column(name = "modify_date_time")
 	private java.time.LocalDateTime modifyDateTime;
 
@@ -76,12 +76,12 @@ public class CsmFaqCategory extends BaseEntity {
 		this.active = active;
 	}
 
-	public java.util.UUID getCreateAccountId() {
-		return createAccountId;
+	public java.util.UUID getCreateUserId() {
+		return createUserId;
 	}
 
-	public void setCreateAccountId(java.util.UUID createAccountId) {
-		this.createAccountId = createAccountId;
+	public void setCreateUserId(java.util.UUID createUserId) {
+		this.createUserId = createUserId;
 	}
 
 	public java.time.LocalDateTime getCreateDateTime() {
@@ -92,12 +92,12 @@ public class CsmFaqCategory extends BaseEntity {
 		this.createDateTime = createDateTime;
 	}
 
-	public java.util.UUID getModifyAccountId() {
-		return modifyAccountId;
+	public java.util.UUID getModifyUserId() {
+		return modifyUserId;
 	}
 
-	public void setModifyAccountId(java.util.UUID modifyAccountId) {
-		this.modifyAccountId = modifyAccountId;
+	public void setModifyUserId(java.util.UUID modifyUserId) {
+		this.modifyUserId = modifyUserId;
 	}
 
 	public java.time.LocalDateTime getModifyDateTime() {

@@ -56,9 +56,9 @@ create table csm_faq_category (
 	name varchar(100) not null,
 	description varchar(255),
 	active bit not null,
-	create_account_id binary(16) not null,
+	create_user_id binary(16) not null,
 	create_date_time timestamp not null,
-	modify_account_id binary(16) not null,
+	modify_user_id binary(16) not null,
 	modify_date_time timestamp not null,
     primary key (id)
 ) engine=InnoDB;
@@ -71,9 +71,9 @@ create table csm_faq (
 	answer varchar(500) not null,
 	attachments varchar(255),
 	active bit not null,
-	create_account_id binary(16) not null,
+	create_user_id binary(16) not null,
 	create_date_time timestamp not null,
-	modify_account_id binary(16) not null,
+	modify_user_id binary(16) not null,
 	modify_date_time timestamp not null,
     primary key (id)
 ) engine=InnoDB;
