@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
+import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmChatCustomerUserGroup;
 import com.itdoes.csm.entity.CsmChatMessage;
 import com.itdoes.csm.service.ui.AdminChatUiService;
@@ -56,25 +57,25 @@ public class AdminChatController extends BaseController {
 		return "admin/chatIcon";
 	}
 
-	@RequestMapping("hasUnhandledCustomers")
+	@RequestMapping(value = "hasUnhandledCustomers", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 	@ResponseBody
 	public Result hasUnhandledCustomers(Principal principal) {
 		return chatService.hasUnhandledCustomers(principal);
 	}
 
-	@RequestMapping(value = "listCustomerUserGroups/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "listCustomerUserGroups/{id}", method = RequestMethod.GET, produces = MediaTypes.APPLICATION_JSON_UTF_8)
 	@ResponseBody
 	public Result listCustomerUserGroups(@PathVariable("id") String id, Principal principal) {
 		return chatService.listCustomerUserGroups(id, principal);
 	}
 
-	@RequestMapping(value = "postCustomerUserGroup", method = RequestMethod.POST)
+	@RequestMapping(value = "postCustomerUserGroup", method = RequestMethod.POST, produces = MediaTypes.APPLICATION_JSON_UTF_8)
 	@ResponseBody
 	public Result postCustomerUserGroup(@Valid CsmChatCustomerUserGroup chatCustomerUserGroup, Principal principal) {
 		return chatService.postCustomerUserGroup(chatCustomerUserGroup, principal, template);
 	}
 
-	@RequestMapping(value = "deleteCustomerUserGroup/{id}")
+	@RequestMapping(value = "deleteCustomerUserGroup/{id}", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 	@ResponseBody
 	public Result deleteCustomerUserGroup(@PathVariable("id") String id, Principal principal) {
 		return chatService.deleteCustomerUserGroup(id, principal, template);
