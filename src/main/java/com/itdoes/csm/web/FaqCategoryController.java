@@ -1,16 +1,12 @@
 package com.itdoes.csm.web;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.itdoes.common.business.web.BaseController;
 import com.itdoes.common.core.Result;
-import com.itdoes.csm.entity.CsmFaqCategory;
 import com.itdoes.csm.service.ui.FaqCategoryUiService;
 
 /**
@@ -25,25 +21,5 @@ public class FaqCategoryController extends BaseController {
 	@RequestMapping(value = "listForm", method = RequestMethod.GET)
 	public Result listForm() {
 		return faqCategoryService.listForm();
-	}
-
-	@RequestMapping(value = "postForm", method = RequestMethod.GET)
-	public Result postForm() {
-		return faqCategoryService.postForm();
-	}
-
-	@RequestMapping(value = "post", method = RequestMethod.POST)
-	public Result post(@Valid CsmFaqCategory faqCategory) {
-		return faqCategoryService.post(faqCategory);
-	}
-
-	@RequestMapping(value = "putForm/{id}", method = RequestMethod.GET)
-	public Result putForm(@PathVariable("id") String id) {
-		return faqCategoryService.putForm(id);
-	}
-
-	@RequestMapping(value = "delete/{id}")
-	public Result delete(@PathVariable("id") String id) {
-		return faqCategoryService.delete(id);
 	}
 }

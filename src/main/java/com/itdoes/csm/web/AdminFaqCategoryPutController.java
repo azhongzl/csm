@@ -15,16 +15,16 @@ import com.itdoes.common.business.web.BasePutController;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.web.MediaTypes;
 import com.itdoes.csm.entity.CsmFaqCategory;
-import com.itdoes.csm.service.ui.FaqCategoryUiService;
+import com.itdoes.csm.service.ui.AdminFaqCategoryUiService;
 
 /**
  * @author Jalen Zhong
  */
 @RestController
-@RequestMapping(value = "/faqCategory", produces = MediaTypes.APPLICATION_JSON_UTF_8)
-public class FaqCategoryPutController extends BasePutController {
+@RequestMapping(value = "/admin/faqCategory", produces = MediaTypes.APPLICATION_JSON_UTF_8)
+public class AdminFaqCategoryPutController extends BasePutController {
 	@Autowired
-	private FaqCategoryUiService faqCategoryService;
+	private AdminFaqCategoryUiService faqCategoryService;
 
 	@RequestMapping(value = "put", method = RequestMethod.POST)
 	public Result put(@Valid @ModelAttribute(ENTITY_KEY) CsmFaqCategory faqCategory, ServletRequest request) {
