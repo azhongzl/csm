@@ -236,10 +236,12 @@ const permission={
 			   	let url = ctx+ "/admin/permission/listForm";
 		    	let checkKey = {};
 	    	let result = ajaxFind(checkKey, url);
+	    	if(result.length==0){
+	    		return false;
+	    	}
 	    	if (result.data.permissionList!=undefined){
 		    	this.permissions = result.data.permissionList;    		
 	    	}
-					
 			},
 			}
 		};
@@ -314,6 +316,9 @@ const role={
 				let url1 = ctx+ "/admin/role/putForm/"+id;
 		    	let checkKey = { 	};
 		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 		    	if (result.data.role!=undefined){
 					this.id=id;
 					this.name=result.data.role.name;
@@ -325,6 +330,9 @@ const role={
 				let url1 = ctx+ "/admin/role/listForm";
 		    	let checkKey = { 	};
 		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 		    	if (result.data.roleList!=undefined){
 		    		this.roles = result.data.roleList;    		
 		    	}
@@ -384,6 +392,9 @@ const role_permission={
 				let url = ctx+ "/admin/role/listRolePermissionForm/"+id;
 		    	let checkKey = {};
 		    	let result = ajaxFind(checkKey, url);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 			    this.rolePermissions = result.data.rolePermissionList;    		
 		    	this.permissions = result.data.roleList;
 		  },
@@ -507,6 +518,9 @@ const group={
 				let url1 = ctx+ "/admin/userGroup/listForm";
 		    	let checkKey = { 	};
 		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 		    	if (result.data.userGroupList!=undefined){
 		    		this.groups = result.data.userGroupList;    		
 		    	}
@@ -515,6 +529,9 @@ const group={
 				let url1 = ctx+ "/admin/userGroup/putForm/"+id;
 		    	let checkKey = {};
 		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 		    	if (result.data.userGroup!=undefined){
 		    		this.group = result.data.userGroup; 
 		    		this.groupOptions = result.data.superUserGroupList;
@@ -524,6 +541,9 @@ const group={
 				let url1 = ctx+ "/admin/userGroup/postForm";
 		    	let checkKey = { 	};
 		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 		    	if (result.data.superUserGroupList!=undefined){
 		    		this.groupOptions = result.data.superUserGroupList;    		
 		    	}
@@ -582,6 +602,9 @@ const group_role={
 					let url = ctx+ "/admin/userGroup/listUserGroupRoleForm/"+id;
 			    	let checkKey = {};
 			    	let result = ajaxFind(checkKey, url);
+			    	if(result.length==0){
+			    		return false;
+			    	}
 			    	this.group_roles = result.data.userGroupRoleList;    		
 			    	this.roles = result.data.roleList;
 			  },
@@ -703,6 +726,9 @@ const user={
 		    			
 		    	};
 		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 		    	if (result.data.userList.content!=undefined){
 			    	this.users = result.data.userList.content;
 			    	this.totalPage=result.data.userList.totalPages;
@@ -716,6 +742,9 @@ const user={
 				let url1 = ctx+ "/admin/user/putForm/"+id;
 		    	let checkKey = {};
 		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 			    	this.user = result.data.user;
 			    	this.groupOptions = result.data.userGroupList;
 			},
@@ -723,6 +752,9 @@ const user={
 				let url1 = ctx+ "/admin/user/postForm";
 		    	let checkKey = { 	};
 		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 		    	if (result.data.userGroupList!=undefined){
 		    		this.groupOptions = result.data.userGroupList;    		
 		    	}
@@ -762,6 +794,9 @@ const faq = {
 			   	let url1 = ctx + "/admin/faqCategory/listForm";
 		    	let checkKey = "";
 		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 		    	if(result.data.faqCategoryList!=undefined){
 			    	this.categoryList = result.data.faqCategoryList;		    		
 		    	}
@@ -806,6 +841,9 @@ const showFaqList = {
 					page_no : this.$store.state.curPage,
 				};
 		    	let result = ajaxFind(checkKey, url1);
+		    	if(result.length==0){
+		    		return false;
+		    	}
 				if (result.data.faqList.content !== undefined) {
 			    	this.faqList = result.data.faqList.content;
 					this.$store.state.total = result.data.faqList.totalElements;
@@ -1058,6 +1096,9 @@ const category = {
 				   	let url1 = ctx + "/admin/faqCategory/listForm";
 			    	let checkKey = "";
 			    	let result = ajaxFind(checkKey, url1);
+			    	if(result.length==0){
+			    		return false;
+			    	}
 			    	if(result.data.faqCategoryList!=undefined){
 				    	this.categoryList = result.data.faqCategoryList;		    		
 			    	}
@@ -1489,6 +1530,7 @@ function ajaxFind(checkKey, url1) {
 		timeout : 3000,
 		error : handleError,
 	});
+
 	return (checkList);
 }
 
@@ -1529,6 +1571,7 @@ function ajaxGet(url1) {
 }
 
 function handleError(xhr){
+
 	if(xhr.status == 499){
 		window.location.replace("${ctx}" + xhr.statusText);
 	}else{
@@ -1576,9 +1619,7 @@ function ajaxcreateUpload(savedata, url1) {
 			myAlert("ADD NEW SUCCESS");
 		},
 		timeout : 3000,
-		error : function(xhr) {
-			alert("error： " + xhr.status + " " + xhr.statusText);
-		},
+		error : handleError,
 
 	});
 }
@@ -1596,9 +1637,7 @@ function ajaxPutUpload(putdata, url1) {
 			myAlert("PUT OK ");
 		},
 		timeout : 3000,
-		error : function(xhr) {
-			myalert("error： " + xhr.status + " " + xhr.statusText);
-		},
+		error : handleError,
 	});
 }
 
