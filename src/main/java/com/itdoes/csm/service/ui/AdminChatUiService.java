@@ -50,6 +50,15 @@ public class AdminChatUiService extends BaseService {
 		}
 	}
 
+	private static class UserGroupComparator implements Comparator<CsmUserGroup> {
+		private static final UserGroupComparator INSTANCE = new UserGroupComparator();
+
+		@Override
+		public int compare(CsmUserGroup o1, CsmUserGroup o2) {
+			return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+		}
+	}
+
 	private static class CustomerUserGroupDto {
 		private final CsmChatCustomerUserGroup customerUserGroup;
 		private final CsmUserGroup userGroup;
@@ -169,6 +178,7 @@ public class AdminChatUiService extends BaseService {
 				userGroupList.add(userGroup);
 			}
 		}
+		Collections.sort(userGroupList, UserGroupComparator.INSTANCE);
 
 		return Result.success().addData("customerUserGroupList", customerUserGroupDtoList).addData("userGroupList",
 				userGroupList);
