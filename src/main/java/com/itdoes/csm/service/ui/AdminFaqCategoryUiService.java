@@ -40,11 +40,8 @@ public class AdminFaqCategoryUiService extends BaseService {
 	}
 
 	public Result listForm() {
-		return Result.success().addData("faqCategoryList",
-				faqCategoryPair.db().findAll(faqCategoryPair,
-						Specifications.build(CsmFaqCategory.class,
-								Lists.newArrayList(new FindFilter("active", Operator.EQ, true))),
-						SpringDatas.newSort("name", true)));
+		return Result.success().addData("faqCategoryList", faqCategoryPair.db().findAll(faqCategoryPair,
+				Specifications.build(CsmFaqCategory.class, null), SpringDatas.newSort("name", true)));
 	}
 
 	public Result postForm() {
