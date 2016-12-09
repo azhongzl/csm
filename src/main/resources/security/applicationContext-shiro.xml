@@ -38,6 +38,8 @@
 				/admin/chat/icon = anon
 				/refreshParentCloseChildWindow = anon
 				/admin/chat/** = perms["itdoes:chat"]
+				/faq/** = anon
+				/faqCategory/** = anon
 				/admin/faqCategory/** = perms["itdoes:faqCategory"]
 				/admin/faq/** = perms["itdoes:faq"]
 				/admin/** = user
