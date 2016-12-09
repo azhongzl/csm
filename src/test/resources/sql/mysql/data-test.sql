@@ -6,7 +6,7 @@ insert into csm_user_group (id, name, admin, chat, super_id) values(unhex(replac
 insert into csm_user_group (id, name, admin, chat, super_id) values(unhex(replace('abac0f26-d51b-4b6c-a8a4-77ff598baa89','-','')), 'Test User Group Chat', 1, 1, unhex(replace('91be9c9e-686c-4e65-8818-6f0fb380b2f2','-','')));
 insert into csm_user_group (id, name, admin, chat, super_id) values(unhex(replace('2b78cd4a-406e-4395-a7f0-cde02a58673e','-','')), 'Test User Group Customer', 0, 0, null);
 
-insert into csm_user_group (id, name, admin, chat, super_id) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), 'Test User Group-1', 1, 1, null);
+insert into csm_user_group (id, name, admin, chat, super_id) values(unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')), 'Test User Group-1', 1, 0, null);
 insert into csm_user_group (id, name, admin, chat, super_id) values(unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')), 'Test User Group-1-1', 1, 0, unhex(replace('5a0452fe-d6ea-1034-a268-c6b53a0158b7','-','')));
 insert into csm_user_group (id, name, admin, chat, super_id) values(unhex(replace('19b7ca19-d6eb-1034-a268-c6b53a0158b7','-','')), 'Test User Group-1-1-1', 1, 0, unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')));
 insert into csm_user_group (id, name, admin, chat, super_id) values(unhex(replace('2a18df1d-d6eb-1034-a268-c6b53a0158b7','-','')), 'Test User Group-1-1-2', 1, 0, unhex(replace('11d5f5f7-d6eb-1034-a268-c6b53a0158b7','-','')));
