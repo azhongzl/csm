@@ -24,7 +24,7 @@ import com.itdoes.csm.service.ui.AdminFaqUiService;
  * @author Jalen Zhong
  */
 @RestController
-@RequestMapping(value = "admin/faq", produces = MediaTypes.APPLICATION_JSON_UTF_8)
+@RequestMapping(value = "/admin/faq", produces = MediaTypes.APPLICATION_JSON_UTF_8)
 public class AdminFaqPutController extends BasePutController {
 	@Autowired
 	private AdminFaqUiService faqService;
