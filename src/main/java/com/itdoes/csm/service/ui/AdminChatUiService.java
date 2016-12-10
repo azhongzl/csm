@@ -59,6 +59,15 @@ public class AdminChatUiService extends BaseService {
 		}
 	}
 
+	private static class ChatUserComparator implements Comparator<ChatUser> {
+		private static final ChatUserComparator INSTANCE = new ChatUserComparator();
+
+		@Override
+		public int compare(ChatUser o1, ChatUser o2) {
+			return o1.getUsername().toLowerCase().compareTo(o2.getUsername().toLowerCase());
+		}
+	}
+
 	private static class CustomerUserGroupDto {
 		private final CsmChatCustomerUserGroup customerUserGroup;
 		private final CsmUserGroup userGroup;
@@ -101,15 +110,6 @@ public class AdminChatUiService extends BaseService {
 	private static final Root ROOT = Root.getInstance();
 
 	private static final int MESSAGE_PAGE_SIZE = 10;
-
-	private static class ChatUserComparator implements Comparator<ChatUser> {
-		private static final ChatUserComparator INSTANCE = new ChatUserComparator();
-
-		@Override
-		public int compare(ChatUser o1, ChatUser o2) {
-			return o1.getUsername().toLowerCase().compareTo(o2.getUsername().toLowerCase());
-		}
-	}
 
 	@Autowired
 	private EntityEnv env;
