@@ -132,6 +132,16 @@ public class AdminChatUiService extends BaseService {
 		customerUserGroupPair = env.getPair(CsmChatCustomerUserGroup.class.getSimpleName());
 	}
 
+	public Result listHistory(String customerId, Principal principal) {
+		final ShiroUser shiroUser = getShiroUser(principal);
+		if (!canSendMessage(shiroUser.getId(), customerId)) {
+			return Result.fail(1, "You are not allowed to view this customer's chat history");
+		}
+
+		return Result.success().addData("historyList",
+				messagePair.db().filter("roomId", Operator.EQ, customerId).sort("createDateTime", true).exeFindAll());
+	}
+
 	public Result hasUnhandledCustomers(Principal principal) {
 		final String key = "hasUnhandledCustomers";
 		if (!unhandledCustomerService.hasUnhandledCustomers()) {

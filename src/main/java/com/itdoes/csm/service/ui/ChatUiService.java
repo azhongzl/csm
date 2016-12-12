@@ -52,6 +52,12 @@ public class ChatUiService extends BaseService {
 		messagePair = env.getPair(CsmChatMessage.class.getSimpleName());
 	}
 
+	public Result listHistory(Principal principal) {
+		final ShiroUser shiroUser = getShiroUser(principal);
+		return Result.success().addData("historyList", messagePair.db().filter("roomId", Operator.EQ, shiroUser.getId())
+				.sort("createDateTime", true).exeFindAll());
+	}
+
 	public Result initMessage(Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
 		List<CsmChatMessage> messageList = getLatestMessageList(shiroUser.getId());
