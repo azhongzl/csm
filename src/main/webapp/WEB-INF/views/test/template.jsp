@@ -59,7 +59,7 @@
 				v-on:click="removeGroup(user.customerUserGroup.id,index)">{{user.userGroup.name}}</a></li>
 		</ul>
 		<label>Select service group</label><br> <select class="form-control" v-model="selected"
-			v-on:change="select(selected)">
+			v-on:change="selectFunction(selected)">
 			<option v-for="service in serviceList" :value="service">{{service.name}}</option>
 		</select>
 	</div>
@@ -96,7 +96,7 @@
 <div>
 	<h3>Permission</h3>
 	<div class="list-group">
-		<a href="javascript:viod(0)" class="list-group-item active" v-on:click="addNew">ADD NEW PERMISSION</a>
+		<a href="javascript:void(0)" class="list-group-item active" v-on:click="addNew">ADD NEW PERMISSION</a>
 
 		<div class="modal fade" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -151,7 +151,7 @@
 <div>
 	<h3>Role</h3>
 	<div class="list-group">
-		<a href="javascript:viod(0)" class="list-group-item active" v-on:click="addNew">ADD NEW ROLE</a>
+		<a href="javascript:void(0)" class="list-group-item active" v-on:click="addNew">ADD NEW ROLE</a>
 
 		<div class="modal fade" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -234,7 +234,7 @@
 <div>
 	<h3>Group</h3>
 	<div class="list-group">
-		<a href="javascript:viod(0)" class="list-group-item  active" v-on:click="addNew">ADD NEW GROUP</a>
+		<a href="javascript:void(0)" class="list-group-item  active" v-on:click="addNew">ADD NEW GROUP</a>
 
 		<div class="modal fade" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -328,7 +328,7 @@
 <div>
 	<h3>User</h3>
 	<div class="list-group">
-		<a href="javascript:viod(0)" class="list-group-item active " v-on:click="addNew">ADD NEW USER</a>
+		<a href="javascript:void(0)" class="list-group-item active " v-on:click="addNew">ADD NEW USER</a>
 
 		<div class="modal fade" id="myModal1" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -509,7 +509,7 @@
 <div>
 	<h3>Categories</h3>
 	<div class="list-group">
-		<a href="javascript:viod(0)" class="list-group-item  active" v-on:click="addNew">ADD NEW CATEGORY</a>
+		<a href="javascript:void(0)" class="list-group-item  active" v-on:click="addNew">ADD NEW CATEGORY</a>
 
 		<div class="modal fade" id="categoryModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">

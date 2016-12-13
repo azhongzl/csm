@@ -103,7 +103,11 @@
 
 
 	<%@include file="template.jsp"%>
-
+	<script type=text/javascript>
+		userId = "<shiro:principal property="id" />";
+		username = "<shiro:principal property="username" />";
+		ctx = "${ctx}";
+	</script>
 	<!-- jQuery -->
 	<script src="${ctx}/static/test/jquery.min.js"></script>
 
@@ -119,11 +123,7 @@
 
 	<!-- Custom Theme JavaScript -->
 	<script src="${ctx}/static/test/sb-admin-2.js"></script>
-	<script type=text/javascript>
-		userId = "<shiro:principal property="id" />";
-		username = "<shiro:principal property="username" />";
-		ctx = "${ctx}";
-	</script>
+
 
 </body>
 </html>

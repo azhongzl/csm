@@ -1,10 +1,7 @@
-
-var ctx;
+var test=1;
 var stompClient = null;
 var subscribeList ;
 var plainPassword="kuzco123";
-var userId = "";
-var username = "";
 var root = "root";
 const
 chat = {
@@ -29,7 +26,7 @@ service = {
 	template : '#service',
 	data : function() {
 		return {
-			selected : "",
+			selected : '',
 
 		}
 	},
@@ -68,12 +65,15 @@ service = {
 				timeout : 3000,
 				error :handleError
 			});
-			store.commit('getService',{id:this.$route.query.id});
+			//store.commit('getService',{id:this.$route.query.id});
 		},
 		
-	 select : function(res) {
+	 selectFunction : function(service) {
+		 	if (service==undefined){
+		 		return;
+		 	}
+		 	var serviceId=service.id;
 			let	id = this.$route.query.id;
-			res.customer = id;
 			var canSendMsg=false;
 			if(store.state.currentUserGroup.chatOrSuper){
 				canSendMsg=true;
@@ -86,13 +86,15 @@ service = {
 				return;
 			}
 			var url1=ctx+"/admin/chat/postCustomerUserGroup";
+
 			var savedata = {
 					customerUserId:id,
-					userGroupId:res.id,
+					userGroupId:serviceId,
 					operatorUserId:userId,
 			};
+
 			ajaxcreate(savedata, url1);
-			store.commit('getService',{id:id});
+			//store.commit('getService',{id:id});
 			
 		},
 
@@ -1335,7 +1337,6 @@ function connect1() {
 			$.each(JSON.parse(message.body).data.customerUserGroupList,function(i,n){
 				store.state.customerUserGroupList.push(n.customerUserId);
 			});
-			if(!store.state.currentUserGroup.userGroup.chat){
 				stompClient.subscribe('/topic/chat/addCustomerUserGroup',
 						function(message) {
 							var data=JSON.parse(message.body);
@@ -1360,8 +1361,6 @@ function connect1() {
 							
 					}
 						});	
-			}
-			
 		});
 		stompClient.subscribe('/topic/chat/login', function(message) {
 			showOnlineCustomer(JSON.parse(message.body).data);
@@ -1507,6 +1506,7 @@ function ajaxcreate(savedata, url1) {
 		type : "POST",
 		url : url1,
 		data : savedata,
+		cache : false,
 		async : false,
 		success : function(result) {
 			myAlert("ADD NEW SUCCESS");
@@ -1523,6 +1523,7 @@ function ajaxFind(checkKey, url1) {
 		type : "GET",
 		url : url1,
 		data : checkKey,
+		cache : false,
 		async : false,
 		success : function(result) {
 				checkList = result;
@@ -1541,6 +1542,7 @@ function ajaxPut(putdata, url1) {
 		type : "POST",
 		url : url1,
 		data : putdata,
+		cache : false,
 		async : false,
 		success : function(result) {
 			myAlert("PUT OK ");
@@ -1557,6 +1559,7 @@ function ajaxGet(url1) {
 		type : "GET",
 		url : url1,
 		async : false,
+		cache : false,
 		success : function(result) {
 			if (result.data == undefined) {
 				myAlert("No Result");
@@ -1645,4 +1648,5 @@ function myAlert(msg){
 	vm.message=msg;
 	vm.showMsg();
 }
+
 

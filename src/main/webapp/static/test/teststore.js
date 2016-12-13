@@ -26,6 +26,5 @@ const store = new Vuex.Store({
 								  		state.customerId=payload.id;
 										state.customerName=payload.name;
 							    },
-
 	  			}
 	});
