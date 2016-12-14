@@ -285,7 +285,7 @@ public class AdminChatUiService extends BaseService {
 		removeUnhandledCustomer(curUserIdString, roomIdString, template);
 	}
 
-	public Result upload(CsmChatMessage message, List<MultipartFile> uploadFileLists, Principal principal,
+	public Result upload(CsmChatMessage message, List<MultipartFile> uploadFileList, Principal principal,
 			SimpMessagingTemplate template) {
 		final UUID roomId = message.getRoomId();
 		Validate.notNull(roomId, "RoomId should not be null");
@@ -302,7 +302,7 @@ public class AdminChatUiService extends BaseService {
 		message.setCreateDateTime(LocalDateTime.now());
 		message.setFromAdmin(true);
 		message.setSenderName(shiroUser.getUsername());
-		messagePair.db().exePost(message);
+		messagePair.upload().exePost(message, uploadFileList);
 		template.convertAndSend("/topic/chat/message/" + roomIdString, message);
 
 		removeUnhandledCustomer(curUserIdString, roomIdString, template);
