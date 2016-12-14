@@ -17,7 +17,7 @@ var vmSidebar = new Vue({
 				page_no : 1,
 			};
 			var result1 = ajaxFind(checkKey, url1);
-			if (result1.length == 0) {
+			if (result1.data.faqList.content == undefined) {
 				vmPagecount.total = 0;
 				vmPagecount.showKey = false;
 			} else {
@@ -118,7 +118,7 @@ var vmPagecount = new Vue({
 						page_no : this.curPage,
 					};
 					var result1 = ajaxFind(checkKey, url1);
-					vmContent.faqs = result1.data.content;
+					vmContent.faqs = result1.data.faqList.content;
 				}
 				if(vmContent.label=="Search"){
 		    		vmContent.faqs=[];
@@ -134,7 +134,7 @@ var vmPagecount = new Vue({
 		    			data : checkKey,
 		    			async : false,
 		    			success : function(result) {
-		    				if (result.data.content == undefined) {
+		    				if (result.data.searchList.content == undefined) {
 		    					alert("No Result");
 		    				} else {
 		    					checkList = result;
@@ -145,7 +145,7 @@ var vmPagecount = new Vue({
 		    				alert(" error： " + xhr.status + " " + xhr.statusText);
 		    			},
 		    		});
-					if (checkList.length == 0) {
+					if (checkList.data.faqList.content == undefined) {
 						vmPagecount.total = 0;
 						vmPagecount.showKey = false;
 					} else {
