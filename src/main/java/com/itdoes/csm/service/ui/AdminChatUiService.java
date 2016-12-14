@@ -15,6 +15,7 @@ import org.assertj.core.util.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
@@ -281,8 +282,37 @@ public class AdminChatUiService extends BaseService {
 		messagePair.db().exePost(message);
 		template.convertAndSend("/topic/chat/message/" + roomIdString, message);
 
-		final ChatEvent messageEvent = new ChatEvent(curUserIdString).addUserId(roomIdString);
-		unhandledCustomerService.removeUnhandledCustomer(roomIdString);
+		removeUnhandledCustomer(curUserIdString, roomIdString, template);
+	}
+
+	public Result upload(CsmChatMessage message, List<MultipartFile> uploadFileLists, Principal principal,
+			SimpMessagingTemplate template) {
+		final UUID roomId = message.getRoomId();
+		Validate.notNull(roomId, "RoomId should not be null");
+		final String roomIdString = roomId.toString();
+
+		final ShiroUser shiroUser = getShiroUser(principal);
+		if (!canSendMessage(shiroUser.getId(), roomIdString)) {
+			return Result.fail(1, "You are not allowed to send message to this customer [" + roomIdString + "]");
+		}
+
+		final String curUserIdString = shiroUser.getId();
+		final UUID curUserId = UUID.fromString(curUserIdString);
+		message.setSenderId(curUserId);
+		message.setCreateDateTime(LocalDateTime.now());
+		message.setFromAdmin(true);
+		message.setSenderName(shiroUser.getUsername());
+		messagePair.db().exePost(message);
+		template.convertAndSend("/topic/chat/message/" + roomIdString, message);
+
+		removeUnhandledCustomer(curUserIdString, roomIdString, template);
+
+		return Result.success();
+	}
+
+	private void removeUnhandledCustomer(String operatorUserId, String roomId, SimpMessagingTemplate template) {
+		final ChatEvent messageEvent = new ChatEvent(operatorUserId).addUserId(roomId);
+		unhandledCustomerService.removeUnhandledCustomer(roomId);
 		template.convertAndSend("/topic/chat/removeUnhandledCustomer", messageEvent);
 	}
 

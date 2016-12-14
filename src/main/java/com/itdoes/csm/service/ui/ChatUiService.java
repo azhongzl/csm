@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
@@ -87,7 +88,29 @@ public class ChatUiService extends BaseService {
 		messagePair.db().exePost(message);
 		template.convertAndSend("/topic/chat/message/" + curUserIdString, message);
 
-		final ChatEvent messageEvent = new ChatEvent(curUserIdString).addUserId(curUserIdString);
+		addUnhandledCustomer(curUserIdString, template);
+	}
+
+	public Result upload(CsmChatMessage message, List<MultipartFile> uploadFileList, Principal principal,
+			SimpMessagingTemplate template) {
+		final ShiroUser shiroUser = getShiroUser(principal);
+		final String curUserIdString = shiroUser.getId();
+		final UUID curUserId = UUID.fromString(curUserIdString);
+		message.setRoomId(curUserId);
+		message.setSenderId(curUserId);
+		message.setCreateDateTime(LocalDateTime.now());
+		message.setFromAdmin(false);
+		message.setSenderName(shiroUser.getUsername());
+		messagePair.upload().exePost(message, uploadFileList);
+		template.convertAndSend("/topic/chat/message/" + curUserIdString, message);
+
+		addUnhandledCustomer(curUserIdString, template);
+
+		return Result.success();
+	}
+
+	private void addUnhandledCustomer(String operatorUserId, SimpMessagingTemplate template) {
+		final ChatEvent messageEvent = new ChatEvent(operatorUserId).addUserId(operatorUserId);
 		unhandledCustomerService.addUnhandledCustomer(messageEvent);
 		template.convertAndSend("/topic/chat/addUnhandledCustomer", messageEvent);
 	}
