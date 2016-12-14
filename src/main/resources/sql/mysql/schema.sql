@@ -84,7 +84,8 @@ create table csm_chat_message (
 	sender_id binary(16) not null,
 	create_date_time timestamp not null,
 	from_admin bit not null,
-	message varchar(500) not null,
+	message varchar(500),
+	attachments varchar(255),
     primary key (id)
 ) engine=InnoDB;
 

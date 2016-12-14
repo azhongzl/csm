@@ -38,9 +38,11 @@ public class CsmChatMessage extends BaseEntity {
 	@javax.validation.constraints.NotNull
 	@Column(name = "from_admin")
 	private Boolean fromAdmin;
-	@javax.validation.constraints.NotNull
 	@Column(name = "message")
 	private String message;
+	@com.itdoes.common.business.entity.FieldUpload
+	@Column(name = "attachments")
+	private String attachments;
 
 	public java.util.UUID getId() {
 		return id;
@@ -88,6 +90,14 @@ public class CsmChatMessage extends BaseEntity {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(String attachments) {
+		this.attachments = attachments;
 	}
 
 	@javax.persistence.Transient
