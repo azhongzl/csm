@@ -153,7 +153,6 @@ function showMessages(messageList) {
 }
 
 function showMessage(message) {
-alert(message.id);
 	var canSendMsg=false;
 	if(store.state.currentUserGroup.chatOrSuper){
 		canSendMsg=true;
