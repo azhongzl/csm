@@ -59,7 +59,8 @@ public class ChatController extends BaseController {
 		chatService.sendMessage(message, principal, template);
 	}
 
-	@RequestMapping(value = "upload", method = RequestMethod.POST)
+	@RequestMapping(value = "upload", method = RequestMethod.POST, produces = MediaTypes.APPLICATION_JSON_UTF_8)
+	@ResponseBody
 	public Result upload(@Valid CsmChatMessage message, @RequestParam(UPLOAD_FILE) List<MultipartFile> uploadFileList,
 			Principal principal) {
 		return chatService.upload(message, uploadFileList, principal, template);
