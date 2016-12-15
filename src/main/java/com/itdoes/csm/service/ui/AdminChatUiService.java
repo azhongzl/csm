@@ -139,8 +139,13 @@ public class AdminChatUiService extends BaseService {
 			return Result.fail(1, "You are not allowed to view this customer's chat history");
 		}
 
-		return Result.success().addData("historyList",
-				messagePair.db().filter("roomId", Operator.EQ, customerId).sort("createDateTime", true).exeFindAll());
+		final List<CsmChatMessage> messageList = messagePair.db().filter("roomId", Operator.EQ, customerId)
+				.sort("createDateTime", true).exeFindAll();
+		for (CsmChatMessage message : messageList) {
+			populateSenderName(message);
+		}
+
+		return Result.success().addData("historyList", messageList);
 	}
 
 	public Result hasUnhandledCustomers(Principal principal) {
@@ -327,19 +332,22 @@ public class AdminChatUiService extends BaseService {
 		final List<CsmChatMessage> messageList = Lists.newArrayListWithCapacity(dbMessageList.size());
 		for (int i = dbMessageList.size() - 1; i >= 0; i--) {
 			final CsmChatMessage message = dbMessageList.get(i);
-
-			final String senderId = message.getSenderId().toString();
-			final String senderName;
-			final CsmUser user = userCacheService.getUser(senderId);
-			if (user == null) {
-				senderName = "Unknown";
-			} else {
-				senderName = user.getUsername();
-			}
-			message.setSenderName(senderName);
+			populateSenderName(message);
 			messageList.add(message);
 		}
 		return messageList;
+	}
+
+	private void populateSenderName(CsmChatMessage message) {
+		final String senderId = message.getSenderId().toString();
+		final String senderName;
+		final CsmUser user = userCacheService.getUser(senderId);
+		if (user == null) {
+			senderName = "Unknown";
+		} else {
+			senderName = user.getUsername();
+		}
+		message.setSenderName(senderName);
 	}
 
 	private boolean isCustomerUserGroupExist(String customerId, String userGroupId) {

@@ -55,8 +55,14 @@ public class ChatUiService extends BaseService {
 
 	public Result listHistory(Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
-		return Result.success().addData("historyList", messagePair.db().filter("roomId", Operator.EQ, shiroUser.getId())
-				.sort("createDateTime", true).exeFindAll());
+
+		final List<CsmChatMessage> messageList = messagePair.db().filter("roomId", Operator.EQ, shiroUser.getId())
+				.sort("createDateTime", true).exeFindAll();
+		for (CsmChatMessage message : messageList) {
+			populateSenderName(message);
+		}
+
+		return Result.success().addData("historyList", messageList);
 	}
 
 	public Result initMessage(Principal principal) {
@@ -125,23 +131,26 @@ public class ChatUiService extends BaseService {
 		final List<CsmChatMessage> messageList = Lists.newArrayListWithCapacity(dbMessageList.size());
 		for (int i = dbMessageList.size() - 1; i >= 0; i--) {
 			final CsmChatMessage message = dbMessageList.get(i);
-
-			final String senderId = message.getSenderId().toString();
-			final String senderName;
-			if (message.getFromAdmin()) {
-				senderName = CUSTOMER_SERVICE_NAME;
-			} else {
-				final CsmUser user = userCacheService.getUser(senderId);
-				if (user == null) {
-					senderName = "Unknown";
-				} else {
-					senderName = user.getUsername();
-				}
-			}
-			message.setSenderName(senderName);
+			populateSenderName(message);
 			messageList.add(message);
 		}
 		return messageList;
+	}
+
+	private void populateSenderName(CsmChatMessage message) {
+		final String senderId = message.getSenderId().toString();
+		final String senderName;
+		if (message.getFromAdmin()) {
+			senderName = CUSTOMER_SERVICE_NAME;
+		} else {
+			final CsmUser user = userCacheService.getUser(senderId);
+			if (user == null) {
+				senderName = "Unknown";
+			} else {
+				senderName = user.getUsername();
+			}
+		}
+		message.setSenderName(senderName);
 	}
 
 	private ShiroUser getShiroUser(Principal principal) {
