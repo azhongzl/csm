@@ -56,6 +56,7 @@
 	<!-- TODO only for test, should be removed in production -->
 	<mvc:view-controller path="/test/" view-name="test/index" />
 	<mvc:view-controller path="/edit" view-name="jalenEditForm" />
+	<mvc:view-controller path="/temp" view-name="temp" />
 
 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">

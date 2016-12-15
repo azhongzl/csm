@@ -26,16 +26,13 @@ public class CsmChatMessage extends BaseEntity {
 	@Column(name = "id")
 	private java.util.UUID id;
 	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
-	@javax.validation.constraints.NotNull
 	@Column(name = "room_id")
 	private java.util.UUID roomId;
 	@com.itdoes.common.business.entity.FieldConstraint(entity = CsmUser.class, field = "id", updateStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.CASCADE, deleteStrategy = com.itdoes.common.business.entity.FieldConstraintStrategy.RESTRICT)
-	@javax.validation.constraints.NotNull
 	@Column(name = "sender_id")
 	private java.util.UUID senderId;
 	@Column(name = "create_date_time")
 	private java.time.LocalDateTime createDateTime;
-	@javax.validation.constraints.NotNull
 	@Column(name = "from_admin")
 	private Boolean fromAdmin;
 	@Column(name = "message")
