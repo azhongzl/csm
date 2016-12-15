@@ -29,6 +29,7 @@
 			width : 640,
 			top : 200
 		});
+		$("#uploadFile").hide();
 	});
 </script>
 <body>
@@ -38,24 +39,40 @@
 			<div id="sentence" class="well"
 				style="width: 600px; height: 600px; overflow-y: auto; overflow-x: hidden; background-color: #ebebeb; margin-top: 5px">
 			</div>
-			<div class="well" style="width: 600px; height: 100px; background-color: #dddcd9; margin: auto;">
-
-				<form class="form-inline">
+			<div class="well" style="width: 600px; height: 100px; background-color: #dddcd9; padding: 0px; padding-top: 30px">
+				<div class="btn-group dropup pull-right">
+					<button type="button" aria-hidden="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<span class="caret">
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="javascript:void(0)" onclick="listHistory()">Display history </a></li>
+						<li><a href="javascript:void(0)" onclick="uploadFile()">Upload file</a></li>
+						<li><a href="javascript:void(0)">other</a></li>
+						<li class="divider"></li>
+						<li><a href="javascript:void(0)" onclick="switchChat()">Chat</a></li>
+					</ul>
+				</div>
+				<form class="form-inline" id="chatForm">
 					<div class="form-group">
 						<input type="text" id="message" class="form-control" placeholder="Your message here..." style="width: 480px;">
 					</div>
 					<button id="send" class="btn btn-default" type="submit" onclick="sendMessage()">Send</button>
 				</form>
-
+				<div id="uploadFile" class="col-md-2 " >
+					<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
+						onchange='showUploadFile()' />
+				</div>
 				<!-- /input-group -->
 			</div>
 		</div>
 	</div>
 	<button id="trigger" class="trigger">try</button>
-	<script type="text/javascript" src="${ctx}/static/js/chatFunction.js"></script>
 	<script type="text/javascript">
 		userId = "<shiro:principal property="id" />";
 		username = "<shiro:principal property="username" />"
+		ctx = "${ctx}";
 	</script>
+	<script type="text/javascript" src="${ctx}/static/js/chatFunction.js"></script>
+
 </body>
 </html>

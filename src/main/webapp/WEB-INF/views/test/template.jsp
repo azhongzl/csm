@@ -43,7 +43,7 @@
 	<h4>Customer</h4>
 	<div class="list-group" style="height: 250px; overflow: auto">
 		<ul class="list-group">
-			<li class="list-group-item" v-for="(customer,index) in customers" ><router-link
+			<li class="list-group-item" v-for="(customer,index) in customers"><router-link
 					:to="{path:'/admin/chat/content',query:{name:customer.username,id:customer.userId}}" :id="customer.userId">{{customer.username}}</router-link></li>
 		</ul>
 	</div>
@@ -70,14 +70,27 @@
 <div>
 	<div class="row clearfix">
 		<div id="sentence"
-			style="background-color: #f7f7f7; max-width: 1000px; height: 600px; padding-top: 10px; overflow-y: auto; overflow-x: hidden; padding-left: 20px; padding-right: 20px"></div>
+			style="background-color: #f7f7f7; max-width: 1000px; height: 550px; margin-top: 0px; overflow-y: auto; overflow-x: hidden; padding-left: 20px; padding-right: 20px"></div>
 	</div>
 	<div class="row clearfix">
 		<div style="max-width: 1000px; height: 60px; margin-top: 2px; margin-left: 50px">
-			<p>
-			<h3>Talk to : {{customerName}}</h3>
-			</p>
-			<div class="form-group input-group" style="max-width: 900px; margin-left: 10px">
+
+			<p style="color: blue">Talk to : {{customerName}}</p>
+
+			<div class="btn-group dropup pull-right" style="margin-right: 80px">
+				<button type="button" aria-hidden="true" class="btn btn-default dropdown-toggle"
+					data-toggle="dropdown" >
+					<span class="fa fa-plus fa-lg">
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="javascript:void(0)" v-on:click="listHistory()">Display history </a></li>
+					<li><a href="javascript:void(0)" v-on:click="switchKey()">Upload file</a></li>
+					<li><a href="javascript:void(0)">other</a></li>
+					<li class="divider"></li>
+					<li><a href="javascript:void(0)" v-on:click="switchChat()">Chat</a></li>
+				</ul>
+			</div>
+			<div class="form-group input-group" style="max-width: 800px; margin-left: 10px" v-show="uploadKey">
 				<input type="text" class="form-control" v-on:keyup.enter="send" v-model="sentence"> <span
 					class="input-group-btn">
 					<button class="btn btn-default" type="button" v-on:click="send(sentence)">
@@ -85,6 +98,12 @@
 					</button>
 				</span>
 			</div>
+
+			<div class="col-md-2 " v-show="!uploadKey">
+				<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
+					v-on:change='showUploadFile()' />
+			</div>
+
 		</div>
 	</div>
 </div>
@@ -94,8 +113,8 @@
 
 <template id="permission">
 <div>
-	<h3>Permission</h3>
-	<div class="list-group">
+	<span class="col-xs-8 col-md-offset-2"><h3>Permission</h3></span>
+	<div class="list-group col-xs-8 col-md-offset-2">
 		<a href="javascript:void(0)" class="list-group-item active" v-on:click="addNew">ADD NEW PERMISSION</a>
 
 		<div class="modal fade" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
@@ -149,8 +168,8 @@
 
 <template id="role">
 <div>
-	<h3>Role</h3>
-	<div class="list-group">
+	<span class="col-xs-8 col-md-offset-2"><h3>Role</h3></span>
+	<div class="list-group col-xs-8 col-md-offset-2">
 		<a href="javascript:void(0)" class="list-group-item active" v-on:click="addNew">ADD NEW ROLE</a>
 
 		<div class="modal fade" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog"
@@ -186,7 +205,7 @@
 
 		<template v-for="role in roles">
 		<div class="list-group-item">
-			<span><router-link :to="{path:'/role_permission',query:{id:role.id}}">{{role.name}}</router-link></span>
+			<span><router-link :to="{path:'/role_permission',query:{id:role.id,name:role.name}}">{{role.name}}</router-link></span>
 			<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
 				v-on:click="del(role.id)">delete</button>
 			<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
@@ -199,7 +218,7 @@
 
 <template id="role_permission">
 <div style="margin-top: 10px">
-	<div class="row clearfix">
+	<div class="row clearfix col-xs-8 col-md-offset-2">
 		<div class="col-md-6 column">
 			<div class="list-group">
 				<a class="list-group-item active">Please select permission(click to selected)</a>
@@ -232,8 +251,8 @@
 
 <template id="group">
 <div>
-	<h3>Group</h3>
-	<div class="list-group">
+	<span class="col-xs-8 col-md-offset-2"><h3>Group</h3></span>
+	<div class="list-group col-xs-8 col-md-offset-2">
 		<a href="javascript:void(0)" class="list-group-item  active" v-on:click="addNew">ADD NEW GROUP</a>
 
 		<div class="modal fade" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog"
@@ -293,7 +312,7 @@
 
 <template id="group_role">
 <div style="margin-top: 10px">
-	<div class="row clearfix">
+	<div class="row clearfix col-xs-8 col-md-offset-2">
 		<div class="col-md-6 column">
 			<div class="list-group">
 				<a class="list-group-item active">Please select role(click to selected)</a>
@@ -326,8 +345,8 @@
 
 <template id="user">
 <div>
-	<h3>User</h3>
-	<div class="list-group">
+	<span class="col-xs-8 col-md-offset-2"><h3>User</h3></span>
+	<div class="list-group col-xs-8 col-md-offset-2">
 		<a href="javascript:void(0)" class="list-group-item active " v-on:click="addNew">ADD NEW USER</a>
 
 		<div class="modal fade" id="myModal1" style="margin-top: 200px" tabindex="-1" role="dialog"
@@ -436,8 +455,8 @@
 <div class="list-group" style="max-height: 650px; overflow: auto">
 	<a class="list-group-item  active">Categories</a>
 	<ul class="list-group-item">
-		<li v-for="n in categoryList" class="list-group-item"><router-link :to="{path: '/faq/showFaqList', query: { id: n.id }}"
-				v-bind:id=" n.id "> {{n.name}} </router-link></li>
+		<li v-for="n in categoryList" class="list-group-item"><router-link
+				:to="{path: '/faq/showFaqList', query: { id: n.id }}" v-bind:id=" n.id "> {{n.name}} </router-link></li>
 	</ul>
 </div>
 </template>

@@ -153,6 +153,7 @@ function showMessages(messageList) {
 }
 
 function showMessage(message) {
+alert(message.id);
 	var canSendMsg=false;
 	if(store.state.currentUserGroup.chatOrSuper){
 		canSendMsg=true;
@@ -164,18 +165,33 @@ function showMessage(message) {
 	if(!canSendMsg){
 		return;
 	}
-	
 	var timeStr="";
 	var num=message.createDateTime.indexOf("T");
 	timeStr=message.createDateTime.substring(0,num)+" "+message.createDateTime.substring(num+1,19);
-	if (message.fromAdmin){
-	$("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:500px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+message.message+" </div></div>"
-);
-	}else{
-		$("#sentence").append("<div class='panel panel-info' style='clear:both;float:left;width:500px'><div class='panel-heading' style='padding: 2px 0px ' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+message.message+" </div></div>"
+	if(message.attachments==undefined){
+			if (message.fromAdmin){
+			$("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:500px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+message.message+" </div></div>"
 		);
+			}else{
+				$("#sentence").append("<div class='panel panel-info' style='clear:both;float:left;width:500px'><div class='panel-heading' style='padding: 2px 0px ' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+message.message+" </div></div>"
+				);
+			}
+	}else{
+		let attachment=message.attachments.split(",");
+		let files="";
+		$.each(attachment,function(i,n){
+			files+="<p><a href="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+">"+n+"</a></p>";
+		
+		});
+		if (message.fromAdmin){
+			$("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:500px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+files+" </div></div>"
+		);
+			}else{
+				$("#sentence").append("<div class='panel panel-info' style='clear:both;float:left;width:500px'><div class='panel-heading' style='padding: 2px 0px ' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+files+" </div></div>"
+				);
+			}
 	}
-
+	
 }
 
 function ajaxcreate(savedata, url1) {

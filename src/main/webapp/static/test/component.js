@@ -1,4 +1,4 @@
-var test=1;
+
 var stompClient = null;
 var subscribeList ;
 var plainPassword="kuzco123";
@@ -105,7 +105,7 @@ const content={
 		  template:'#content',
 		  data:function(){
 			return {
-
+				uploadKey:true,
 				sentence:"",
 					}; 
 		  },
@@ -138,7 +138,46 @@ const content={
 						}));
 						this.sentence="";
 					}
-			}
+			},
+			switchKey:function(){
+				this.uploadKey=!this.uploadKey;
+			},
+			switchChat:function(){
+				this.uploadKey=true;
+			},
+			listHistory:function(){
+				let customerId=	this.$route.query.id;
+			   	let url = ctx+ "/admin/chat/listHistory/"+customerId;
+		    	let checkKey = {};
+	    	let result = ajaxFind(checkKey, url);
+	    	showMessages(result.data.historyList);
+			},
+			showUploadFile: function(){
+	    		var fileData = $("input[name='uploadFile1']").get(0);
+//	    		var txt = "";
+//	    		if ('files' in fileData) {
+//	    			for (var i = 0; i < fileData.files.length; i++) {
+//	    				txt += (i + 1) + ". file ";
+//	    				var file = fileData.files[i];
+//	    				if ('name' in file) {
+//	    					txt += "name: " + file.name;
+//	    					myAlert(file.name);
+//	    				}
+//	    				if ('size' in file) {
+//	    					txt += "  file size: " + file.size + " bytes \n";
+//	    				}
+//	    			}
+//	    		}
+
+	    		url1 = ctx + "/admin/chat/upload";
+	    		var form_data = new FormData();
+	    		form_data.append("roomId", this.$route.query.id);
+	    		for (var i = 0; i < (fileData.files.length); i++) {
+	    			form_data.append("uploadFile", fileData.files[i]);
+	    		}
+	    		ajaxcreateUpload(form_data, url1);
+	    		
+			},
 		  }
 		};
 

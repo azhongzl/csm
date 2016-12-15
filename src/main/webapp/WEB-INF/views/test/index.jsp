@@ -32,7 +32,7 @@
 
 <body>
 
-	<div id="wrapper">
+	<div id="wrapper" >
 		<!-- Navigation -->
 		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
 			<div class="navbar-header">
@@ -118,13 +118,12 @@
 	<script src="${ctx}/static/test/metisMenu.min.js"></script>
 
 	<script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
-	<script type="text/javascript" src="${ctx}/static/test/teststore.js"></script>
-	<script type="text/javascript" src="${ctx}/static/test/companent.js"></script>
+	<script type="text/javascript" src="${ctx}/static/test/common.js"></script>
+	<script type="text/javascript" src="${ctx}/static/test/store.js"></script>
+	<script type="text/javascript" src="${ctx}/static/test/component.js"></script>
 	<script type="text/javascript" src="${ctx}/static/test/router.js"></script>
-		<script type="text/javascript" src="${ctx}/static/test/common.js"></script>
+
 	<!-- Custom Theme JavaScript -->
 	<script src="${ctx}/static/test/sb-admin-2.js"></script>
-
-
 </body>
 </html>
