@@ -40,7 +40,7 @@
 				style="width: 600px; height: 600px; overflow-y: auto; overflow-x: hidden; background-color: #ebebeb; margin-top: 5px">
 			</div>
 			<div class="well" style="width: 600px; height: 100px; background-color: #dddcd9; padding: 0px; padding-top: 30px">
-				<div class="btn-group dropup pull-right">
+				<div class="btn-group dropup pull-right" style="margin-right: 10px">
 					<button type="button" aria-hidden="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						<span class="caret">
 					</button>

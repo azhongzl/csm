@@ -119,9 +119,9 @@
 
 		<div class="modal fade" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
+			<div class="modal-dialog" >
 				<div class="modal-content">
-					<div class="modal-header">
+					<div class="modal-header "  style="background-color:#337ab7;color:white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
 					</div>
@@ -174,9 +174,9 @@
 
 		<div class="modal fade" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
+			<div class="modal-dialog" >
 				<div class="modal-content">
-					<div class="modal-header">
+					<div class="modal-header "  style="background-color:#337ab7;color:white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
 					</div>
@@ -257,9 +257,9 @@
 
 		<div class="modal fade" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
+			<div class="modal-dialog" >
 				<div class="modal-content">
-					<div class="modal-header">
+					<div class="modal-header "  style="background-color:#337ab7;color:white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
 					</div>
@@ -349,11 +349,11 @@
 	<div class="list-group ">
 		<a href="javascript:void(0)" class="list-group-item active " v-on:click="addNew">ADD NEW USER</a>
 
-		<div class="modal fade" id="myModal1" style="margin-top: 200px" tabindex="-1" role="dialog"
+		<div class="modal fade" id="myModal1" style="margin-top: 200px; " tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
+			<div class="modal-dialog" >
 				<div class="modal-content">
-					<div class="modal-header">
+					<div class="modal-header "  style="background-color:#337ab7;color:white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
 					</div>
@@ -532,9 +532,9 @@
 
 		<div class="modal fade" id="categoryModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
+			<div class="modal-dialog" >
 				<div class="modal-content">
-					<div class="modal-header">
+					<div class="modal-header "  style="background-color:#337ab7;color:white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">ADD NEW CATEGORY</h4>
 					</div>
@@ -578,9 +578,9 @@
 <div>
 	<div class="modal fade" id="profileModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
+			<div class="modal-dialog" >
+				<div class="modal-content">
+					<div class="modal-header "  style="background-color:#337ab7;color:white">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title" id="myModalLabel">Change Password</h4>
 				</div>
