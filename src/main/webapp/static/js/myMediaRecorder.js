@@ -9,7 +9,7 @@
             ext: '.mp4',
             constraints: {
                 video: true,
-                audio: true
+                audio: false
             }
         },
         audio: {
