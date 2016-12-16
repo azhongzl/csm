@@ -35,7 +35,6 @@
         recorder.start();
     }
 
-
     myMediaRecorder.stop = function() {
         recorder.stop();
     }
@@ -43,7 +42,6 @@
     init = function(media, processStream, processBlob) {
         navigator.mediaDevices.getUserMedia(media.constraints).then(_stream => {
             processStream(_stream);
-
 
             recorder = new MediaRecorder(_stream);
             recorder.ondataavailable = e => {
