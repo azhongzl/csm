@@ -4,6 +4,7 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
+
 <head>
 <title>MediaRecorder API - Sample</title>
 <meta charset="utf-8">
@@ -34,11 +35,15 @@ h1 {
 }
 </style>
 </head>
+
 <body>
 	<h1>MediaRecorder API example</h1>
 
 	<p>For now it is supported only in Firefox(v25+) and Chrome(v47+)</p>
-	<div id='gUMArea'>
+	<div>
+		<video id="myVideo" autoplay muted></video>
+	</div>
+	<div>
 		<div>
 			Record: <input type="radio" name="media" value="video" checked id='mediaVideo'>Video <input type="radio"
 				name="media" value="audio" id='mediaAudio'>audio
@@ -52,9 +57,64 @@ h1 {
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script src="${ctx}/static/js/myMediaRecorder.js"></script>
 	<script>
-		function uploadCallback() {
-			alert("my upload callback");
-		}
-	</script>
+                    var processStream = function(stream) {
+                        var video = document.getElementById('myVideo');
+                        video.srcObject = stream;
+                        video.onloadedmetadata = function(e) {
+                            video.play();
+                        };
+                    }
+
+                    var processBlob = function(blob, media) {
+                        var url = "${ctx}/admin/chat/upload";
+                        var fd = new FormData();
+                        fd.append("roomId", "5ab5e407-9a6a-4e3b-90db-2aa3dc267012");
+                        fd.append("uploadFile", blob, "media" + media.ext);
+                        var xhr = new XMLHttpRequest();
+                        xhr.addEventListener("load", function(e) {
+                            alert("Upload successfully");
+                        }, false);
+                        xhr.addEventListener("error", function(e) {
+                            alert("Upload failed");
+                        }, false);
+                        xhr.addEventListener("abort", function(e) {
+                            alert("Upload cancelled");
+                        }, false);
+                        xhr.open("POST", url);
+                        xhr.send(fd);
+                    };
+
+                    var id = val => document.getElementById(val),
+                        mediaVideo = id('mediaVideo'),
+                        mediaAudio = id('mediaAudio'),
+                        start = id('start'),
+                        stop = id('stop');
+
+                    myMediaRecorder.initVideo(processStream, processBlob);
+
+                    id('btns').style.display = 'inherit';
+                    start.removeAttribute('disabled');
+                    stop.disabled = true;
+
+                    mediaVideo.onchange = e => {
+                        myMediaRecorder.initVideo(processStream, processBlob);
+                    }
+
+                    mediaAudio.onchange = e => {
+                        myMediaRecorder.initAudio(processStream, processBlob);
+                    }
+
+                    start.onclick = e => {
+                        start.disabled = true;
+                        myMediaRecorder.start();
+                        stop.removeAttribute('disabled');
+                    }
+
+                    stop.onclick = e => {
+                        stop.disabled = true;
+                        myMediaRecorder.stop();
+                        start.removeAttribute('disabled');
+                    }
+                </script>
 </body>
 </html>
