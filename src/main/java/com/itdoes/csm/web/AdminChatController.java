@@ -48,12 +48,6 @@ public class AdminChatController extends BaseController {
 		return "admin/chat";
 	}
 
-	@RequestMapping(value = "listHistory/{customerId}", method = RequestMethod.GET, produces = MediaTypes.APPLICATION_JSON_UTF_8)
-	@ResponseBody
-	public Result listHistory(@PathVariable("customerId") String customerId, Principal principal) {
-		return chatService.listHistory(customerId, principal);
-	}
-
 	@RequestMapping("icon")
 	public String chatIcon(
 			@RequestParam(value = FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, required = false) String username,
@@ -63,6 +57,18 @@ public class AdminChatController extends BaseController {
 		model.addAttribute("iconWidth", iconWidth);
 		model.addAttribute("iconHeight", iconHeight);
 		return "admin/chatIcon";
+	}
+
+	@RequestMapping(value = "getCurrentUserGroupPair", method = RequestMethod.GET, produces = MediaTypes.APPLICATION_JSON_UTF_8)
+	@ResponseBody
+	public Result getCurrentUserGroupPair(Principal principal) {
+		return chatService.getCurrentUserGroupPair(principal);
+	}
+
+	@RequestMapping(value = "listHistory/{customerId}", method = RequestMethod.GET, produces = MediaTypes.APPLICATION_JSON_UTF_8)
+	@ResponseBody
+	public Result listHistory(@PathVariable("customerId") String customerId, Principal principal) {
+		return chatService.listHistory(customerId, principal);
 	}
 
 	@RequestMapping(value = "hasUnhandledCustomers", method = RequestMethod.GET, produces = MediaTypes.APPLICATION_JSON_UTF_8)

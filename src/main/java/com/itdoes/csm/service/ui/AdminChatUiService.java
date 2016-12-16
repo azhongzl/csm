@@ -133,6 +133,18 @@ public class AdminChatUiService extends BaseService {
 		customerUserGroupPair = env.getPair(CsmChatCustomerUserGroup.class.getSimpleName());
 	}
 
+	public Result getCurrentUserGroupPair(Principal principal) {
+		final ShiroUser shiroUser = getShiroUser(principal);
+		final CsmUserGroup curAdminUserGroup = userCacheService.getUserGroupByUser(shiroUser.getId());
+		final UserGroupDto curAdminUserGroupDto = new UserGroupDto(curAdminUserGroup, isChatOrSuper(curAdminUserGroup));
+		List<CsmChatCustomerUserGroup> customerUserGroupList = Collections.emptyList();
+		if (!curAdminUserGroup.getChat()) {
+			customerUserGroupList = getCustomerUserGroupListByUserGroup(curAdminUserGroup.getId().toString());
+		}
+		return Result.success().addData("currentUserGroup", curAdminUserGroupDto).addData("customerUserGroupList",
+				customerUserGroupList);
+	}
+
 	public Result listHistory(String customerId, Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
 		if (!canSendMessage(shiroUser.getId(), customerId)) {
@@ -234,7 +246,6 @@ public class AdminChatUiService extends BaseService {
 	public Result init(Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
 		final CsmUserGroup curAdminUserGroup = userCacheService.getUserGroupByUser(shiroUser.getId());
-		final UserGroupDto curAdminUserGroupDto = new UserGroupDto(curAdminUserGroup, isChatOrSuper(curAdminUserGroup));
 		List<CsmChatCustomerUserGroup> customerUserGroupList = Collections.emptyList();
 		if (!curAdminUserGroup.getChat()) {
 			customerUserGroupList = getCustomerUserGroupListByUserGroup(curAdminUserGroup.getId().toString());
@@ -254,8 +265,7 @@ public class AdminChatUiService extends BaseService {
 			}
 		}
 		Collections.sort(customerList, ChatUserComparator.INSTANCE);
-		return Result.success().addData("currentUserGroup", curAdminUserGroupDto)
-				.addData("customerUserGroupList", customerUserGroupList).addData("customerList", customerList);
+		return Result.success().addData("customerList", customerList);
 	}
 
 	public Result initMessage(String roomId, Principal principal) {
