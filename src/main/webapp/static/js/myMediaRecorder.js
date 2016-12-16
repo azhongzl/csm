@@ -40,10 +40,10 @@
     }
 
     init = function(media, processStream, processBlob) {
-        navigator.mediaDevices.getUserMedia(media.constraints).then(_stream => {
-            processStream(_stream);
+        navigator.mediaDevices.getUserMedia(media.constraints).then(stream => {
+            processStream(stream);
 
-            recorder = new MediaRecorder(_stream);
+            recorder = new MediaRecorder(stream);
             recorder.ondataavailable = e => {
                 chunks.push(e.data);
             };
@@ -53,12 +53,12 @@
                 });
                 processBlob(blob, media);
             };
-            recorder.onerror = function(e) {
+            recorder.onerror = e => {
                 log('Error: ' + e);
             };
             log('Get user media successfully');
-        }).catch(_err => {
-            log('Error: ' + _err);
+        }).catch(e => {
+            log('Error: ' + e);
         });
     }
 
