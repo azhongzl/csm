@@ -57,7 +57,9 @@
                 log('Error: ' + e);
             };
             log('Get user media successfully');
-        }).catch(log);
+        }).catch(_err => {
+            log('Error: ' + _err);
+        });
     }
 
 }(window.myMediaRecorder = window.myMediaRecorder || {}, jQuery));
