@@ -30,9 +30,9 @@
 
 </head>
 
-<body>
+<body style="max-width: 1280px; margin:0 auto;">
 
-	<div id="wrapper" >
+	<div id="wrapper"  >
 		<!-- Navigation -->
 		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
 			<div class="navbar-header">
