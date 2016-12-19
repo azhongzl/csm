@@ -14,14 +14,14 @@
 <meta name="author" content="">
 <title>KUZCOLIGHTING</title>
 <!-- Bootstrap Core CSS -->
-<link href="${ctx}/static/test/bootstrap.min.css" rel="stylesheet">
+<link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
 <!-- MetisMenu CSS -->
-<link href="${ctx}/static/test/metisMenu.min.css" rel="stylesheet">
+<link href="${ctx}/static/css/lib/metisMenu.min.css" rel="stylesheet">
 <!-- Custom CSS -->
-<link href="${ctx}/static/test/sb-admin-2.css" rel="stylesheet">
+<link href="${ctx}/static/css/lib/sb-admin-2.css" rel="stylesheet">
 <!-- Custom Fonts -->
-<link href="${ctx}/static/test/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-<link href="${ctx}/static/css/test.css" rel="stylesheet">
+<link href="${ctx}/static/css/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<link href="${ctx}/static/css/admin.css" rel="stylesheet">
 <script type="text/javascript" src="${ctx}/static/js/lib/polyfill.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
@@ -110,21 +110,21 @@
 		ctx = "${ctx}";
 	</script>
 	<!-- jQuery -->
-	<script src="${ctx}/static/test/jquery.min.js"></script>
+	<script src="${ctx}/static/js/lib/jquery.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
-	<script src="${ctx}/static/test/bootstrap.min.js"></script>
+	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
 
 	<!-- Metis Menu Plugin JavaScript -->
-	<script src="${ctx}/static/test/metisMenu.min.js"></script>
+	<script src="${ctx}/static/js/lib/metisMenu.min.js"></script>
 	<script src="${ctx}/static/js/myMediaRecorder.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
-	<script type="text/javascript" src="${ctx}/static/test/common.js"></script>
-	<script type="text/javascript" src="${ctx}/static/test/store.js"></script>
-	<script type="text/javascript" src="${ctx}/static/test/component.js"></script>
-	<script type="text/javascript" src="${ctx}/static/test/router.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/common.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/store.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/component.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/router.js"></script>
 
 	<!-- Custom Theme JavaScript -->
-	<script src="${ctx}/static/test/sb-admin-2.js"></script>
+	<script src="${ctx}/static/js/lib/sb-admin-2.js"></script>
 </body>
 </html>
