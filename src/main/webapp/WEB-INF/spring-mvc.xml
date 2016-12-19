@@ -54,7 +54,6 @@
 	<mvc:view-controller path="/refreshParentCloseChildWindow" view-name="refreshParentCloseChildWindow" />
 
 	<!-- TODO only for test, should be removed in production -->
-	<mvc:view-controller path="/test/" view-name="test/index" />
 	<mvc:view-controller path="/edit" view-name="jalenEditForm" />
 
 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
