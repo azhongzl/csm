@@ -178,7 +178,7 @@ const content = {
         video: function() {
             this.modalTitle = "VIDEO"
             $("#myVideoModal").modal("show");
-            myMediaRecorder.initVideo(this.processStream, this.processBlob);
+            myMediaRecorder.initVideo(this.processStream, this.processBlob, this.processError);
             this.videostart = false;
             this.videostop = true;
 
@@ -218,6 +218,9 @@ const content = {
             xhr.open("POST", url);
             xhr.send(fd);
         },
+        processError: function(e) {
+            alert(e);
+        }
     }
 };
 

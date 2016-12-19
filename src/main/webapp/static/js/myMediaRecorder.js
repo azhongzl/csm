@@ -22,12 +22,12 @@
         }
     };
 
-    myMediaRecorder.initVideo = function(processStream, processBlob) {
-        init(mediaOptions.video, processStream, processBlob);
+    myMediaRecorder.initVideo = function(processStream, processBlob, processError) {
+        init(mediaOptions.video, processStream, processBlob, processError);
     }
 
-    myMediaRecorder.initAudio = function(processStream, processBlob) {
-        init(mediaOptions.audio, processStream, processBlob);
+    myMediaRecorder.initAudio = function(processStream, processBlob, processError) {
+        init(mediaOptions.audio, processStream, processBlob, processError);
     }
 
     myMediaRecorder.start = function() {
@@ -39,7 +39,7 @@
         recorder.stop();
     }
 
-    init = function(media, processStream, processBlob) {
+    init = function(media, processStream, processBlob, processError) {
         navigator.mediaDevices.getUserMedia(media.constraints).then(stream => {
             processStream(stream);
 
@@ -53,13 +53,9 @@
                 });
                 processBlob(blob, media);
             };
-            recorder.onerror = e => {
-                log('Error: ' + e);
-            };
+            recorder.onerror = processError;
             log('Get user media successfully');
-        }).catch(e => {
-            log('Error: ' + e);
-        });
+        }).catch(processError);
     }
 
 }(window.myMediaRecorder = window.myMediaRecorder || {}, jQuery));
