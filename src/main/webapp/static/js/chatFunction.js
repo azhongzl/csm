@@ -38,20 +38,6 @@ function listHistory() {
 
 function showUploadFile() {
 	var fileData = $("input[name='uploadFile1']").get(0);
-	var txt = "";
-	// if ('files' in fileData) {
-	// for (var i = 0; i < fileData.files.length; i++) {
-	// txt += (i + 1) + ". file ";
-	// var file = fileData.files[i];
-	// if ('name' in file) {
-	// txt += "name: " + file.name;
-	// alert(file.name);
-	// }
-	// if ('size' in file) {
-	// txt += " file size: " + file.size + " bytes \n";
-	// }
-	// }
-	// }
 	url1 = ctx + "/chat/upload";
 	var form_data = new FormData();
 	for (var i = 0; i < (fileData.files.length); i++) {
@@ -175,14 +161,49 @@ function showMessage(message) {
 }
 
 function video(){
-	this.modalTitle="VIDEO"
 	$("#myVideoModal").modal("show");
-    myMediaRecorder.initVideo(this.processStream, this.processBlob);
+    myMediaRecorder.initVideo(processStream, processBlob);
     $("#videostart").attr("disabled",false);
     $("#videostop").attr("disabled",true);
 
 }
 
+function videoStart(){
+    $("#videostart").attr("disabled",true);
+    myMediaRecorder.start();
+    $("#videostop").attr("disabled",false);
+} 
+
+function videoStop(){
+    myMediaRecorder.stop();
+    $("#myVideoModal").modal("hide");
+} 
+
+var processStream = function(stream) {
+    var video = document.getElementById('myVideo');
+    video.srcObject = stream;
+    video.onloadedmetadata = function(e) {
+        video.play();
+    };
+}
+
+var processBlob = function(blob, media) {
+    var url = ctx+"/chat/upload";
+    var fd = new FormData();
+    fd.append("uploadFile", blob, "media" + media.ext);
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", function(e) {
+        alert("Upload successfully");
+    }, false);
+    xhr.addEventListener("error", function(e) {
+        alert("Upload failed");
+    }, false);
+    xhr.addEventListener("abort", function(e) {
+        alert("Upload cancelled");
+    }, false);
+    xhr.open("POST", url);
+    xhr.send(fd);
+};
 
 $(function() {
 	$("form").on('submit', function(e) {

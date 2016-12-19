@@ -126,7 +126,7 @@ const content = {
             showMsg(customerId);
         }
     },
-    created: function() {
+    mounted: function() {
         let customerId = this.$route.query.id;
         store.commit('getCustomerName', {
             id: customerId,
