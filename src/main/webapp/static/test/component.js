@@ -1,6 +1,5 @@
-
+var subscribeList= [] ;
 var stompClient = null;
-var subscribeList ;
 var plainPassword="kuzco123";
 var root = "root";
 const
@@ -18,6 +17,7 @@ customer = {
 	},
 	created: function(){
 		connect1();
+		store.commit("getCurrentUserGroup");
 	}
 };
 
@@ -27,7 +27,6 @@ service = {
 	data : function() {
 		return {
 			selected : '',
-
 		}
 	},
 	created: function(){
@@ -107,6 +106,9 @@ const content={
 			return {
 				uploadKey:true,
 				sentence:"",
+				modalTitle:"",
+				videostart:true,
+				videostop:true,
 					}; 
 		  },
 			watch:{
@@ -114,7 +116,7 @@ const content={
 					store.commit('getService',{id:this.$route.query.id});
 					store.commit('getCustomerName',{id:this.$route.query.id,name:this.$route.query.name});
 					let customerId=	this.$route.query.id;
-						showMsg(customerId);
+					showMsg(customerId);
 					}
 			},
 			created:function(){
@@ -154,21 +156,6 @@ const content={
 			},
 			showUploadFile: function(){
 	    		var fileData = $("input[name='uploadFile1']").get(0);
-//	    		var txt = "";
-//	    		if ('files' in fileData) {
-//	    			for (var i = 0; i < fileData.files.length; i++) {
-//	    				txt += (i + 1) + ". file ";
-//	    				var file = fileData.files[i];
-//	    				if ('name' in file) {
-//	    					txt += "name: " + file.name;
-//	    					myAlert(file.name);
-//	    				}
-//	    				if ('size' in file) {
-//	    					txt += "  file size: " + file.size + " bytes \n";
-//	    				}
-//	    			}
-//	    		}
-
 	    		url1 = ctx + "/admin/chat/upload";
 	    		var form_data = new FormData();
 	    		form_data.append("roomId", this.$route.query.id);
@@ -177,6 +164,49 @@ const content={
 	    		}
 	    		ajaxcreateUpload(form_data, url1);
 	    		
+			},
+			video:function(){
+				this.modalTitle="VIDEO"
+				$("#myVideoModal").modal("show");
+                myMediaRecorder.initVideo(this.processStream, this.processBlob);
+                this.videostart=false;
+                this.videostop=true;
+				
+			},
+			videoStart:function(){
+                this.videostart=true;
+				myMediaRecorder.start();
+                this.videostop=false;
+				
+			},
+			videoStop:function(){
+				myMediaRecorder.stop();
+				$("#myVideoModal").modal("hide");
+			},
+			processStream:function(stream){
+			    var video = document.getElementById('myVideo');
+			    video.srcObject = stream;
+			    video.onloadedmetadata = function(e) {
+			        video.play();
+			    };	
+			},
+			processBlob:function(blob,media){
+			    var url = ctx+"/admin/chat/upload";
+			    var fd = new FormData();
+			    fd.append("roomId", this.$route.query.id);
+			    fd.append("uploadFile", blob, "media" + media.ext);
+			    var xhr = new XMLHttpRequest();
+			    xhr.addEventListener("load", function(e) {
+			        myAlert("Upload successfully");
+			    }, false);
+			    xhr.addEventListener("error", function(e) {
+			    	myAlert("Upload failed");
+			    }, false);
+			    xhr.addEventListener("abort", function(e) {
+			    	myAlert("Upload cancelled");
+			    }, false);
+			    xhr.open("POST", url);
+			    xhr.send(fd);
 			},
 		  }
 		};

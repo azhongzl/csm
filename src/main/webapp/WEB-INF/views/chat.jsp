@@ -47,7 +47,8 @@
 					<ul class="dropdown-menu" role="menu">
 						<li><a href="javascript:void(0)" onclick="listHistory()">Display history </a></li>
 						<li><a href="javascript:void(0)" onclick="uploadFile()">Upload file</a></li>
-						<li><a href="javascript:void(0)">other</a></li>
+						<li><a href="javascript:void(0) onclick="video()">Video</a></li>
+						<li><a href="javascript:void(0)">Audio</a></li>
 						<li class="divider"></li>
 						<li><a href="javascript:void(0)" onclick="switchChat()">Chat</a></li>
 					</ul>
@@ -58,12 +59,32 @@
 					</div>
 					<button id="send" class="btn btn-default" type="submit" onclick="sendMessage()">Send</button>
 				</form>
-				<div id="uploadFile" class="col-md-2 " >
+				<div id="uploadFile" class="col-md-2 ">
 					<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
 						onchange='showUploadFile()' />
 				</div>
 				<!-- /input-group -->
 			</div>
+		</div>
+		<div class="modal fade" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header " style="background-color: #337ab7; color: white">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">VIDEO</h4>
+					</div>
+					<div class="modal-body" style="text-align: center">
+						<video id="myVideo" autoplay muted></video>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="videostart" class="btn btn-primary pull-left" v-on:click="videoStart">Start</button>
+						<button type="button" id="videostop" class="btn btn-primary" v-on:click="videoStop">Stop</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal -->
 		</div>
 	</div>
 	<button id="trigger" class="trigger">try</button>

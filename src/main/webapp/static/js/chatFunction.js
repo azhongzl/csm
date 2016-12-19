@@ -143,8 +143,13 @@ function showMessage(message) {
 		let attachment=message.attachments.split(",");
 		let files="";
 		$.each(attachment,function(i,n){
-			files+="<p><a href="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+">"+n+"</a></p>";
-		
+			let temp="";
+			temp="<p><a href="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+">"+n+"</a></p>";
+			if(n.indexOf("mp4")>0){
+			files+="<video src="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+" controls>"+temp+"</video>";	
+			}else{
+			files+=temp;
+			}
 		});
 		if (message.fromAdmin) {
 			$("#sentence")
@@ -169,6 +174,16 @@ function showMessage(message) {
 	}
 }
 
+function video(){
+	this.modalTitle="VIDEO"
+	$("#myVideoModal").modal("show");
+    myMediaRecorder.initVideo(this.processStream, this.processBlob);
+    $("#videostart").attr("disabled",false);
+    $("#videostop").attr("disabled",true);
+
+}
+
+
 $(function() {
 	$("form").on('submit', function(e) {
 		e.preventDefault();
@@ -184,3 +199,4 @@ function handleError(xhr) {
 		alert("error： " + xhr.status + " " + xhr.statusText);
 	}
 }
+

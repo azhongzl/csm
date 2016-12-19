@@ -28,9 +28,10 @@
 <script src="${ctx}/static/js/lib/sockjs.js"></script>
 <script src="${ctx}/static/js/lib/stomp.js"></script>
 
+
 </head>
 
-<body style="max-width: 1280px; margin:0 auto;">
+<body style="max-width: 1600px; margin:0 auto;">
 
 	<div id="wrapper"  >
 		<!-- Navigation -->
@@ -63,7 +64,7 @@
 			</ul>
 			<!-- /.navbar-top-links -->
 
-			<div class="navbar-default sidebar" role="navigation">
+			<div class="navbar-default sidebar" role="navigation" >
 				<div class="sidebar-nav navbar-collapse">
 					<ul class="nav" id="side-menu">
 						<li><a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
@@ -116,7 +117,7 @@
 
 	<!-- Metis Menu Plugin JavaScript -->
 	<script src="${ctx}/static/test/metisMenu.min.js"></script>
-
+	<script src="${ctx}/static/js/myMediaRecorder.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
 	<script type="text/javascript" src="${ctx}/static/test/common.js"></script>
 	<script type="text/javascript" src="${ctx}/static/test/store.js"></script>

@@ -77,20 +77,20 @@
 
 			<p style="color: blue">Talk to : {{customerName}}</p>
 
-			<div class="btn-group dropup pull-right" style="margin-right: 20px">
-				<button type="button" aria-hidden="true" class="btn btn-default dropdown-toggle"
-					data-toggle="dropdown" >
+			<div class="btn-group dropup pull-right" style="margin-right: 60px">
+				<button type="button" aria-hidden="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 					<span class="fa fa-plus fa-lg">
 				</button>
 				<ul class="dropdown-menu" role="menu">
 					<li><a href="javascript:void(0)" v-on:click="listHistory()">Display history </a></li>
 					<li><a href="javascript:void(0)" v-on:click="switchKey()">Upload file</a></li>
-					<li><a href="javascript:void(0)">other</a></li>
+					<li><a href="javascript:void(0)" v-on:click="video()">Video</a></li>
+					<li><a href="javascript:void(0)">Audio</a></li>
 					<li class="divider"></li>
 					<li><a href="javascript:void(0)" v-on:click="switchChat()">Chat</a></li>
 				</ul>
 			</div>
-			<div class="form-group input-group" style="max-width: 650px; margin-left: 10px" v-show="uploadKey">
+			<div class="form-group input-group" style="max-width: 800px; margin-left: 10px" v-show="uploadKey">
 				<input type="text" class="form-control" v-on:keyup.enter="send" v-model="sentence"> <span
 					class="input-group-btn">
 					<button class="btn btn-default" type="button" v-on:click="send(sentence)">
@@ -103,7 +103,28 @@
 				<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
 					v-on:change='showUploadFile()' />
 			</div>
-
+			
+			<div class="modal fade" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header " style="background-color: #337ab7; color: white">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
+						</div>
+						<div class="modal-body" style="text-align: center">
+							<video id="myVideo" autoplay muted  ></video>
+						</div>
+						<div class="modal-footer">
+							<button type="button"  v-bind:disabled="videostart" class="btn btn-primary pull-left" v-on:click="videoStart" >Start</button>
+							<button type="button"  v-bind:disabled="videostop" class="btn btn-primary" v-on:click="videoStop" >Stop</button>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal -->
+			</div>
+			
 		</div>
 	</div>
 </div>
@@ -113,15 +134,15 @@
 
 <template id="permission">
 <div>
-<h3>Permission</h3>
+	<h3>Permission</h3>
 	<div class="list-group ">
 		<a href="javascript:void(0)" class="list-group-item active" v-on:click="addNew">ADD NEW PERMISSION</a>
 
 		<div class="modal fade" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog" >
+			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="modal-header "  style="background-color:#337ab7;color:white">
+					<div class="modal-header " style="background-color: #337ab7; color: white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
 					</div>
@@ -174,9 +195,9 @@
 
 		<div class="modal fade" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog" >
+			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="modal-header "  style="background-color:#337ab7;color:white">
+					<div class="modal-header " style="background-color: #337ab7; color: white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
 					</div>
@@ -257,9 +278,9 @@
 
 		<div class="modal fade" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog" >
+			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="modal-header "  style="background-color:#337ab7;color:white">
+					<div class="modal-header " style="background-color: #337ab7; color: white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
 					</div>
@@ -349,11 +370,11 @@
 	<div class="list-group ">
 		<a href="javascript:void(0)" class="list-group-item active " v-on:click="addNew">ADD NEW USER</a>
 
-		<div class="modal fade" id="myModal1" style="margin-top: 200px; " tabindex="-1" role="dialog"
+		<div class="modal fade" id="myModal1" style="margin-top: 200px;" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog" >
+			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="modal-header "  style="background-color:#337ab7;color:white">
+					<div class="modal-header " style="background-color: #337ab7; color: white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
 					</div>
@@ -532,9 +553,9 @@
 
 		<div class="modal fade" id="categoryModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog" >
+			<div class="modal-dialog">
 				<div class="modal-content">
-					<div class="modal-header "  style="background-color:#337ab7;color:white">
+					<div class="modal-header " style="background-color: #337ab7; color: white">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">ADD NEW CATEGORY</h4>
 					</div>
@@ -578,9 +599,9 @@
 <div>
 	<div class="modal fade" id="profileModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog" >
-				<div class="modal-content">
-					<div class="modal-header "  style="background-color:#337ab7;color:white">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header " style="background-color: #337ab7; color: white">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title" id="myModalLabel">Change Password</h4>
 				</div>

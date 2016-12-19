@@ -1,16 +1,17 @@
+var connect=false;
 
 function connect1() {
+
 	var socket = new SockJS('/csm/ws');
 	stompClient = Stomp.over(socket);
+	alert("cnn");
 	var headers = {
 		admin : true
 	};
-
 	stompClient.connect(headers, function(frame) {
 		subscribeList = [];
 		stompClient.subscribe('/app/chatAInit', function(message) {
 			showCustomerSet(JSON.parse(message.body).data.customerList);
-			store.state.currentUserGroup=JSON.parse(message.body).data.currentUserGroup;
 			$.each(JSON.parse(message.body).data.customerUserGroupList,function(i,n){
 				store.state.customerUserGroupList.push(n.customerUserId);
 			});
@@ -38,6 +39,7 @@ function connect1() {
 							
 					}
 						});	
+				connect=true;
 		});
 		stompClient.subscribe('/topic/chat/login', function(message) {
 			showOnlineCustomer(JSON.parse(message.body).data);
@@ -53,7 +55,6 @@ function connect1() {
 				function(message) {
 					removeUnhandledCustomer(JSON.parse(message.body).data.userId);
 				});	
-
 	});
 }
 function showCustomerSet(customerSet) {
@@ -130,6 +131,7 @@ function showMsg(customerId){
 			subscribeList[i].unsubscribe();
 		}
 		subscribeList = [];
+		alert(stompClient.connected);
 		var subApp = stompClient.subscribe('/app/chatAInitMessage/'
 				+ customerId, function(message) {
 			showMessages(JSON.parse(message.body).data.messageList);
@@ -138,7 +140,7 @@ function showMsg(customerId){
 		var subTopic = stompClient.subscribe('/topic/chat/message/'
 				+ customerId, function(message) {
 			showMessage(JSON.parse(message.body));
-			document.getElementById ( 'sentence').scrollTop=document.getElementById ( 'sentence').scrollHeight ;
+			document.getElementById ('sentence').scrollTop=document.getElementById ( 'sentence').scrollHeight ;
 		});
 		subscribeList.push(subApp);
 		subscribeList.push(subTopic);
@@ -178,9 +180,15 @@ function showMessage(message) {
 	}else{
 		let attachment=message.attachments.split(",");
 		let files="";
-		$.each(attachment,function(i,n){
-			files+="<p><a href="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+">"+n+"</a></p>";
 		
+		$.each(attachment,function(i,n){
+			let temp="";
+			temp="<p><a href="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+">"+n+"</a></p>";
+			if(n.indexOf("mp4")>0){
+			files+="<video src="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+" controls>"+temp+"</video>";	
+			}else{
+			files+=temp;
+			}
 		});
 		if (message.fromAdmin){
 			$("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:500px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >"+message.senderName+"&nbsp;&nbsp;&nbsp;&nbsp;"+timeStr+"</div><div class='panel-body'>"+files+" </div></div>"

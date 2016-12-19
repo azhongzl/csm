@@ -84,10 +84,10 @@ h1 {
                         xhr.send(fd);
                     };
 
-                    var id = val => document.getElementById(val),
-                        mediaVideo = id('mediaVideo'),
-                        mediaAudio = id('mediaAudio'),
-                        start = id('start'),
+                    var id = val => document.getElementById(val);
+                        mediaVideo = id('mediaVideo');
+                        mediaAudio = id('mediaAudio');
+                        start = id('start');
                         stop = id('stop');
 
                     myMediaRecorder.initVideo(processStream, processBlob);
