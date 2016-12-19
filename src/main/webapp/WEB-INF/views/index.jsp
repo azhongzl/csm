@@ -33,7 +33,7 @@
 				<div class="sidebar">
 					<h3>Categories</h3>
 					<ul id="Category">
-						<li v-for="category in categorys"><a href="javascript:void(0)" v-on:click="showCategoryDetail(category.id)">{{category.name }}</a></li>
+						<li v-for="category in categorys"><a href="javascript:void(0)" v-on:click="showCategoryDetail(category.id)" v-bind:id="category.id">{{category.name }}</a></li>
 					</ul>
 				</div>
 			</div>

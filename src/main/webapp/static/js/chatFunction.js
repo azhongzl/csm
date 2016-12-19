@@ -132,7 +132,7 @@ function showMessage(message) {
 			let temp="";
 			temp="<p><a href="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+">"+n+"</a></p>";
 			if(n.indexOf("mp4")>0){
-			files+="<video src="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+" controls>"+temp+"</video>";	
+			files+="<video src="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+" controls  style='height:280px;width:350px'>"+temp+"</video>";	
 			}else{
 			files+=temp;
 			}

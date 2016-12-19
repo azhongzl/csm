@@ -70,13 +70,13 @@
 				<div class="modal fade" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 				<div class="modal-dialog">
-					<div class="modal-content" style="width: 700px">
+					<div class="modal-content" >
 						<div class="modal-header " style="background-color: #337ab7; color: white">
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 							<h4 class="modal-title" id="myModalLabel">VIDEO</h4>
 						</div>
 						<div class="modal-body" style="text-align: center">
-							<video id="myVideo" autoplay muted  ></video>
+							<video id="myVideo" autoplay muted style="height: 280px;" ></video>
 						</div>
 						<div class="modal-footer">
 							<button type="button" id="videostart" class="btn btn-primary pull-left" onclick="videoStart()" >Start</button>

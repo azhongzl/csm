@@ -3,6 +3,7 @@ var vmSidebar = new Vue({
 	el : '#sidebar_container',
 	data : {
 		categorys : [],
+		cssId:"",
 	},
 	created :function() {
 		this.getCategory();
@@ -10,6 +11,11 @@ var vmSidebar = new Vue({
 
 	methods : {
 		showCategoryDetail : function(id) {
+			if(this.cssId.length>0){
+				$("#" + this.cssId).css("color", "#555");
+			}
+	        $("#" + id).css("color", "red");
+	        this.cssId = id;
 			vmContent.faqs = [];
 			vmPagecount.id = id;
 			var url1 =  ctx + "/faq/listForm/"+id;
