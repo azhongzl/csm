@@ -1,10 +1,6 @@
-var connect = false;
-
 function connect1() {
-
     var socket = new SockJS('/csm/ws');
     stompClient = Stomp.over(socket);
-    alert("cnn");
     var headers = {
         admin: true
     };
@@ -43,7 +39,6 @@ function connect1() {
 
                     }
                 });
-            connect = true;
         });
         stompClient.subscribe('/topic/chat/login', function(message) {
             showOnlineCustomer(JSON.parse(message.body).data);
@@ -83,8 +78,6 @@ function showCustomer(customer) {
         }, 200);
     }
 }
-
-
 
 function showOnlineCustomer(customer) {
     $("#" + customer.userId).css('color', 'red');
@@ -126,6 +119,13 @@ function removeUnhandledCustomer(customerId) {
 }
 
 function showMsg(customerId) {
+    if (!stompClient.connected) {
+        setTimeout(function() {
+            showMsg(customerId);
+        }, 200);
+        return;
+    }
+
     $("#sentence").empty();
     var canSendMsg = false;
     if (store.state.currentUserGroup.chatOrSuper) {
@@ -140,7 +140,6 @@ function showMsg(customerId) {
             subscribeList[i].unsubscribe();
         }
         subscribeList = [];
-        alert(stompClient.connected);
         var subApp = stompClient.subscribe('/app/chatAInitMessage/' +
             customerId,
             function(message) {
@@ -205,7 +204,6 @@ function showMessage(message) {
             $("#sentence").append("<div class='panel panel-info' style='clear:both;float:left;width:500px'><div class='panel-heading' style='padding: 2px 0px ' >" + message.senderName + "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr + "</div><div class='panel-body'>" + files + " </div></div>");
         }
     }
-
 }
 
 function ajaxcreate(savedata, url1) {
@@ -256,7 +254,6 @@ function ajaxPut(putdata, url1) {
         },
         timeout: 3000,
         error: handleError,
-
     });
 }
 
@@ -281,7 +278,6 @@ function ajaxGet(url1) {
 }
 
 function handleError(xhr) {
-
     if (xhr.status == 499) {
         window.location.replace("${ctx}" + xhr.statusText);
     } else {
