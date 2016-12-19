@@ -2,180 +2,129 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-<title>DATA Managment</title>
 
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" type="text/css" href="${ctx}/static/css/adminStyle.css" />
-<script type="text/javascript" src="${ctx}/static/js/lib/jquery.js"></script>
-<script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
-<script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>KUZCOLIGHTING</title>
+<!-- Bootstrap Core CSS -->
+<link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
+<!-- MetisMenu CSS -->
+<link href="${ctx}/static/css/lib/metisMenu.min.css" rel="stylesheet">
+<!-- Custom CSS -->
+<link href="${ctx}/static/css/lib/sb-admin-2.css" rel="stylesheet">
+<!-- Custom Fonts -->
+<link href="${ctx}/static/css/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<link href="${ctx}/static/css/admin.css" rel="stylesheet">
 <script type="text/javascript" src="${ctx}/static/js/lib/polyfill.js"></script>
+<script type="text/javascript" src="${ctx}/static/js/lib/vue.js"></script>
 <script type="text/javascript" src="${ctx}/static/js/lib/vuex.js"></script>
+<script src="${ctx}/static/js/lib/sockjs.js"></script>
+<script src="${ctx}/static/js/lib/stomp.js"></script>
+
+
 </head>
 
-<body>
-	<div id="main">
-		<header>
-			<nav>
-				<div id="menu_container">
-					<ul class="sf-menu" id="nav">
-						<li><router-link :to="{name:'home'}">Home</router-link></li>
-						<li><a href="#">Database</a>
-							<ul>
-								<li><router-link :to="{name:'faq1'}">Faq</router-link></li>
-								<li><router-link :to="{name:'category'}">Category</router-link></li>
-							</ul></li>
-						<li><a href="#">Logout</a></li>
+<body style="max-width: 1600px; margin:0 auto;">
+
+	<div id="wrapper"  >
+		<!-- Navigation -->
+		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="http://www.kuzcolighting.com">KUZCOLIGHTING</a>
+			</div>
+			<!-- /.navbar-header -->
+
+			<ul class="nav navbar-top-links navbar-right">
+
+				<li style="color: blue; margin-right: 50px;"><i><b>Hello : <shiro:principal property="username" /></b></i></li>
+				<li><router-link to="/admin/chat"> <i class="fa  fa-comments fa-fw"
+						style="padding-right: 40px; color: red">chat</i> </router-link></li>
+				<!-- /.dropdown -->
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i
+						class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+				</a>
+					<ul class="dropdown-menu dropdown-user">
+						<li><router-link to="/profile"> <i class="fa  fa-user fa-fw">User Profile</i> </router-link></li>
+						<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
+						<li class="divider"></li>
+						<li><a href="${ctx}/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+					</ul> <!-- /.dropdown-user --></li>
+				<!-- /.dropdown -->
+			</ul>
+			<!-- /.navbar-top-links -->
+
+			<div class="navbar-default sidebar" role="navigation" >
+				<div class="sidebar-nav navbar-collapse">
+					<ul class="nav" id="side-menu">
+						<li><a href="#"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+						<li><a href="#"><i class="fa fa-edit fa-fw"></i> FAQ<span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level">
+								<li><router-link :to="{path:'/faq'}">FAQ</router-link></li>
+								<li><router-link :to="{path:'/category'}">Category</router-link></li>
+							</ul> <!-- /.nav-second-level --></li>
+
+						<li><a href="#"><i class="fa fa-user  fa-fw"></i> USER<span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level">
+								<li><router-link to="/user">User</router-link></li>
+								<li><router-link to="/group">Group</router-link></li>
+								<li><router-link to="/role">Role</router-link></li>
+								<li><router-link to="/permission">Permission</router-link></li>
+
+							</ul> <!-- /.nav-second-level --></li>
+						<li><a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level">
+								<li><a href="blank.html">Blank Page</a></li>
+								<li><a href="login.html">Login Page</a></li>
+							</ul> <!-- /.nav-second-level --></li>
 					</ul>
 				</div>
-			</nav>
-		</header>
-		<div id="site_content">
-			<div id="sidebar_container">
-				<router-view></router-view>
+				<!-- /.sidebar-collapse -->
 			</div>
-			<div id="content">
-				<router-view name="content"></router-view>
-			</div>
-			<div id="pagecount">
-				<router-view name="pagecount"></router-view>
-			</div>
+			<!-- /.navbar-static-side -->
+		</nav>
+
+		<div id="page-wrapper">
+			<router-view name="mainRouter"></router-view>
 		</div>
-		<div id="scroll">
-			<a title="Scroll to the top" class="top" href="javascript:void(0)"><img src="${ctx}/static/images/top.png" alt="top" /></a>
-		</div>
-		<footer>
-			<p>
-				<img src="${ctx}/static/images/twitter.png" alt="twitter" />&nbsp;<img src="${ctx}/static/images/facebook.png"
-					alt="facebook" />&nbsp;<img src="${ctx}/static/images/rss.png" alt="rss" />
-			</p>
-			<p>
-				<a href="${ctx}/">Home</a> | <a href="javascript:void(0)">Contact Us</a>
-			</p>
-			<p>
-				Copyright &copy; <a href="http://www.kuzcolighting.com">design from Kuzcolighting</a>
-			</p>
-		</footer>
+		<!-- /#page-wrapper -->
+
 	</div>
+	<!-- /#wrapper -->
 
 
-
-
-	<template id="category">
-	<div id="admin_sidebar">
-		<h3>Categories</h3>
-		<template v-for="n in list"> 
-		<input type="radio" name="id" :value="n.id" v-model="picked"/>{{n.name}}
-		<br>
-		</template>
-		<div id="router">
-			<router-link :to="{name:'addNew'}">ADD NEW</router-link>
-			<br>
-			<router-link :to="{ name: 'categoryDelete', query: { id: picked }}">DELETE</router-link>
-			<br>
-			<router-link :to="{name: 'modify', query: { id: picked }}">MODIFY</router-link>
-		</div>
-	</div>
-	</template>
-
-	<template id="addNew">
-	<div>
-		NAME:<br> 
-		<input type=text name='name' size='75' v-model='name'/>
-		<br> DESCRIPTION:<br>
-		<textarea name='describe' rows='4' cols='58' v-model='describe'></textarea>
-		<br> 
-		<input type='button' value='submit' v-on:click='addNew()'/>
-		 <input type='button' value='cancel'
-			v-on:click='reset()'/>
-	</div>
-	</template>
-
-
-
-	<template id="FaqCategory">
-	<div id="admin_sidebar">
-		<h3>Categories</h3>
-		<ul id="adminCategory">
-			<li v-for="n in list">
-			<router-link :to="{name: 'showFaqList', params: { id: n.id }}">
-			{{n.name}}
-			</router-link>
-			</li>
-		</ul>
-	</div>
-	</template>
-
-	<template id="FaqDetail">
-	<div>
-	  	<ul>
-		<li v-for="n in list1"><router-link :to="{name: 'faqModify', params: { id: n.id }}">{{n.question}}</router-link></li>
-		</ul>
-		<input type="button" v-on:click="faqAddNewUi()" value="ADD NEW">
-	</div>
-	</template>
-
-	<template id="FaqAddNewUi">
-	<div>
-		QUESTION:<br>
-		<textarea name='question' rows='4' cols='75' v-model='question'></textarea>
-		<br> ANSWER:<br>
-		<textarea name='answer' rows='8' cols='75' v-model='answer'></textarea>		
-		<br> Upload File: <input type='file' name='uploadFile' multiple='multiple' v-on:change='showUploadFile()' /> <br>
-		<textarea name='attachments' rows='3' cols='75' disabled='disabled' v-model='attachements'></textarea>
-		<br> <input type='button' value='submit' v-on:click='faqAddNew()'/> 
-		<input type='button' value='cancel'	v-on:click='faqCancel()'/>
-	</div>
-	</template>
-
-
-	<template id="FaqModifyUi">
-	<div>
-		QUESTION:<br>
-		<textarea name='question' rows='4' cols='75' v-model='question'></textarea>
-		<br> ANSWER:<br>
-		<textarea name='answer' rows='8' cols='75' v-model='answer'></textarea>
-		<br>
-		<p v-show="attachments.length === 0?false:true">
-		Attachments: 
-		</p>		
-		<template v-for='attachment in attachments'  >
-			<input type='checkbox' checked='checked' name='attach' :value='attachment' 
-			v-model='attach' v-show="attachments.length === 0?false:true"/>{{attachment}}   
-		</template>
-		 <br><br>
-		Upload File: <input type='file' name='uploadFile' multiple='multiple' v-on:change='showUploadFile()' /><br>
-		<textarea name='attachments1' rows='3' cols='75' disabled='disabled' v-model='attachements1'></textarea> <br>
-		<input type='button' value='submit' v-on:click='adminFaqPut()'/>
-		<input type='button' value='Delete' v-on:click='adminFaqDelete()'/> 
-		<input type='button' value='cancel' v-on:click='faqCancel()'/>
-	</div>
-	</template>
-	 
-	 
-	<template id="pageChange">
-		<div  v-show="showKey" >
-				<span><a href="javascript:void(0)" v-on:click="changePage(1)"> &laquo; </a></span> 
-				<span><a href="javascript:void(0)" v-on:click="changePage(curPage - 1)"> &lsaquo; </a></span>
-			    <span v-for="n in totalPage" :class="curPage === n ? 'current' : ''">
-			    <a href="javascript:void(0)" v-on:click="changePage(n)">{{ n }}</a>
-			    </span> 
-			    <span><a href="javascript:void(0)" v-on:click="changePage(curPage + 1)"> &rsaquo; </a></span> 
-			    <span><a href="javascript:void(0)" v-on:click="changePage(totalPage)"> &raquo; </a></span>
-			</div>
-	</template>
-
-	<script type="text/javascript" src="${ctx}/static/js/adminVueFunction.js"></script>
-	<script type="text/javascript">
+	<%@include file="template.jsp"%>
+	<script type=text/javascript>
 		userId = "<shiro:principal property="id" />";
-		userName = "<shiro:principal property="username" />"
-
+		username = "<shiro:principal property="username" />";
+		ctx = "${ctx}";
 	</script>
+	<!-- jQuery -->
+	<script src="${ctx}/static/js/lib/jquery.js"></script>
 
+	<!-- Bootstrap Core JavaScript -->
+	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
+
+	<!-- Metis Menu Plugin JavaScript -->
+	<script src="${ctx}/static/js/lib/metisMenu.min.js"></script>
+	<script src="${ctx}/static/js/myMediaRecorder.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/common.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/store.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/component.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/router.js"></script>
+
+	<!-- Custom Theme JavaScript -->
+	<script src="${ctx}/static/js/lib/sb-admin-2.js"></script>
 </body>
-
 </html>
