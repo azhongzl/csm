@@ -219,7 +219,18 @@ const content = {
             xhr.send(fd);
         },
         processError: function(e) {
-            alert(e);
+        	let text="";
+        	if(e.name=="NotAllowedError"){
+        		text="Camera Not Allowed";
+        		}else{
+        			if(e.name=="NotFoundError"){
+                		text="Camera Not Found";
+            		}else{
+            			text=e.name+":"+e.message;
+            		}
+        		}
+        	myAlert(text);
+            $("#myVideoModal").modal("hide");
         }
     }
 };

@@ -162,7 +162,7 @@ function showMessage(message) {
 
 function video(){
 	$("#myVideoModal").modal("show");
-    myMediaRecorder.initVideo(processStream, processBlob);
+    myMediaRecorder.initVideo(processStream, processBlob,processError);
     $("#videostart").attr("disabled",false);
     $("#videostop").attr("disabled",true);
 
@@ -187,6 +187,21 @@ var processStream = function(stream) {
     };
 }
 
+var processError = function(e) {
+	alert("b");
+	let text="";
+	if(e.name=="NotAllowedError"){
+		text="Camera Not Allowed";
+		}else{
+			if(e.name=="NotFoundError"||e.name=="devicesNotFoundError"){
+        		text="Camera Not Found";
+    		}else{
+    			text=e.message;
+    		}
+		}
+	myAlert(text);
+    $("#myVideoModal").modal("hide");
+}
 var processBlob = function(blob, media) {
     var url = ctx+"/chat/upload";
     var fd = new FormData();

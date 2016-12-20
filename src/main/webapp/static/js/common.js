@@ -5,7 +5,6 @@ function connect1() {
         admin: true
     };
     stompClient.connect(headers, function(frame) {
-        subscribeList = [];
         stompClient.subscribe('/app/chatAInit', function(message) {
             showCustomerSet(JSON.parse(message.body).data.customerList);
             $.each(JSON.parse(message.body).data.customerUserGroupList, function(i, n) {
@@ -136,6 +135,7 @@ function showMsg(customerId) {
         }
     }
     if (canSendMsg) {
+    	alert(subscribeList.length);
         for (var i = 0; i < subscribeList.length; i++) {
             subscribeList[i].unsubscribe();
         }
