@@ -18,7 +18,6 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.common.core.util.Collections3;
@@ -56,7 +55,7 @@ public class ChatUiService extends BaseService {
 	public Result listHistory(Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
 
-		final List<CsmChatMessage> messageList = messagePair.db().filter("roomId", Operator.EQ, shiroUser.getId())
+		final List<CsmChatMessage> messageList = messagePair.db().filterEqual("roomId", shiroUser.getId())
 				.sort("createDateTime", true).exeFindAll();
 		for (CsmChatMessage message : messageList) {
 			populateSenderName(message);
@@ -122,7 +121,7 @@ public class ChatUiService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getLatestMessageList(String roomId) {
-		final List<CsmChatMessage> dbMessageList = messagePair.db().filter("roomId", Operator.EQ, roomId)
+		final List<CsmChatMessage> dbMessageList = messagePair.db().filterEqual("roomId", roomId)
 				.page(1, MESSAGE_PAGE_SIZE, MESSAGE_PAGE_SIZE).sort("createDateTime", false).exeFindPage().getContent();
 		if (Collections3.isEmpty(dbMessageList)) {
 			return Collections.emptyList();

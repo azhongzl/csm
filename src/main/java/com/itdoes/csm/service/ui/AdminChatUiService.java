@@ -22,7 +22,6 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.common.core.util.Collections3;
@@ -151,7 +150,7 @@ public class AdminChatUiService extends BaseService {
 			return Result.fail(1, "You are not allowed to view this customer's chat history");
 		}
 
-		final List<CsmChatMessage> messageList = messagePair.db().filter("roomId", Operator.EQ, customerId)
+		final List<CsmChatMessage> messageList = messagePair.db().filterEqual("roomId", customerId)
 				.sort("createDateTime", true).exeFindAll();
 		for (CsmChatMessage message : messageList) {
 			populateSenderName(message);
@@ -332,7 +331,7 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	private List<CsmChatMessage> getLatestMessageList(String roomId, Principal principal) {
-		final List<CsmChatMessage> dbMessageList = messagePair.db().filter("roomId", Operator.EQ, roomId)
+		final List<CsmChatMessage> dbMessageList = messagePair.db().filterEqual("roomId", roomId)
 				.page(1, MESSAGE_PAGE_SIZE, MESSAGE_PAGE_SIZE).sort("createDateTime", false).exeFindPage().getContent();
 
 		if (Collections3.isEmpty(dbMessageList)) {
@@ -361,8 +360,8 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	private boolean isCustomerUserGroupExist(String customerId, String userGroupId) {
-		return customerUserGroupPair.db().filter("customerUserId", Operator.EQ, customerId)
-				.filter("userGroupId", Operator.EQ, userGroupId).exeCount() > 0;
+		return customerUserGroupPair.db().filterEqual("customerUserId", customerId)
+				.filterEqual("userGroupId", userGroupId).exeCount() > 0;
 	}
 
 	private boolean isUnhandledCustomer(String customerId, CsmUserGroup adminUserGroup,
@@ -388,11 +387,11 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	private List<CsmChatCustomerUserGroup> getCustomerUserGroupListByUserGroup(String userGroupId) {
-		return customerUserGroupPair.db().filter("userGroupId", Operator.EQ, userGroupId).exeFindAll();
+		return customerUserGroupPair.db().filterEqual("userGroupId", userGroupId).exeFindAll();
 	}
 
 	private List<CsmChatCustomerUserGroup> getCustomerUserGroupListByCustomer(String customerUserId) {
-		return customerUserGroupPair.db().filter("customerUserId", Operator.EQ, customerUserId).exeFindAll();
+		return customerUserGroupPair.db().filterEqual("customerUserId", customerUserId).exeFindAll();
 	}
 
 	private boolean canSendMessage(String adminId, String customerId) {

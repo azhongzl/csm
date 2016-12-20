@@ -17,7 +17,6 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.csm.dto.Root;
 import com.itdoes.csm.entity.CsmUser;
 import com.itdoes.csm.entity.CsmUserGroup;
@@ -53,7 +52,7 @@ public class AdminUserUiService extends BaseService {
 	}
 
 	public Result listForm(int pageNo, int pageSize) {
-		return Result.success().addData("userList", userPair.db().filter("id", Operator.NOT_EQ, ROOT.getIdString())
+		return Result.success().addData("userList", userPair.db().filterNotEqual("id", ROOT.getIdString())
 				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).sort("username", true).exeFindPage());
 	}
 

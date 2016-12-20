@@ -14,7 +14,6 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.csm.entity.CsmFaq;
@@ -35,7 +34,7 @@ public class AdminFaqUiService extends BaseService {
 	}
 
 	public Result listForm(String categoryId, int pageNo, int pageSize) {
-		return Result.success().addData("faqList", faqPair.db().filter("categoryId", Operator.EQ, categoryId)
+		return Result.success().addData("faqList", faqPair.db().filterEqual("categoryId", categoryId)
 				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).sort("question", true).exeFindPage());
 	}
 

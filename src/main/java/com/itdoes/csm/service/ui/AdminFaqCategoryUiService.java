@@ -12,7 +12,6 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
-import com.itdoes.common.core.jpa.FindFilter.Operator;
 import com.itdoes.common.core.shiro.ShiroUser;
 import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.csm.entity.CsmFaq;
@@ -71,7 +70,7 @@ public class AdminFaqCategoryUiService extends BaseService {
 	}
 
 	public Result delete(String id) {
-		final long count = faqPair.db().filter("categoryId", Operator.EQ, id).exeCount();
+		final long count = faqPair.db().filterEqual("categoryId", id).exeCount();
 		if (count > 0) {
 			return Result.fail(1, "Cannot delete FaqCategory since it is used by Faq");
 		}
