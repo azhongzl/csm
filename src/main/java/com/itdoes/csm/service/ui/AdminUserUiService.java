@@ -53,7 +53,7 @@ public class AdminUserUiService extends BaseService {
 	}
 
 	public Result listForm(int pageNo, int pageSize) {
-		return Result.success().addData("userList", userPair.db().filter("id", Operator.NEQ, ROOT.getIdString())
+		return Result.success().addData("userList", userPair.db().filter("id", Operator.NOT_EQ, ROOT.getIdString())
 				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).sort("username", true).exeFindPage());
 	}
 
