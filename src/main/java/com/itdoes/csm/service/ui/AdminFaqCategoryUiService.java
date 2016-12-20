@@ -35,7 +35,7 @@ public class AdminFaqCategoryUiService extends BaseService {
 	}
 
 	public Result listForm() {
-		return Result.success().addData("faqCategoryList", faqCategoryPair.db().sortAsc("name").exeFindAll());
+		return Result.success().addData("faqCategoryList", faqCategoryPair.db().sortAsc("name").exeFindList());
 	}
 
 	public Result postForm() {
