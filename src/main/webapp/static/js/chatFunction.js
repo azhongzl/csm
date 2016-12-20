@@ -4,7 +4,7 @@ $(document).ready(function() {
 });
 
 function connect() {
-	var socket = new SockJS('/csm/ws');
+	var socket = new SockJS(ctx+'/ws');
 	stompClient = Stomp.over(socket);
 	stompClient.connect({}, function(frame) {
 		stompClient.subscribe('/topic/chat/message/' + userId,

@@ -1,5 +1,5 @@
 function connect1() {
-    var socket = new SockJS('/csm/ws');
+    var socket = new SockJS(ctx+'/ws');
     stompClient = Stomp.over(socket);
     var headers = {
         admin: true
@@ -135,7 +135,6 @@ function showMsg(customerId) {
         }
     }
     if (canSendMsg) {
-    	alert(subscribeList.length);
         for (var i = 0; i < subscribeList.length; i++) {
             subscribeList[i].unsubscribe();
         }
