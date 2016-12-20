@@ -151,7 +151,7 @@ public class AdminChatUiService extends BaseService {
 		}
 
 		final List<CsmChatMessage> messageList = messagePair.db().filterEqual("roomId", customerId)
-				.sortAsc("createDateTime").exeFindList();
+				.sortAsc("createDateTime").exeFindAll();
 		for (CsmChatMessage message : messageList) {
 			populateSenderName(message);
 		}
@@ -387,11 +387,11 @@ public class AdminChatUiService extends BaseService {
 	}
 
 	private List<CsmChatCustomerUserGroup> getCustomerUserGroupListByUserGroup(String userGroupId) {
-		return customerUserGroupPair.db().filterEqual("userGroupId", userGroupId).exeFindList();
+		return customerUserGroupPair.db().filterEqual("userGroupId", userGroupId).exeFindAll();
 	}
 
 	private List<CsmChatCustomerUserGroup> getCustomerUserGroupListByCustomer(String customerUserId) {
-		return customerUserGroupPair.db().filterEqual("customerUserId", customerUserId).exeFindList();
+		return customerUserGroupPair.db().filterEqual("customerUserId", customerUserId).exeFindAll();
 	}
 
 	private boolean canSendMessage(String adminId, String customerId) {

@@ -56,7 +56,7 @@ public class ChatUiService extends BaseService {
 		final ShiroUser shiroUser = getShiroUser(principal);
 
 		final List<CsmChatMessage> messageList = messagePair.db().filterEqual("roomId", shiroUser.getId())
-				.sortAsc("createDateTime").exeFindList();
+				.sortAsc("createDateTime").exeFindAll();
 		for (CsmChatMessage message : messageList) {
 			populateSenderName(message);
 		}
