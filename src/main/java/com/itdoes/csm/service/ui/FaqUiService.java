@@ -30,6 +30,6 @@ public class FaqUiService extends BaseService {
 
 	public Result listForm(String categoryId, int pageNo, int pageSize) {
 		return Result.success().addData("faqList", faqPair.db().filterEqual("categoryId", categoryId)
-				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).sort("question", true).exeFindPage());
+				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).sortAsc("question").exeFindPage());
 	}
 }

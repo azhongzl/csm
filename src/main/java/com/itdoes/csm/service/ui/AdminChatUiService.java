@@ -151,7 +151,7 @@ public class AdminChatUiService extends BaseService {
 		}
 
 		final List<CsmChatMessage> messageList = messagePair.db().filterEqual("roomId", customerId)
-				.sort("createDateTime", true).exeFindAll();
+				.sortAsc("createDateTime").exeFindAll();
 		for (CsmChatMessage message : messageList) {
 			populateSenderName(message);
 		}
@@ -332,7 +332,7 @@ public class AdminChatUiService extends BaseService {
 
 	private List<CsmChatMessage> getLatestMessageList(String roomId, Principal principal) {
 		final List<CsmChatMessage> dbMessageList = messagePair.db().filterEqual("roomId", roomId)
-				.page(1, MESSAGE_PAGE_SIZE, MESSAGE_PAGE_SIZE).sort("createDateTime", false).exeFindPage().getContent();
+				.page(1, MESSAGE_PAGE_SIZE, MESSAGE_PAGE_SIZE).sortDesc("createDateTime").exeFindPage().getContent();
 
 		if (Collections3.isEmpty(dbMessageList)) {
 			return Collections.emptyList();

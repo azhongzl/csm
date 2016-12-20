@@ -29,6 +29,6 @@ public class FaqCategoryUiService extends BaseService {
 	}
 
 	public Result listForm() {
-		return Result.success().addData("faqCategoryList", faqCategoryPair.db().sort("name", true).exeFindAll());
+		return Result.success().addData("faqCategoryList", faqCategoryPair.db().sortAsc("name").exeFindAll());
 	}
 }
