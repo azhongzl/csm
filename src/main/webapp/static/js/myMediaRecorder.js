@@ -24,20 +24,20 @@
 
     myMediaRecorder.initVideo = function(processStream, processBlob, processError) {
         init(mediaOptions.video, processStream, processBlob, processError);
-    }
+    };
 
     myMediaRecorder.initAudio = function(processStream, processBlob, processError) {
         init(mediaOptions.audio, processStream, processBlob, processError);
-    }
+    };
 
     myMediaRecorder.start = function() {
         chunks = [];
         recorder.start();
-    }
+    };
 
     myMediaRecorder.stop = function() {
         recorder.stop();
-    }
+    };
 
     init = function(media, processStream, processBlob, processError) {
         navigator.mediaDevices.getUserMedia(media.constraints).then(stream => {
@@ -56,6 +56,6 @@
             recorder.onerror = processError;
             log('Get user media successfully');
         }).catch(processError);
-    }
+    };
 
 }(window.myMediaRecorder = window.myMediaRecorder || {}, jQuery));
