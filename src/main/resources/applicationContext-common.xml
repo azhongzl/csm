@@ -59,28 +59,28 @@
 
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
+	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<property name="initialSize" value="${jdbc.pool.initialSize}" />
+		<property name="maxActive" value="${jdbc.pool.maxActive}" />
+		<property name="minIdle" value="${jdbc.pool.minIdle}" />
+		<property name="maxIdle" value="${jdbc.pool.maxIdle}" />
+
+		<property name="defaultAutoCommit" value="false" />
+		<property name="maxWait" value="60000" />
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="testWhileIdle" value="true" />
+		<property name="validationQuery" value="SELECT 1" />
+	</bean>
+
 	<beans profile="production">
 		<context:property-placeholder ignore-resource-not-found="true"
 			location="classpath*:/application.properties" />
-
-		<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-			<property name="driverClassName" value="${jdbc.driver}" />
-			<property name="url" value="${jdbc.url}" />
-			<property name="username" value="${jdbc.username}" />
-			<property name="password" value="${jdbc.password}" />
-
-			<property name="initialSize" value="${jdbc.pool.initialSize}" />
-			<property name="maxActive" value="${jdbc.pool.maxActive}" />
-			<property name="minIdle" value="${jdbc.pool.minIdle}" />
-			<property name="maxIdle" value="${jdbc.pool.maxIdle}" />
-
-			<property name="defaultAutoCommit" value="false" />
-			<property name="maxWait" value="60000" />
-			<property name="timeBetweenEvictionRunsMillis" value="60000" />
-			<property name="minEvictableIdleTimeMillis" value="300000" />
-			<property name="testWhileIdle" value="true" />
-			<property name="validationQuery" value="SELECT 1" />
-		</bean>
 	</beans>
 
 	<beans profile="development,functionaltest,unittest">
@@ -96,27 +96,11 @@
 	<beans profile="development">
 		<context:property-placeholder ignore-resource-not-found="true"
 			location="classpath*:/application.properties, classpath*:/application.development.properties, classpath*:/application.local.properties" />
-
-		<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-			<property name="driverClassName" value="${jdbc.driver}" />
-			<property name="url" value="${jdbc.url}" />
-			<property name="username" value="${jdbc.username}" />
-			<property name="password" value="${jdbc.password}" />
-			<property name="defaultAutoCommit" value="false" />
-		</bean>
 	</beans>
 
 	<beans profile="functionaltest">
 		<context:property-placeholder ignore-resource-not-found="true"
 			location="classpath*:/application.properties, classpath*:/application.functionaltest.properties, classpath*:/application.local.properties" />
-
-		<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-			<property name="driverClassName" value="${jdbc.driver}" />
-			<property name="url" value="${jdbc.url}" />
-			<property name="username" value="${jdbc.username}" />
-			<property name="password" value="${jdbc.password}" />
-			<property name="defaultAutoCommit" value="false" />
-		</bean>
 
 		<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
 			<jdbc:script location="classpath:sql/${db.type}/schema.sql" />
@@ -126,13 +110,6 @@
 	<beans profile="unittest">
 		<context:property-placeholder ignore-resource-not-found="true"
 			location="classpath*:/application.properties, classpath*:/application.unittest.properties, classpath*:/application.local.properties" />
-
-		<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-			<property name="driverClass" value="${jdbc.driver}" />
-			<property name="url" value="${jdbc.url}" />
-			<property name="username" value="${jdbc.username}" />
-			<property name="password" value="${jdbc.password}" />
-		</bean>
 
 		<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
 			<jdbc:script location="classpath:sql/h2/schema.sql" />
