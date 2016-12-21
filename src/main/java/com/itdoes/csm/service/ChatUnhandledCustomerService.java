@@ -33,7 +33,7 @@ public class ChatUnhandledCustomerService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		chatUnhandledCustomerPair = entityEnv.getPair(CsmChatUnhandledCustomer.class.getSimpleName());
+		chatUnhandledCustomerPair = entityEnv.getPair(CsmChatUnhandledCustomer.class);
 
 		final List<CsmChatUnhandledCustomer> unhandledCustomerList = chatUnhandledCustomerPair.db().exeFindAll();
 		if (Collections3.isEmpty(unhandledCustomerList)) {

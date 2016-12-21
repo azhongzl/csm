@@ -88,8 +88,8 @@ public class AdminRoleUiService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		rolePair = env.getPair(CsmRole.class.getSimpleName());
-		rolePermissionPair = env.getPair(CsmRolePermission.class.getSimpleName());
+		rolePair = env.getPair(CsmRole.class);
+		rolePermissionPair = env.getPair(CsmRolePermission.class);
 	}
 
 	public Result listForm() {

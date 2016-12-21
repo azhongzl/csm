@@ -128,8 +128,8 @@ public class AdminChatUiService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		messagePair = env.getPair(CsmChatMessage.class.getSimpleName());
-		customerUserGroupPair = env.getPair(CsmChatCustomerUserGroup.class.getSimpleName());
+		messagePair = env.getPair(CsmChatMessage.class);
+		customerUserGroupPair = env.getPair(CsmChatCustomerUserGroup.class);
 	}
 
 	public Result getCurrentUserGroupPair(Principal principal) {

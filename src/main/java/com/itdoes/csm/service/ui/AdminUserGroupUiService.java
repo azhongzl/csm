@@ -90,8 +90,8 @@ public class AdminUserGroupUiService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		userGroupPair = env.getPair(CsmUserGroup.class.getSimpleName());
-		userGroupRolePair = env.getPair(CsmUserGroupRole.class.getSimpleName());
+		userGroupPair = env.getPair(CsmUserGroup.class);
+		userGroupRolePair = env.getPair(CsmUserGroupRole.class);
 	}
 
 	public Result listForm() {

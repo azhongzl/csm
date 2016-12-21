@@ -49,7 +49,7 @@ public class ChatUiService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		messagePair = env.getPair(CsmChatMessage.class.getSimpleName());
+		messagePair = env.getPair(CsmChatMessage.class);
 	}
 
 	public Result listHistory(Principal principal) {

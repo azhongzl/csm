@@ -48,7 +48,7 @@ public class AdminUserUiService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		userPair = env.getPair(CsmUser.class.getSimpleName());
+		userPair = env.getPair(CsmUser.class);
 	}
 
 	public Result listForm(int pageNo, int pageSize) {

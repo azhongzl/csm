@@ -48,7 +48,7 @@ public class AdminPermissionUiService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		permissionPair = env.getPair(CsmPermission.class.getSimpleName());
+		permissionPair = env.getPair(CsmPermission.class);
 	}
 
 	public Result listForm() {

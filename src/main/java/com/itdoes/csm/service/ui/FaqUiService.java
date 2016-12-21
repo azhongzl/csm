@@ -25,7 +25,7 @@ public class FaqUiService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		faqPair = env.getPair(CsmFaq.class.getSimpleName());
+		faqPair = env.getPair(CsmFaq.class);
 	}
 
 	public Result listForm(String categoryId, int pageNo, int pageSize) {

@@ -30,8 +30,8 @@ public class AdminFaqCategoryUiService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		faqCategoryPair = env.getPair(CsmFaqCategory.class.getSimpleName());
-		faqPair = env.getPair(CsmFaq.class.getSimpleName());
+		faqCategoryPair = env.getPair(CsmFaqCategory.class);
+		faqPair = env.getPair(CsmFaq.class);
 	}
 
 	public Result listForm() {

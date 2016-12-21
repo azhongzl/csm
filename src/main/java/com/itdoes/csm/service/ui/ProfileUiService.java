@@ -32,7 +32,7 @@ public class ProfileUiService extends BaseService {
 
 	@PostConstruct
 	public void myInit() {
-		userPair = env.getPair(CsmUser.class.getSimpleName());
+		userPair = env.getPair(CsmUser.class);
 	}
 
 	public Result putForm() {
