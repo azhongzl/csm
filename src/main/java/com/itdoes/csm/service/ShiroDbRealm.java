@@ -41,7 +41,7 @@ public class ShiroDbRealm extends AbstractShiroRealm {
 		final ShiroUser shiroUser = (ShiroUser) principal;
 
 		final SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		info.addStringPermissions(userCacheService.getPermissionSetByUser(shiroUser.getId()));
+		info.addObjectPermissions(userCacheService.getPermissionSetByUser(shiroUser.getId()));
 		return info;
 	}
 

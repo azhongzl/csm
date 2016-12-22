@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
 import com.itdoes.common.business.Perms;
 import com.itdoes.common.business.service.BaseService;
+import com.itdoes.common.core.shiro.Shiros;
 import com.itdoes.common.core.util.Collections3;
 import com.itdoes.csm.entity.CsmPermission;
 import com.itdoes.csm.entity.CsmRole;
@@ -39,7 +41,7 @@ public class UserCacheService extends BaseService {
 	private final Map<String, CsmRole> roleMap = Maps.newConcurrentMap();
 	private final Map<String, CsmRolePermission> rolePermissionMap = Maps.newConcurrentMap();
 	private final Map<String, CsmPermission> permissionMap = Maps.newHashMap();
-	private final Map<String, Set<String>> permissionSetMap = Maps.newConcurrentMap();
+	private final Map<String, Set<Permission>> permissionSetMap = Maps.newConcurrentMap();
 	private final Map<String, CsmUser> userMap = Maps.newConcurrentMap();
 	private final Map<String, String> usernameIdMap = Maps.newConcurrentMap();
 
@@ -223,7 +225,7 @@ public class UserCacheService extends BaseService {
 		return permissionMap.get(id);
 	}
 
-	public Set<String> getPermissionSetByUser(String userId) {
+	public Set<Permission> getPermissionSetByUser(String userId) {
 		final CsmUser user = getUser(userId);
 		if (user == null) {
 			return Collections.emptySet();
@@ -232,15 +234,15 @@ public class UserCacheService extends BaseService {
 		return getPermissionSetByUserGroup(user.getUserGroupId().toString());
 	}
 
-	private Set<String> getPermissionSetByUserGroup(String userGroupId) {
-		final Set<String> result = Sets.newHashSet();
+	private Set<Permission> getPermissionSetByUserGroup(String userGroupId) {
+		final Set<Permission> result = Sets.newHashSet();
 		final Set<CsmUserGroup> userGroupSet = getSubUserGroupSet(userGroupId);
 		for (CsmUserGroup userGroup : userGroupSet) {
 			for (CsmUserGroupRole userGroupRole : userGroupRoleMap.values()) {
 				if (userGroupRole.getUserGroupId().equals(userGroup.getId())) {
 					for (CsmRolePermission rolePermission : rolePermissionMap.values()) {
 						if (rolePermission.getRoleId().equals(userGroupRole.getRoleId())) {
-							final Set<String> permissionSet = permissionSetMap
+							final Set<Permission> permissionSet = permissionSetMap
 									.get(rolePermission.getPermissionId().toString());
 							if (!Collections3.isEmpty(permissionSet)) {
 								result.addAll(permissionSet);
@@ -253,19 +255,19 @@ public class UserCacheService extends BaseService {
 		return result;
 	}
 
-	private Set<String> getPermissionSet(CsmPermission permission) {
+	private Set<Permission> getPermissionSet(CsmPermission permission) {
 		if (permission == null) {
 			return Collections.emptySet();
 		}
 
-		final Set<String> result = Sets.newHashSet();
+		final Set<Permission> result = Sets.newHashSet();
 		final String permRow = permission.getPermission();
 		if (StringUtils.isNotBlank(permRow)) {
 			final String[] permRowItems = StringUtils.split(permRow, ",");
 			if (!Collections3.isEmpty(permRowItems)) {
 				for (String permRowItem : permRowItems) {
 					if (StringUtils.isNotBlank(permRowItem)) {
-						result.add(Perms.getFullPerm(permRowItem));
+						result.add(Shiros.toPermission(Perms.getFullPerm(permRowItem)));
 					}
 				}
 			}
