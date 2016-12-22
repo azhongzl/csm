@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.shiro.authz.Permission;
 import org.assertj.core.util.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.common.collect.Lists;
 import com.itdoes.common.business.EntityEnv;
 import com.itdoes.common.business.EntityPair;
+import com.itdoes.common.business.Perms;
 import com.itdoes.common.business.service.BaseService;
 import com.itdoes.common.core.Result;
 import com.itdoes.common.core.shiro.ShiroUser;
@@ -201,7 +203,8 @@ public class AdminChatUiService extends BaseService {
 		final List<CsmUserGroup> userGroupList = Lists.newArrayList();
 		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
 			if (!ROOT.isRootById(userGroup.getId()) && !userGroup.getChat() && userGroup.getAdmin()
-					&& !customerUserGroupIdSet.contains(userGroup.getId())) {
+					&& !customerUserGroupIdSet.contains(userGroup.getId())
+					&& hasChatPermission(userGroup.getId().toString())) {
 				userGroupList.add(userGroup);
 			}
 		}
@@ -217,6 +220,9 @@ public class AdminChatUiService extends BaseService {
 		final String userGroupId = customerUserGroup.getUserGroupId().toString();
 		if (isCustomerUserGroupExist(customerId, userGroupId)) {
 			return Result.fail(1, "CustomerUserGroup exists");
+		}
+		if (!hasChatPermission(userGroupId)) {
+			return Result.fail(2, "UserGroup has no chat permission");
 		}
 
 		final ShiroUser shiroUser = getShiroUser(principal);
@@ -426,6 +432,11 @@ public class AdminChatUiService extends BaseService {
 		}
 
 		return false;
+	}
+
+	private boolean hasChatPermission(String userGroupId) {
+		final Set<Permission> permissionSet = userCacheService.getPermissionSetByUserGroup(userGroupId);
+		return Shiros.isPermitted(permissionSet, Shiros.toPermission(Perms.getFullPerm("chat")));
 	}
 
 	private ShiroUser getShiroUser(Principal principal) {

@@ -234,7 +234,7 @@ public class UserCacheService extends BaseService {
 		return getPermissionSetByUserGroup(user.getUserGroupId().toString());
 	}
 
-	private Set<Permission> getPermissionSetByUserGroup(String userGroupId) {
+	public Set<Permission> getPermissionSetByUserGroup(String userGroupId) {
 		final Set<Permission> result = Sets.newHashSet();
 		final Set<CsmUserGroup> userGroupSet = getSubUserGroupSet(userGroupId);
 		for (CsmUserGroup userGroup : userGroupSet) {
