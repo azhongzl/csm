@@ -103,7 +103,7 @@
 				<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
 					v-on:change='showUploadFile()' />
 			</div>
-			
+
 			<div class="modal fade" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 				<div class="modal-dialog">
@@ -113,18 +113,18 @@
 							<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
 						</div>
 						<div class="modal-body" style="text-align: center">
-							<video id="myVideo" autoplay muted  ></video>
+							<video id="myVideo" autoplay muted></video>
 						</div>
 						<div class="modal-footer">
-							<button type="button"  v-bind:disabled="videostart" class="btn btn-primary pull-left" v-on:click="videoStart" >Start</button>
-							<button type="button"  v-bind:disabled="videostop" class="btn btn-primary" v-on:click="videoStop" >Stop</button>
+							<button type="button" v-bind:disabled="videostart" class="btn btn-primary pull-left" v-on:click="videoStart">Start</button>
+							<button type="button" v-bind:disabled="videostop" class="btn btn-primary" v-on:click="videoStop">Stop</button>
 						</div>
 					</div>
 					<!-- /.modal-content -->
 				</div>
 				<!-- /.modal -->
 			</div>
-			
+
 		</div>
 	</div>
 </div>
@@ -136,7 +136,13 @@
 <div>
 	<h3>Permission</h3>
 	<div class="list-group ">
-		<a href="javascript:void(0)" class="list-group-item active" v-on:click="addNew">ADD NEW PERMISSION</a>
+		<div class=" list-group-item active ">
+			<div class="row">
+				<span class="col-sm-2"><b>Permission Name</b></span> <a href="javascript:void(0)" class="pull-right"
+					style="color: white; margin-right: 15px" v-on:click="addNew"><i class="fa fa-plus fa-fw"></i><b>ADD NEW
+						PERMISSION</b></a>
+			</div>
+		</div>
 
 		<div class="modal fade" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -163,7 +169,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary" v-on:click="addNewSubmit">submit</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 
 					</div>
 				</div>
@@ -171,8 +177,6 @@
 			</div>
 			<!-- /.modal -->
 		</div>
-
-
 
 		<template v-for="permission in permissions">
 		<div class="list-group-item">
@@ -191,7 +195,13 @@
 <div>
 	<h3>Role</h3>
 	<div class="list-group">
-		<a href="javascript:void(0)" class="list-group-item active" v-on:click="addNew">ADD NEW ROLE</a>
+		<div class=" list-group-item active ">
+			<div class="row">
+				<span class="col-sm-2"><b>Role Name</b></span> <a href="javascript:void(0)" class="pull-right"
+					style="color: white; margin-right: 15px" v-on:click="addNew"><i class="fa fa-plus fa-fw"></i><b>ADD NEW
+						ROLE</b></a>
+			</div>
+		</div>
 
 		<div class="modal fade" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -213,7 +223,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary" v-on:click="addNewSubmit">submit</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 
 					</div>
 				</div>
@@ -221,8 +231,6 @@
 			</div>
 			<!-- /.modal -->
 		</div>
-
-
 
 		<template v-for="role in roles">
 		<div class="list-group-item">
@@ -262,8 +270,6 @@
 					</div>
 					<a href="javascript:void(0)" v-on:click="back" class="list-group-item active"> Back</a>
 				</div>
-
-
 			</div>
 		</div>
 	</div>
@@ -274,8 +280,13 @@
 <div>
 	<h3>Group</h3>
 	<div class="list-group">
-		<a href="javascript:void(0)" class="list-group-item  active" v-on:click="addNew">ADD NEW GROUP</a>
-
+		<div class=" list-group-item active ">
+			<div class="row">
+				<span class="col-sm-2"><b>User Group Name</b></span> <span class="col-sm-3 col-sm-offset-2"><b>Super User Group Name</b></span> <a
+					href="javascript:void(0)" class="pull-right" style="color: white" v-on:click="addNew"><i
+					class="fa fa-plus fa-fw"></i><b>ADD NEW GROUP</b></a>
+			</div>
+		</div>
 		<div class="modal fade" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
@@ -310,8 +321,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary" v-on:click="addNewSubmit">submit</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
-
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -319,12 +329,16 @@
 			<!-- /.modal -->
 		</div>
 		<template v-for="group in groups">
-		<div class="list-group-item">
-			<span><router-link :to="{path:'/group_role',query:{id:group.id,name:group.name}}">{{group.name}}</router-link></span>
-			<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
-				v-on:click="del(group.id)">delete</button>
-			<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
-				v-on:click="mod(group.id)">modify</button>
+		<div class="list-group-item" style="padding: 5px 10px">
+			<div class="row">
+				<span class="col-sm-2 "><router-link
+						:to="{path:'/group_role',query:{id:group.userGroup.id,name:group.userGroup.name}}">{{group.userGroup.name}}</router-link></span>
+				<span class="col-sm-3 col-sm-offset-2">{{group.superUserGroup==undefined?"":group.superUserGroup.name}}</span>
+				<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
+					v-on:click="del(group.userGroup.id)">delete</button>
+				<button type="button" class="btn btn-primary btn-link" style="float: right; padding-top: 0px;"
+					v-on:click="mod(group.userGroup.id)">modify</button>
+			</div>
 		</div>
 		</template>
 	</div>
@@ -342,7 +356,6 @@
 						<button type="button" class="btn btn-primary btn-link" v-on:click="add(role.id)">{{role.name}}</button>
 					</div>
 				</div>
-
 			</div>
 		</div>
 		<div class="col-md-6 column">
@@ -356,8 +369,6 @@
 					</div>
 					<a href="javascript:void(0)" v-on:click="back" class="list-group-item active"> Back</a>
 				</div>
-
-
 			</div>
 		</div>
 	</div>
@@ -368,7 +379,14 @@
 <div>
 	<h3>User</h3>
 	<div class="list-group ">
-		<a href="javascript:void(0)" class="list-group-item active " v-on:click="addNew">ADD NEW USER</a>
+		<div class=" list-group-item active ">
+			<div class="row">
+				<span class="col-sm-2"><b>Username</b></span> 
+				<a href="javascript:void(0)" class="pull-right"	style="color: white; margin-right: 15px" v-on:click="addNew">
+				<i class="fa fa-plus fa-fw"></i>
+				<b>ADD NEW USER</b></a>
+			</div>
+		</div>
 
 		<div class="modal fade" id="myModal1" style="margin-top: 200px;" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -406,7 +424,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary" v-on:click="addNewSubmit">submit</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 
 					</div>
 				</div>
@@ -576,7 +594,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary" v-on:click="addNewSubmit">submit</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 
 					</div>
 				</div>
@@ -625,7 +643,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" v-on:click="addNewSubmit">submit</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 
 				</div>
 			</div>
