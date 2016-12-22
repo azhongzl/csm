@@ -77,6 +77,26 @@ public class AdminUserGroupUiService extends BaseService {
 		}
 	}
 
+	private static class UserGroupDto {
+		private final CsmUserGroup userGroup;
+		private final CsmUserGroup superUserGroup;
+
+		public UserGroupDto(CsmUserGroup userGroup, CsmUserGroup superUserGroup) {
+			this.userGroup = userGroup;
+			this.superUserGroup = superUserGroup;
+		}
+
+		@SuppressWarnings("unused")
+		public CsmUserGroup getUserGroup() {
+			return userGroup;
+		}
+
+		@SuppressWarnings("unused")
+		public CsmUserGroup getSuperUserGroup() {
+			return superUserGroup;
+		}
+	}
+
 	private static final Root ROOT = Root.getInstance();
 
 	@Autowired
@@ -95,7 +115,15 @@ public class AdminUserGroupUiService extends BaseService {
 	}
 
 	public Result listForm() {
-		return Result.success().addData("userGroupList", getUserGroupList());
+		final List<CsmUserGroup> csmUserGroupList = getUserGroupList();
+		final List<UserGroupDto> userGroupList = Lists.newArrayListWithCapacity(csmUserGroupList.size());
+		for (CsmUserGroup csmUserGroup : csmUserGroupList) {
+			final UUID superUserGroupId = csmUserGroup.getSuperId();
+			final CsmUserGroup superUserGroup = superUserGroupId == null ? null
+					: userCacheService.getUserGroup(superUserGroupId.toString());
+			userGroupList.add(new UserGroupDto(csmUserGroup, superUserGroup));
+		}
+		return Result.success().addData("userGroupList", userGroupList);
 	}
 
 	public Result postForm() {
