@@ -98,10 +98,8 @@
 			<router-view name="mainRouter"></router-view>
 		</div>
 		<!-- /#page-wrapper -->
-
 	</div>
 	<!-- /#wrapper -->
-
 
 	<%@include file="template.jsp"%>
 	<script type=text/javascript>
@@ -111,10 +109,8 @@
 	</script>
 	<!-- jQuery -->
 	<script src="${ctx}/static/js/lib/jquery.js"></script>
-
 	<!-- Bootstrap Core JavaScript -->
 	<script src="${ctx}/static/js/lib/bootstrap.js"></script>
-
 	<!-- Metis Menu Plugin JavaScript -->
 	<script src="${ctx}/static/js/lib/metisMenu.min.js"></script>
 	<script src="${ctx}/static/js/myMediaRecorder.js"></script>
@@ -123,7 +119,6 @@
 	<script type="text/javascript" src="${ctx}/static/js/store.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/component.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/router.js"></script>
-
 	<!-- Custom Theme JavaScript -->
 	<script src="${ctx}/static/js/lib/sb-admin-2.js"></script>
 </body>

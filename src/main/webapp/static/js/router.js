@@ -2,6 +2,12 @@ const
     router = new VueRouter({
 
         routes: [{
+            path: '/home',
+            components: {
+
+            },
+        },
+                 {
                 path: '/admin/chat',
                 components: {
                     mainRouter: chat,

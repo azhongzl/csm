@@ -1309,7 +1309,6 @@ const profile = {
         }
     },
     mounted: function() {
-
         $("#profileModal").modal('show');
 
     },
@@ -1336,5 +1335,11 @@ const profile = {
                 this.password2 = "";
             }
         },
+       closeModal:function(){
+           $("#profileModal").modal('hide')
+           router.push({
+               path: '/home'
+           });
+       }
     },
 }

@@ -1,12 +1,9 @@
 
-
-
-
 <template id="chatMainPage">
 <div>
 	<div class="row">
 		<div class="col-lg-12">
-			<h3 class="page-header">Chat</h3>
+			<h3>Chat</h3>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
@@ -144,7 +141,7 @@
 			</div>
 		</div>
 
-		<div class="modal fade" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+		<div class="modal" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -203,7 +200,7 @@
 			</div>
 		</div>
 
-		<div class="modal fade" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+		<div class="modal" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -287,7 +284,7 @@
 					class="fa fa-plus fa-fw"></i><b>ADD NEW GROUP</b></a>
 			</div>
 		</div>
-		<div class="modal fade" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+		<div class="modal" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -388,7 +385,7 @@
 			</div>
 		</div>
 
-		<div class="modal fade" id="myModal1" style="margin-top: 200px;" tabindex="-1" role="dialog"
+		<div class="modal" id="myModal1" style="margin-top: 200px;" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -502,7 +499,7 @@
 
 <template id="FaqDetail">
 <div class="list-group">
-	<a href="javascript:void(0)" class="list-group-item  active" v-on:click="faqAddNewUi()">ADD NEW FAQ</a>
+	<a href="javascript:void(0)" class="list-group-item  active" v-on:click="faqAddNewUi()"><i class="fa fa-plus fa-fw"></i>ADD NEW FAQ</a>
 
 	<div v-for="n in faqList" class="list-group-item">
 		<span><router-link :to="{path: '/faq/faqModify', query: { id: n.id }}">{{n.question}}</router-link></span>
@@ -567,9 +564,9 @@
 <div>
 	<h3>Categories</h3>
 	<div class="list-group">
-		<a href="javascript:void(0)" class="list-group-item  active" v-on:click="addNew">ADD NEW CATEGORY</a>
+		<a href="javascript:void(0)" class="list-group-item  active pull-right" v-on:click="addNew"><i class="fa fa-plus fa-fw"></i>ADD NEW CATEGORY</a>
 
-		<div class="modal fade" id="categoryModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+		<div class="modal" id="categoryModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -615,7 +612,7 @@
 </template>
 <template id="profile">
 <div>
-	<div class="modal fade" id="profileModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+	<div class="modal" id="profileModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -643,7 +640,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" v-on:click="addNewSubmit">submit</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-default" v-on:click="closeModal">Cancel</button>
 
 				</div>
 			</div>
@@ -666,7 +663,7 @@
 
 <!------------------ template------------------- -->
 <!-- myAlert -->
-<div class="modal fade" id="myAlertModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+<div class="modal" id="myAlertModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 	<div class="modal-dialog" style="width: 300px">
 		<div class="modal-content">
