@@ -1181,7 +1181,7 @@ const category = {
                     var putdata = {
                         id: this.id,
                         name: this.name,
-                        description: this.describe,
+                        description: this.description,
                     }
                     ajaxPut(putdata, url1);
                 }

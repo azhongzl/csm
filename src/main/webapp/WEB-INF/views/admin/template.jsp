@@ -489,7 +489,7 @@
 
 <template id="FaqCategory">
 <div class="list-group" style="max-height: 650px; overflow: auto">
-	<a class="list-group-item  active">Categories</a>
+	<a class="list-group-item  active"><b>Categories</b></a>
 	<ul class="list-group-item">
 		<li v-for="n in categoryList" class="list-group-item"><router-link
 				:to="{path: '/faq/showFaqList', query: { id: n.id }}" v-bind:id=" n.id "> {{n.name}} </router-link></li>
@@ -499,7 +499,7 @@
 
 <template id="FaqDetail">
 <div class="list-group">
-	<a href="javascript:void(0)" class="list-group-item  active" v-on:click="faqAddNewUi()"><i class="fa fa-plus fa-fw"></i>ADD NEW FAQ</a>
+	<a href="javascript:void(0)" class="list-group-item  active text-right" v-on:click="faqAddNewUi()"><i class="fa fa-plus fa-fw"></i><b>ADD NEW FAQ</b></a>
 
 	<div v-for="n in faqList" class="list-group-item">
 		<span><router-link :to="{path: '/faq/faqModify', query: { id: n.id }}">{{n.question}}</router-link></span>
@@ -564,7 +564,7 @@
 <div>
 	<h3>Categories</h3>
 	<div class="list-group">
-		<a href="javascript:void(0)" class="list-group-item  active pull-right" v-on:click="addNew"><i class="fa fa-plus fa-fw"></i>ADD NEW CATEGORY</a>
+		<a href="javascript:void(0)" class="list-group-item  active text-right" v-on:click="addNew"><i class="fa fa-plus fa-fw"></i><b>ADD NEW CATEGORY</b></a>
 
 		<div class="modal" id="categoryModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
