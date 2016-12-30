@@ -82,7 +82,7 @@
 					<li><a href="javascript:void(0)" v-on:click="listHistory()">Display history </a></li>
 					<li><a href="javascript:void(0)" v-on:click="switchKey()">Upload file</a></li>
 					<li><a href="javascript:void(0)" v-on:click="video()">Video</a></li>
-					<li><a href="javascript:void(0)">Audio</a></li>
+					<li><a href="javascript:void(0)" v-on:click="audio()">Audio</a></li>
 					<li class="divider"></li>
 					<li><a href="javascript:void(0)" v-on:click="switchChat()">Chat</a></li>
 				</ul>
@@ -101,7 +101,7 @@
 					v-on:change='showUploadFile()' />
 			</div>
 
-			<div class="modal fade" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+			<div class="modal" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -121,7 +121,28 @@
 				</div>
 				<!-- /.modal -->
 			</div>
-
+			<div class="modal" id="myAudioModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header " style="background-color: #337ab7; color: white">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
+						</div>
+						<div class="modal-body" style="text-align: center">
+							<audio id="myAudio" controls >
+								Your browser does not support the audio tag.
+							</audio>
+						</div>
+						<div class="modal-footer">
+							<button type="button" v-bind:disabled="videostart" class="btn btn-primary pull-left" v-on:click="audioStart">Start</button>
+							<button type="button" v-bind:disabled="videostop" class="btn btn-primary" v-on:click="audioStop">Stop</button>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal -->
+			</div>
 		</div>
 	</div>
 </div>
@@ -200,8 +221,8 @@
 			</div>
 		</div>
 
-		<div class="modal" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header " style="background-color: #337ab7; color: white">
@@ -279,13 +300,13 @@
 	<div class="list-group">
 		<div class=" list-group-item active ">
 			<div class="row">
-				<span class="col-sm-2"><b>User Group Name</b></span> <span class="col-sm-3 col-sm-offset-2"><b>Super User Group Name</b></span> <a
-					href="javascript:void(0)" class="pull-right" style="color: white" v-on:click="addNew"><i
+				<span class="col-sm-2"><b>User Group Name</b></span> <span class="col-sm-3 col-sm-offset-2"><b>Super User
+						Group Name</b></span> <a href="javascript:void(0)" class="pull-right" style="color: white" v-on:click="addNew"><i
 					class="fa fa-plus fa-fw"></i><b>ADD NEW GROUP</b></a>
 			</div>
 		</div>
-		<div class="modal" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header " style="background-color: #337ab7; color: white">
@@ -378,15 +399,14 @@
 	<div class="list-group ">
 		<div class=" list-group-item active ">
 			<div class="row">
-				<span class="col-sm-2"><b>Username</b></span> 
-				<a href="javascript:void(0)" class="pull-right"	style="color: white; margin-right: 15px" v-on:click="addNew">
-				<i class="fa fa-plus fa-fw"></i>
-				<b>ADD NEW USER</b></a>
+				<span class="col-sm-2"><b>Username</b></span> <a href="javascript:void(0)" class="pull-right"
+					style="color: white; margin-right: 15px" v-on:click="addNew"> <i class="fa fa-plus fa-fw"></i> <b>ADD NEW
+						USER</b></a>
 			</div>
 		</div>
 
-		<div class="modal" id="myModal1" style="margin-top: 200px;" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal" id="myModal1" style="margin-top: 200px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header " style="background-color: #337ab7; color: white">
@@ -499,7 +519,8 @@
 
 <template id="FaqDetail">
 <div class="list-group">
-	<a href="javascript:void(0)" class="list-group-item  active text-right" v-on:click="faqAddNewUi()"><i class="fa fa-plus fa-fw"></i><b>ADD NEW FAQ</b></a>
+	<a href="javascript:void(0)" class="list-group-item  active text-right" v-on:click="faqAddNewUi()"><i
+		class="fa fa-plus fa-fw"></i><b>ADD NEW FAQ</b></a>
 
 	<div v-for="n in faqList" class="list-group-item">
 		<span><router-link :to="{path: '/faq/faqModify', query: { id: n.id }}">{{n.question}}</router-link></span>
@@ -564,7 +585,8 @@
 <div>
 	<h3>Categories</h3>
 	<div class="list-group">
-		<a href="javascript:void(0)" class="list-group-item  active text-right" v-on:click="addNew"><i class="fa fa-plus fa-fw"></i><b>ADD NEW CATEGORY</b></a>
+		<a href="javascript:void(0)" class="list-group-item  active text-right" v-on:click="addNew"><i
+			class="fa fa-plus fa-fw"></i><b>ADD NEW CATEGORY</b></a>
 
 		<div class="modal" id="categoryModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">

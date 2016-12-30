@@ -196,6 +196,11 @@ function showMessage(message) {
             } else {
                 files += temp;
             }
+            if (n.indexOf("ogg") > 0) {
+                files += "<audio src=" + ctx + "/uploads/CsmChatMessage/" + message.id + "/" + n + " controls >" + temp + "</audio>";
+            } else {
+                files += temp;
+            }
         });
         if (message.fromAdmin) {
             $("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:500px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >" + message.senderName + "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr + "</div><div class='panel-body'>" + files + " </div></div>");

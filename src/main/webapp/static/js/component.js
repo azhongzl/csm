@@ -193,8 +193,33 @@ const content = {
             myMediaRecorder.stop();
             $("#myVideoModal").modal("hide");
         },
+        audio: function() {
+            this.modalTitle = "AUDIO"
+            $("#myAudioModal").modal("show");
+            myMediaRecorder.initAudio(this.processStream1, this.processBlob, this.processError);
+            this.videostart = false;
+            this.videostop = true;
+
+        },
+        audioStart: function() {
+            this.videostart = true;
+            myMediaRecorder.start();
+            this.videostop = false;
+
+        },
+        audioStop: function() {
+            myMediaRecorder.stop();
+            $("#myAudioModal").modal("hide");
+        },
         processStream: function(stream) {
             var video = document.getElementById('myVideo');
+            video.srcObject = stream;
+            video.onloadedmetadata = function(e) {
+                video.play();
+            };
+        },
+        processStream1: function(stream) {
+            var video = document.getElementById('myAudio');
             video.srcObject = stream;
             video.onloadedmetadata = function(e) {
                 video.play();
@@ -1191,7 +1216,6 @@ const category = {
             router.push({
                 path: '/category'
             });
-
         },
 
         del: function(id) {
