@@ -75,8 +75,6 @@ public class AdminRoleUiService extends BaseService {
 		}
 	}
 
-	private static final Root ROOT = Root.getInstance();
-
 	@Autowired
 	private EntityEnv env;
 
@@ -95,7 +93,7 @@ public class AdminRoleUiService extends BaseService {
 	public Result listForm() {
 		final List<CsmRole> roleList = Lists.newArrayListWithCapacity(userCacheService.getRoleMap().size() - 1);
 		for (CsmRole role : userCacheService.getRoleMap().values()) {
-			if (!ROOT.isRootById(role.getId())) {
+			if (!Root.isRootById(role.getId())) {
 				roleList.add(role);
 			}
 		}
@@ -109,7 +107,7 @@ public class AdminRoleUiService extends BaseService {
 
 	public Result post(CsmRole role) {
 		Validate.isTrue(StringUtils.isNotBlank(role.getName()), "Role name should not be blank");
-		Validate.isTrue(!ROOT.isRootByName(role.getName()), "Cannot create root Role");
+		Validate.isTrue(!Root.isRootByName(role.getName()), "Cannot create root Role");
 
 		role = rolePair.db().exePost(role);
 		userCacheService.addRole(role);
@@ -125,7 +123,7 @@ public class AdminRoleUiService extends BaseService {
 	}
 
 	public Result put(CsmRole role, CsmRole oldRole) {
-		Validate.isTrue(!ROOT.isRootByName(role.getName()) && !ROOT.isRootById(role.getId()),
+		Validate.isTrue(!Root.isRootByName(role.getName()) && !Root.isRootById(role.getId()),
 				"Cannot modify root Role");
 
 		rolePair.db().exePut(role, oldRole);
@@ -134,7 +132,7 @@ public class AdminRoleUiService extends BaseService {
 	}
 
 	public Result delete(String id) {
-		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root Role");
+		Validate.isTrue(!Root.isRootById(id), "Cannot remove root Role");
 
 		for (CsmUserGroupRole userGroupRole : userCacheService.getUserGroupRoleMap().values()) {
 			if (userGroupRole.getRoleId().toString().equals(id)) {
@@ -151,7 +149,7 @@ public class AdminRoleUiService extends BaseService {
 		final List<CsmPermission> permissionList = Lists
 				.newArrayListWithCapacity(userCacheService.getPermissionMap().size() - 1);
 		for (CsmPermission permission : userCacheService.getPermissionMap().values()) {
-			if (!ROOT.isRootById(permission.getId())) {
+			if (!Root.isRootById(permission.getId())) {
 				permissionList.add(permission);
 			}
 		}
@@ -175,7 +173,7 @@ public class AdminRoleUiService extends BaseService {
 		Validate.notNull(rolePermission.getRoleId(), "Role should not be null");
 		Validate.notNull(rolePermission.getPermissionId(), "Permission should not be null");
 		Validate.isTrue(
-				!ROOT.isRootById(rolePermission.getRoleId()) && !ROOT.isRootById(rolePermission.getPermissionId()),
+				!Root.isRootById(rolePermission.getRoleId()) && !Root.isRootById(rolePermission.getPermissionId()),
 				"Cannot create root RolePermission");
 
 		rolePermission = rolePermissionPair.db().exePost(rolePermission);
@@ -184,7 +182,7 @@ public class AdminRoleUiService extends BaseService {
 	}
 
 	public Result deleteRolePermission(String id) {
-		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root RolePermission");
+		Validate.isTrue(!Root.isRootById(id), "Cannot remove root RolePermission");
 
 		rolePermissionPair.db().exeDelete(UUID.fromString(id));
 		userCacheService.removeRolePermission(id);

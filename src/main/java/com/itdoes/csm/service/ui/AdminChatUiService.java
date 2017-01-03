@@ -109,8 +109,6 @@ public class AdminChatUiService extends BaseService {
 		}
 	}
 
-	private static final Root ROOT = Root.getInstance();
-
 	private static final int MESSAGE_PAGE_SIZE = 10;
 
 	@Autowired
@@ -202,7 +200,7 @@ public class AdminChatUiService extends BaseService {
 
 		final List<CsmUserGroup> userGroupList = Lists.newArrayList();
 		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
-			if (!ROOT.isRootById(userGroup.getId()) && !userGroup.getChat() && userGroup.getAdmin()
+			if (!Root.isRootById(userGroup.getId()) && !userGroup.getChat() && userGroup.getAdmin()
 					&& !customerUserGroupIdSet.contains(userGroup.getId())
 					&& hasChatPermission(userGroup.getId().toString())) {
 				userGroupList.add(userGroup);

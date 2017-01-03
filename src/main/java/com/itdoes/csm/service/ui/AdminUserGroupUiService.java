@@ -97,8 +97,6 @@ public class AdminUserGroupUiService extends BaseService {
 		}
 	}
 
-	private static final Root ROOT = Root.getInstance();
-
 	@Autowired
 	private EntityEnv env;
 
@@ -132,9 +130,9 @@ public class AdminUserGroupUiService extends BaseService {
 
 	public Result post(CsmUserGroup userGroup) {
 		Validate.isTrue(StringUtils.isNotBlank(userGroup.getName()), "Name should not be blank");
-		Validate.isTrue(!ROOT.isRootByName(userGroup.getName()), "Cannot create root UserGroup");
+		Validate.isTrue(!Root.isRootByName(userGroup.getName()), "Cannot create root UserGroup");
 		if (userGroup.getSuperId() != null) {
-			Validate.isTrue(!ROOT.isRootById(userGroup.getSuperId()), "Cannot use root as super UserGroup");
+			Validate.isTrue(!Root.isRootById(userGroup.getSuperId()), "Cannot use root as super UserGroup");
 		}
 
 		userGroup = userGroupPair.db().exePost(userGroup);
@@ -152,10 +150,10 @@ public class AdminUserGroupUiService extends BaseService {
 	}
 
 	public Result put(CsmUserGroup userGroup, CsmUserGroup oldUserGroup) {
-		Validate.isTrue(!ROOT.isRootByName(userGroup.getName()) && !ROOT.isRootById(userGroup.getId()),
+		Validate.isTrue(!Root.isRootByName(userGroup.getName()) && !Root.isRootById(userGroup.getId()),
 				"Cannot modify root UserGroup");
 		if (userGroup.getSuperId() != null) {
-			Validate.isTrue(!ROOT.isRootById(userGroup.getSuperId()), "Cannot use root as super UserGroup");
+			Validate.isTrue(!Root.isRootById(userGroup.getSuperId()), "Cannot use root as super UserGroup");
 			final Set<CsmUserGroup> subUserGroupSet = userCacheService.getSubUserGroupSet(userGroup.getId().toString());
 			if (!Collections3.isEmpty(subUserGroupSet)) {
 				for (CsmUserGroup subUserGroup : subUserGroupSet) {
@@ -171,7 +169,7 @@ public class AdminUserGroupUiService extends BaseService {
 	}
 
 	public Result delete(String id) {
-		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroup");
+		Validate.isTrue(!Root.isRootById(id), "Cannot remove root UserGroup");
 
 		final Set<CsmUserGroup> subUserGroupSet = userCacheService.getSubUserGroupSet(id);
 		if (subUserGroupSet.size() > 1) {
@@ -192,7 +190,7 @@ public class AdminUserGroupUiService extends BaseService {
 	public Result listUserGroupRoleForm(String id) {
 		final List<CsmRole> roleList = Lists.newArrayListWithCapacity(userCacheService.getRoleMap().size() - 1);
 		for (CsmRole role : userCacheService.getRoleMap().values()) {
-			if (!ROOT.isRootById(role.getId())) {
+			if (!Root.isRootById(role.getId())) {
 				roleList.add(role);
 			}
 		}
@@ -214,7 +212,7 @@ public class AdminUserGroupUiService extends BaseService {
 	public Result postUserGroupRole(CsmUserGroupRole userGroupRole) {
 		Validate.notNull(userGroupRole.getUserGroupId(), "UserGroup should not be null");
 		Validate.notNull(userGroupRole.getRoleId(), "Role should not be null");
-		Validate.isTrue(!ROOT.isRootById(userGroupRole.getUserGroupId()) && !ROOT.isRootById(userGroupRole.getRoleId()),
+		Validate.isTrue(!Root.isRootById(userGroupRole.getUserGroupId()) && !Root.isRootById(userGroupRole.getRoleId()),
 				"Cannot create root UserGroupRole");
 
 		userGroupRole = userGroupRolePair.db().exePost(userGroupRole);
@@ -223,7 +221,7 @@ public class AdminUserGroupUiService extends BaseService {
 	}
 
 	public Result deleteUserGroupRole(String id) {
-		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root UserGroupRole");
+		Validate.isTrue(!Root.isRootById(id), "Cannot remove root UserGroupRole");
 
 		userGroupRolePair.db().exeDelete(UUID.fromString(id));
 		userCacheService.removeUserGroupRole(id);
@@ -234,7 +232,7 @@ public class AdminUserGroupUiService extends BaseService {
 		final List<CsmUserGroup> userGroupList = Lists
 				.newArrayListWithCapacity(userCacheService.getUserGroupMap().size() - 1);
 		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
-			if (!ROOT.isRootById(userGroup.getId())) {
+			if (!Root.isRootById(userGroup.getId())) {
 				userGroupList.add(userGroup);
 			}
 		}
@@ -246,7 +244,7 @@ public class AdminUserGroupUiService extends BaseService {
 		final List<CsmUserGroup> userGroupList = Lists.newArrayList();
 		final Set<CsmUserGroup> subUserGroupSet = userCacheService.getSubUserGroupSet(id);
 		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
-			if (!ROOT.isRootById(userGroup.getId()) && !subUserGroupSet.contains(userGroup)) {
+			if (!Root.isRootById(userGroup.getId()) && !subUserGroupSet.contains(userGroup)) {
 				userGroupList.add(userGroup);
 			}
 		}

@@ -36,8 +36,6 @@ public class AdminUserUiService extends BaseService {
 		}
 	}
 
-	private static final Root ROOT = Root.getInstance();
-
 	@Autowired
 	private EntityEnv env;
 
@@ -52,7 +50,7 @@ public class AdminUserUiService extends BaseService {
 	}
 
 	public Result listForm(int pageNo, int pageSize) {
-		return Result.success().addData("userList", userPair.db().filterNotEqual("id", ROOT.getIdString())
+		return Result.success().addData("userList", userPair.db().filterNotEqual("id", Root.getIdString())
 				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).sortAsc("username").exeFindPage());
 	}
 
@@ -64,8 +62,8 @@ public class AdminUserUiService extends BaseService {
 		Validate.isTrue(StringUtils.isNotBlank(user.getUsername()), "Username should not be blank");
 		Validate.isTrue(StringUtils.isNotBlank(user.getPlainPassword()), "Password should not be blank");
 		Validate.isTrue(userCacheService.getUserId(user.getUsername()) == null, "User [%s] exists", user.getUsername());
-		Validate.isTrue(!ROOT.isRootByName(user.getUsername()), "Cannot create root User");
-		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
+		Validate.isTrue(!Root.isRootByName(user.getUsername()), "Cannot create root User");
+		Validate.isTrue(!Root.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
 
 		user.populatePassword();
 		user = userPair.db().exePost(user);
@@ -84,9 +82,9 @@ public class AdminUserUiService extends BaseService {
 
 	public Result put(CsmUser user, CsmUser oldUser) {
 		Validate.isTrue(user.getUsername().equals(oldUser.getUsername()), "Cannot modify username");
-		Validate.isTrue(!ROOT.isRootByName(user.getUsername()) && !ROOT.isRootById(user.getId()),
+		Validate.isTrue(!Root.isRootByName(user.getUsername()) && !Root.isRootById(user.getId()),
 				"Cannot modify root User");
-		Validate.isTrue(!ROOT.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
+		Validate.isTrue(!Root.isRootById(user.getUserGroupId()), "Cannot assign user to root UserGroup");
 
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			user.populatePassword();
@@ -97,7 +95,7 @@ public class AdminUserUiService extends BaseService {
 	}
 
 	public Result delete(String id) {
-		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root User");
+		Validate.isTrue(!Root.isRootById(id), "Cannot remove root User");
 
 		userPair.db().exeDelete(UUID.fromString(id));
 		userCacheService.removeUser(id);
@@ -108,7 +106,7 @@ public class AdminUserUiService extends BaseService {
 		final List<CsmUserGroup> userGroupList = Lists
 				.newArrayListWithCapacity(userCacheService.getUserGroupMap().size() - 1);
 		for (CsmUserGroup userGroup : userCacheService.getUserGroupMap().values()) {
-			if (!ROOT.isRootById(userGroup.getId())) {
+			if (!Root.isRootById(userGroup.getId())) {
 				userGroupList.add(userGroup);
 			}
 		}

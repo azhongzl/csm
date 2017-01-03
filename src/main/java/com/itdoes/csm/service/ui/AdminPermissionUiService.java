@@ -36,8 +36,6 @@ public class AdminPermissionUiService extends BaseService {
 		}
 	}
 
-	private static final Root ROOT = Root.getInstance();
-
 	@Autowired
 	private EntityEnv env;
 
@@ -55,7 +53,7 @@ public class AdminPermissionUiService extends BaseService {
 		final List<CsmPermission> permissionList = Lists
 				.newArrayListWithCapacity(userCacheService.getPermissionMap().size() - 1);
 		for (CsmPermission permission : userCacheService.getPermissionMap().values()) {
-			if (!ROOT.isRootById(permission.getId())) {
+			if (!Root.isRootById(permission.getId())) {
 				permissionList.add(permission);
 			}
 		}
@@ -70,7 +68,7 @@ public class AdminPermissionUiService extends BaseService {
 	public Result post(CsmPermission permission) {
 		Validate.isTrue(StringUtils.isNotBlank(permission.getName()), "Permission name should not be blank");
 		Validate.isTrue(StringUtils.isNotBlank(permission.getPermission()), "Permission value should not be blank");
-		Validate.isTrue(!ROOT.isRootByName(permission.getName()), "Cannot create root Permission");
+		Validate.isTrue(!Root.isRootByName(permission.getName()), "Cannot create root Permission");
 
 		permission = permissionPair.db().exePost(permission);
 		userCacheService.addPermission(permission);
@@ -86,7 +84,7 @@ public class AdminPermissionUiService extends BaseService {
 	}
 
 	public Result put(CsmPermission permission, CsmPermission oldPermission) {
-		Validate.isTrue(!ROOT.isRootByName(permission.getName()) && !ROOT.isRootById(permission.getId()),
+		Validate.isTrue(!Root.isRootByName(permission.getName()) && !Root.isRootById(permission.getId()),
 				"Cannot modify root Permission");
 
 		permissionPair.db().exePut(permission, oldPermission);
@@ -95,7 +93,7 @@ public class AdminPermissionUiService extends BaseService {
 	}
 
 	public Result delete(String id) {
-		Validate.isTrue(!ROOT.isRootById(id), "Cannot remove root Permission");
+		Validate.isTrue(!Root.isRootById(id), "Cannot remove root Permission");
 
 		for (CsmRolePermission rolePermission : userCacheService.getRolePermissionMap().values()) {
 			if (rolePermission.getPermissionId().toString().equals(id)) {
