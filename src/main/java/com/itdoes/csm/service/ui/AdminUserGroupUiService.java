@@ -31,8 +31,8 @@ import com.itdoes.csm.service.UserCacheService;
  */
 @Service
 public class AdminUserGroupUiService extends BaseService {
-	private static class UserGroupComparator implements Comparator<CsmUserGroup> {
-		private static final UserGroupComparator INSTANCE = new UserGroupComparator();
+	private static enum UserGroupComparator implements Comparator<CsmUserGroup> {
+		INSTANCE;
 
 		@Override
 		public int compare(CsmUserGroup o1, CsmUserGroup o2) {
@@ -40,8 +40,8 @@ public class AdminUserGroupUiService extends BaseService {
 		}
 	}
 
-	private static class RoleComparator implements Comparator<CsmRole> {
-		private static final RoleComparator INSTANCE = new RoleComparator();
+	private static enum RoleComparator implements Comparator<CsmRole> {
+		INSTANCE;
 
 		@Override
 		public int compare(CsmRole o1, CsmRole o2) {
@@ -49,8 +49,8 @@ public class AdminUserGroupUiService extends BaseService {
 		}
 	}
 
-	private static class UserGroupRoleDtoComparator implements Comparator<UserGroupRoleDto> {
-		private static final UserGroupRoleDtoComparator INSTANCE = new UserGroupRoleDtoComparator();
+	private static enum UserGroupRoleDtoComparator implements Comparator<UserGroupRoleDto> {
+		INSTANCE;
 
 		@Override
 		public int compare(UserGroupRoleDto o1, UserGroupRoleDto o2) {

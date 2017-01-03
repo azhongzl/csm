@@ -43,8 +43,8 @@ import com.itdoes.csm.service.UserCacheService;
  */
 @Service
 public class AdminChatUiService extends BaseService {
-	private static class CustomerUserGroupDtoComparator implements Comparator<CustomerUserGroupDto> {
-		private static final CustomerUserGroupDtoComparator INSTANCE = new CustomerUserGroupDtoComparator();
+	private static enum CustomerUserGroupDtoComparator implements Comparator<CustomerUserGroupDto> {
+		INSTANCE;
 
 		@Override
 		public int compare(CustomerUserGroupDto o1, CustomerUserGroupDto o2) {
@@ -52,8 +52,8 @@ public class AdminChatUiService extends BaseService {
 		}
 	}
 
-	private static class UserGroupComparator implements Comparator<CsmUserGroup> {
-		private static final UserGroupComparator INSTANCE = new UserGroupComparator();
+	private static enum UserGroupComparator implements Comparator<CsmUserGroup> {
+		INSTANCE;
 
 		@Override
 		public int compare(CsmUserGroup o1, CsmUserGroup o2) {
@@ -61,8 +61,8 @@ public class AdminChatUiService extends BaseService {
 		}
 	}
 
-	private static class ChatUserComparator implements Comparator<ChatUser> {
-		private static final ChatUserComparator INSTANCE = new ChatUserComparator();
+	private static enum ChatUserComparator implements Comparator<ChatUser> {
+		INSTANCE;
 
 		@Override
 		public int compare(ChatUser o1, ChatUser o2) {

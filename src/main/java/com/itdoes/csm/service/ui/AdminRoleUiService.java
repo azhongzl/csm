@@ -29,8 +29,8 @@ import com.itdoes.csm.service.UserCacheService;
  */
 @Service
 public class AdminRoleUiService extends BaseService {
-	private static class RoleComparator implements Comparator<CsmRole> {
-		private static final RoleComparator INSTANCE = new RoleComparator();
+	private static enum RoleComparator implements Comparator<CsmRole> {
+		INSTANCE;
 
 		@Override
 		public int compare(CsmRole o1, CsmRole o2) {
@@ -38,8 +38,8 @@ public class AdminRoleUiService extends BaseService {
 		}
 	}
 
-	private static class PermissionComparator implements Comparator<CsmPermission> {
-		private static final PermissionComparator INSTANCE = new PermissionComparator();
+	private static enum PermissionComparator implements Comparator<CsmPermission> {
+		INSTANCE;
 
 		@Override
 		public int compare(CsmPermission o1, CsmPermission o2) {
@@ -47,8 +47,8 @@ public class AdminRoleUiService extends BaseService {
 		}
 	}
 
-	private static class RolePermissionDtoComparator implements Comparator<RolePermissionDto> {
-		private static final RolePermissionDtoComparator INSTANCE = new RolePermissionDtoComparator();
+	private static enum RolePermissionDtoComparator implements Comparator<RolePermissionDto> {
+		INSTANCE;
 
 		@Override
 		public int compare(RolePermissionDto o1, RolePermissionDto o2) {

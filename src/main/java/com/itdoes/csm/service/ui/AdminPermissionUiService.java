@@ -27,8 +27,8 @@ import com.itdoes.csm.service.UserCacheService;
  */
 @Service
 public class AdminPermissionUiService extends BaseService {
-	private static class PermissionComparator implements Comparator<CsmPermission> {
-		private static final PermissionComparator INSTANCE = new PermissionComparator();
+	private static enum PermissionComparator implements Comparator<CsmPermission> {
+		INSTANCE;
 
 		@Override
 		public int compare(CsmPermission o1, CsmPermission o2) {

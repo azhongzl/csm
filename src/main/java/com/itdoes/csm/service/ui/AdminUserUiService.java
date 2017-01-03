@@ -27,8 +27,8 @@ import com.itdoes.csm.service.UserCacheService;
  */
 @Service
 public class AdminUserUiService extends BaseService {
-	private static class UserGroupComparator implements Comparator<CsmUserGroup> {
-		private static final UserGroupComparator INSTANCE = new UserGroupComparator();
+	private static enum UserGroupComparator implements Comparator<CsmUserGroup> {
+		INSTANCE;
 
 		@Override
 		public int compare(CsmUserGroup o1, CsmUserGroup o2) {
