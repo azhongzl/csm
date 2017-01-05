@@ -74,7 +74,7 @@
 			<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
 				v-on:change='showUploadFile()' style="display: none"> </input>
 			<div class="row">
-				<div class="btn-group col-md-3  column col-md-offset-1">
+				<div class="btn-group col-md-3  column ">
 					<button class="btn btn-default" type="button" v-on:click="listHistory()" data-toggle="tooltip"
 						title="Display history">
 						<i class="fa fa-history" aria-hidden="true"></i>
@@ -96,14 +96,14 @@
 			</div>
 
 			<div class="row">
-				<div class="col-md-10 column col-md-offset-1" >
+				<div class="col-md-12 column " >
 					<textarea class="form-control" v-model="sentence" rows="4" style="resize: none"> </textarea>
 				</div>
 
 			</div>
 
 			<div class="row">
-				<div class="col-md-10 column col-md-offset-1" style="margin-bottom: 10px" >
+				<div class="col-md-12 column " style="margin-bottom: 10px" >
 					<button class="btn btn-defaut btn-block" type="button" v-on:click="send(sentence)" style="background-color: #c0c0c0">
 						<i class="fa fa-share-square-o " aria-hidden="true">Send</i>
 					</button>
