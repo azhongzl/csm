@@ -61,7 +61,7 @@ const
                     url: url1,
                     async: false,
                     success: function(result) {
-                        myAlert("DELETE OK ");
+ //                       myAlert("DELETE OK ");
                     },
                     timeout: 3000,
                     error: handleError
@@ -142,7 +142,7 @@ const content = {
 
     methods: {
         send: function() {
-            if (this.sentence.length > 0) {
+            if (this.sentence.trim().length > 0) {
                 let customerId = this.$route.query.id;
                 stompClient.send('/app/chatASendMessage', {}, JSON.stringify({
                     'message': this.sentence,
@@ -151,12 +151,7 @@ const content = {
                 this.sentence = "";
             }
         },
-        switchKey: function() {
-            this.uploadKey = !this.uploadKey;
-        },
-        switchChat: function() {
-            this.uploadKey = true;
-        },
+
         listHistory: function() {
             let customerId = this.$route.query.id;
             let url = ctx + "/admin/chat/listHistory/" + customerId;
@@ -171,6 +166,10 @@ const content = {
             form_data.append("roomId", this.$route.query.id);
             for (var i = 0; i < (fileData.files.length); i++) {
                 form_data.append("uploadFile", fileData.files[i]);
+            }
+            if (this.sentence.trim().length>0){
+            	form_data.append("message", this.sentence);
+                this.sentence="";
             }
             ajaxcreateUpload(form_data, url1);
 
@@ -188,6 +187,10 @@ const content = {
             myMediaRecorder.start();
             this.videostop = false;
 
+        },
+        videoCancel: function() {
+            myMediaRecorder.cancel();
+            $("#myVideoModal").modal("hide");
         },
         videoStop: function() {
             myMediaRecorder.stop();
@@ -211,6 +214,10 @@ const content = {
             myMediaRecorder.stop();
             $("#myAudioModal").modal("hide");
         },
+        audioCancel: function() {
+            myMediaRecorder.cancel();
+            $("#myAudioModal").modal("hide");
+        },
         processStream: function(stream) {
             var video = document.getElementById('myVideo');
             video.srcObject = stream;
@@ -230,15 +237,19 @@ const content = {
             var fd = new FormData();
             fd.append("roomId", this.$route.query.id);
             fd.append("uploadFile", blob, "media" + media.ext);
+            if (this.sentence.trim().length>0){
+                fd.append("message", this.sentence);
+                this.sentence="";
+            }
             var xhr = new XMLHttpRequest();
             xhr.addEventListener("load", function(e) {
-                myAlert("Upload successfully");
+//                myAlert("Upload successfully");
             }, false);
             xhr.addEventListener("error", function(e) {
-                myAlert("Upload failed");
+//                myAlert("Upload failed");
             }, false);
             xhr.addEventListener("abort", function(e) {
-                myAlert("Upload cancelled");
+//                myAlert("Upload cancelled");
             }, false);
             xhr.open("POST", url);
             xhr.send(fd);

@@ -187,21 +187,21 @@ function showMessage(message) {
     } else {
         let attachment = message.attachments.split(",");
         let files = "";
-
+        if (message.message){
+        	files +="<p>"+message.message+"</p>";
+        }
         $.each(attachment, function(i, n) {
-            let temp = "";
-            temp = "<p><a href=" + ctx + "/uploads/CsmChatMessage/" + message.id + "/" + n + ">" + n + "</a></p>";
-            if (n.indexOf("mp4") > 0) {
-                files += "<video src=" + ctx + "/uploads/CsmChatMessage/" + message.id + "/" + n + " controls style='height:280px;'>" + temp + "</video>";
-            } else {
-                files += temp;
-            }
-            if (n.indexOf("ogg") > 0) {
-                files += "<audio src=" + ctx + "/uploads/CsmChatMessage/" + message.id + "/" + n + " controls >" + temp + "</audio>";
-            } else {
-                files += temp;
-            }
+				if(n.indexOf("mp4")!=-1){
+				files+="<video src="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+" controls  style='height:280px;width:350px'>"+n+"</video>";	
+				}
+	            if (n.indexOf("ogg")!=-1) {
+	                files += "<audio src=" + ctx + "/uploads/CsmChatMessage/" + message.id + "/" + n + " controls >" + n + "</audio>";
+	            } 
+	            if ((n.indexOf("mp4")===-1)&&(n.indexOf("ogg")===-1)){
+	                files +="<p><a href="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+">"+n+"</a></p>";
+	            }
         });
+        
         if (message.fromAdmin) {
             $("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:500px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >" + message.senderName + "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr + "</div><div class='panel-body'>" + files + " </div></div>");
         } else {
@@ -218,7 +218,7 @@ function ajaxcreate(savedata, url1) {
         cache: false,
         async: false,
         success: function(result) {
-            myAlert("ADD NEW SUCCESS");
+//            myAlert("ADD NEW SUCCESS");
         },
         timeout: 3000,
         error: handleError
@@ -254,7 +254,7 @@ function ajaxPut(putdata, url1) {
         cache: false,
         async: false,
         success: function(result) {
-            myAlert("PUT OK ");
+//            myAlert("PUT OK ");
         },
         timeout: 3000,
         error: handleError,
@@ -270,7 +270,7 @@ function ajaxGet(url1) {
         cache: false,
         success: function(result) {
             if (result.data == undefined) {
-                myAlert("No Result");
+//                myAlert("No Result");
             } else {
                 checkList = result.data;
             }
@@ -326,7 +326,7 @@ function ajaxcreateUpload(savedata, url1) {
         contentType: false,
         processData: false,
         success: function(result) {
-            myAlert("ADD NEW SUCCESS");
+//            myAlert("ADD NEW SUCCESS");
         },
         timeout: 3000,
         error: handleError,
@@ -344,7 +344,7 @@ function ajaxPutUpload(putdata, url1) {
         contentType: false,
         processData: false,
         success: function(result) {
-            myAlert("PUT OK ");
+//            myAlert("PUT OK ");
         },
         timeout: 3000,
         error: handleError,

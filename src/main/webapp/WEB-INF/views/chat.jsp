@@ -10,6 +10,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
+<link href="${ctx}/static/css/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 <link href="${ctx}/static/css/chat.css" rel="stylesheet">
 <script src="${ctx}/static/js/lib/jquery.js"></script>
 <script src="${ctx}/static/js/lib/bootstrap.js"></script>
@@ -35,58 +36,97 @@
 <body>
 
 	<div id="slider" class="slider">
-		<div id="main" class="container" style="width: 630px; height: 740px;">
-			<div id="sentence" class="well"
-				style="width: 600px; height: 600px; overflow-y: auto; overflow-x: hidden; background-color: #ebebeb; margin-top: 5px">
-			</div>
-			<div class="well" style="width: 600px; height: 100px; background-color: #dddcd9; padding: 0px; padding-top: 30px">
-				<div class="btn-group dropup pull-right" style="margin-right: 10px">
-					<button type="button" aria-hidden="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						<span class="caret">
-					</button>
-					<ul class="dropdown-menu" role="menu">
-						<li><a href="javascript:void(0)" onclick="listHistory()">Display history </a></li>
-						<li><a href="javascript:void(0)" onclick="uploadFile()">Upload file</a></li>
-						<li><a href="javascript:void(0)" onclick="video()">Video</a></li>
-						<li><a href="javascript:void(0)">Audio</a></li>
-						<li class="divider"></li>
-						<li><a href="javascript:void(0)" onclick="switchChat()">Chat</a></li>
-					</ul>
-				</div>
-				<form class="form-inline" id="chatForm">
-					<div class="form-group">
-						<input type="text" id="message" class="form-control" placeholder="Your message here..." style="width: 480px;">
-					</div>
-					<button id="send" class="btn btn-default" type="submit" onclick="sendMessage()">Send</button>
-				</form>
-				<div id="uploadFile" class="col-md-2 ">
-					<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
-						onchange='showUploadFile()' />
-				</div>
-				<!-- /input-group -->
-			</div>
+
+		<div id="sentence" class="well"
+			style="width: 600px; height: 600px; overflow-y: auto; overflow-x: hidden; background-color: #ebebeb; margin-top: 5px; margin-bottom: 0px">
 		</div>
-	</div>
-				<div class="modal fade" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
-				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-				<div class="modal-dialog">
-					<div class="modal-content" >
-						<div class="modal-header " style="background-color: #337ab7; color: white">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<h4 class="modal-title" id="myModalLabel">VIDEO</h4>
-						</div>
-						<div class="modal-body" style="text-align: center">
-							<video id="myVideo" autoplay muted style="height: 280px;" ></video>
-						</div>
-						<div class="modal-footer">
-							<button type="button" id="videostart" class="btn btn-primary pull-left" onclick="videoStart()" >Start</button>
-							<button type="button"  id="videostop" class="btn btn-primary" onclick="videoStop()" >Stop</button>
-						</div>
-					</div>
-					<!-- /.modal-content -->
+		<div class="panel panel-default" style="width: 600px; background-color: #dddcd9; margin-top: 0">
+
+			<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
+				onchange='showUploadFile()' style="display: none"> </input>
+			<div class="row">
+				<div class="btn-group col-md-5  column ">
+					<button class="btn btn-default" type="button" onclick="listHistory()" data-toggle="tooltip" title="Display history">
+						<i class="fa fa-history" aria-hidden="true"></i>
+					</button>
+					<button class="btn btn-default" type="button" onclick="document.getElementById('inputFile').click();"
+						data-toggle="tooltip" title="Upload">
+						<i class="fa fa-paperclip" aria-hidden="true"></i>
+					</button>
+					<button class="btn btn-default" type="button" onclick="video();" data-toggle="tooltip" title="Video">
+						<i class="fa fa-video-camera" aria-hidden="true"></i>
+					</button>
+					<button class="btn btn-default" type="button" onclick="audio();" data-toggle="tooltip" title="Audio">
+						<i class="fa fa-volume-up" aria-hidden="true"></i>
+					</button>
 				</div>
-				<!-- /.modal -->
+
 			</div>
+
+			<div class="row">
+				<div class="col-md-12 column ">
+					<textarea id="message" class="form-control" v-model="sentence" rows="2" style="resize: none"> </textarea>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-12 column " style="margin-bottom: 5px">
+					<button class="btn btn-defaut btn-block" type="button" onclick="sendMessage()" style="background-color: #c0c0c0">
+						<i class="fa fa-share-square-o " aria-hidden="true">Send</i>
+					</button>
+				</div>
+			</div>
+
+
+
+			<!-- /input-group -->
+		</div>
+
+	</div>
+	<div class="modal" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header " style="background-color: #337ab7; color: white">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">VIDEO</h4>
+				</div>
+				<div class="modal-body" style="text-align: center">
+					<video id="myVideo" autoplay muted style="height: 280px;"></video>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="videostart" class="btn btn-primary pull-left" onclick="videoStart()">Record</button>
+					<button type="button" id="videocancel" class="btn btn-primary" onclick="videoCancel()">Cancel</button>
+					<button type="button" id="videostop" class="btn btn-primary" onclick="videoStop()">Send</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+	<div class="modal" id="myAudioModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header " style="background-color: #337ab7; color: white">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">AUDIO</h4>
+				</div>
+				<div class="modal-body" style="text-align: center">
+					<audio id="myAudio" controls> Your browser does not support the audio tag.
+					</audio>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="audiostart" class="btn btn-primary pull-left" onclick="audioStart()">Record</button>
+					<button type="button" id="audiocancel" class="btn btn-primary" onclick="audioCancel()">Cancel</button>
+					<button type="button" id="audiostop" class="btn btn-primary" onclick="audioStop()">Send</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
 	<button id="trigger" class="trigger">try</button>
 	<script type="text/javascript">
 		userId = "<shiro:principal property="id" />";

@@ -10,13 +10,13 @@
 	<!-- /.row -->
 	<div class="row">
 		<div class="col-lg-12">
-			<div class="panel panel-default">
+			<div class="panel panel-default" style="background-color: #d8d8d8">
 				<div class="panel-body">
 
 					<!-- /.row (nested) -->
 
-					<div class="row clearfix">
-						<div class="col-md-2 column " style="height: 650px">
+					<div class="row clearfix" style="height: 750px">
+						<div class="col-md-2 column ">
 							<router-view name="customer"></router-view>
 							<router-view name="service"></router-view>
 						</div>
@@ -70,81 +70,94 @@
 			style="background-color: #f7f7f7; max-width: 1000px; height: 550px; margin-top: 0px; overflow-y: auto; overflow-x: hidden; padding-left: 20px; padding-right: 20px"></div>
 	</div>
 	<div class="row clearfix">
-		<div style="max-width: 1000px; height: 60px; margin-top: 2px; margin-left: 50px">
-
-			<p style="color: blue">Talk to : {{customerName}}</p>
-
-			<div class="btn-group dropup pull-right" style="margin-right: 60px">
-				<button type="button" aria-hidden="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<span class="fa fa-plus fa-lg">
-				</button>
-				<ul class="dropdown-menu" role="menu">
-					<li><a href="javascript:void(0)" v-on:click="listHistory()">Display history </a></li>
-					<li><a href="javascript:void(0)" v-on:click="switchKey()">Upload file</a></li>
-					<li><a href="javascript:void(0)" v-on:click="video()">Video</a></li>
-					<li><a href="javascript:void(0)" v-on:click="audio()">Audio</a></li>
-					<li class="divider"></li>
-					<li><a href="javascript:void(0)" v-on:click="switchChat()">Chat</a></li>
-				</ul>
-			</div>
-			<div class="form-group input-group" style="max-width: 800px; margin-left: 10px" v-show="uploadKey">
-				<input type="text" class="form-control" v-on:keyup.enter="send" v-model="sentence"> <span
-					class="input-group-btn">
-					<button class="btn btn-default" type="button" v-on:click="send(sentence)">
-						<i class="fa fa-share">send</i>
+		<div style="max-width: 1000px; margin-top: 5px; border-style: solid; border-width: 0.2px; border-color: white;background-color:white">
+			<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
+				v-on:change='showUploadFile()' style="display: none"> </input>
+			<div class="row">
+				<div class="btn-group col-md-3  column col-md-offset-1">
+					<button class="btn btn-default" type="button" v-on:click="listHistory()" data-toggle="tooltip"
+						title="Display history">
+						<i class="fa fa-history" aria-hidden="true"></i>
 					</button>
-				</span>
+					<button class="btn btn-default" type="button" v-on:click="document.getElementById('inputFile').click();"
+						data-toggle="tooltip" title="Upload">
+						<i class="fa fa-paperclip" aria-hidden="true"></i>
+					</button>
+					<button class="btn btn-default" type="button" v-on:click="video();" data-toggle="tooltip" title="Video">
+						<i class="fa fa-video-camera" aria-hidden="true"></i>
+					</button>
+					<button class="btn btn-default" type="button" v-on:click="audio();" data-toggle="tooltip" title="Audio">
+						<i class="fa fa-volume-up" aria-hidden="true"></i>
+					</button>
+				</div>
+				<div class="col-md-2 column " style="margin-top: 5px">
+					<p style="color: blue">Talk to : <span style="color: red">{{customerName}}</span></p>
+				</div>
 			</div>
 
-			<div class="col-md-2 " v-show="!uploadKey">
-				<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
-					v-on:change='showUploadFile()' />
+			<div class="row">
+				<div class="col-md-10 column col-md-offset-1" >
+					<textarea class="form-control" v-model="sentence" rows="4" style="resize: none"> </textarea>
+				</div>
+
 			</div>
 
-			<div class="modal" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
-				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header " style="background-color: #337ab7; color: white">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
-						</div>
-						<div class="modal-body" style="text-align: center">
-							<video id="myVideo" autoplay muted></video>
-						</div>
-						<div class="modal-footer">
-							<button type="button" v-bind:disabled="videostart" class="btn btn-primary pull-left" v-on:click="videoStart">Start</button>
-							<button type="button" v-bind:disabled="videostop" class="btn btn-primary" v-on:click="videoStop">Stop</button>
-						</div>
-					</div>
-					<!-- /.modal-content -->
+			<div class="row">
+				<div class="col-md-10 column col-md-offset-1" style="margin-bottom: 10px" >
+					<button class="btn btn-defaut btn-block" type="button" v-on:click="send(sentence)" style="background-color: #c0c0c0">
+						<i class="fa fa-share-square-o " aria-hidden="true">Send</i>
+					</button>
 				</div>
-				<!-- /.modal -->
-			</div>
-			<div class="modal" id="myAudioModal" style="margin-top: 200px" tabindex="-1" role="dialog"
-				aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header " style="background-color: #337ab7; color: white">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
-						</div>
-						<div class="modal-body" style="text-align: center">
-							<audio id="myAudio" controls >
-								Your browser does not support the audio tag.
-							</audio>
-						</div>
-						<div class="modal-footer">
-							<button type="button" v-bind:disabled="videostart" class="btn btn-primary pull-left" v-on:click="audioStart">Start</button>
-							<button type="button" v-bind:disabled="videostop" class="btn btn-primary" v-on:click="audioStop">Stop</button>
-						</div>
-					</div>
-					<!-- /.modal-content -->
-				</div>
-				<!-- /.modal -->
 			</div>
 		</div>
+
 	</div>
+
+	<div class="modal" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header " style="background-color: #337ab7; color: white">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
+				</div>
+				<div class="modal-body" style="text-align: center">
+					<video id="myVideo" autoplay muted></video>
+				</div>
+				<div class="modal-footer">
+					<button type="button" v-bind:disabled="videostart" class="btn btn-primary pull-left" v-on:click="videoStart">Record</button>
+					<button type="button" v-bind:disabled="videostop" class="btn btn-primary" v-on:click="videoCancel">Cancel</button>
+					<button type="button" v-bind:disabled="videostop" class="btn btn-primary" v-on:click="videoStop">Send</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+	<div class="modal" id="myAudioModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header " style="background-color: #337ab7; color: white">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">{{modalTitle}}</h4>
+				</div>
+				<div class="modal-body" style="text-align: center">
+					<audio id="myAudio" controls> Your browser does not support the audio tag.
+					</audio>
+				</div>
+				<div class="modal-footer">
+					<button type="button" v-bind:disabled="videostart" class="btn btn-primary pull-left" v-on:click="audioStart">Record</button>
+					<button type="button" v-bind:disabled="videostop" class="btn btn-primary" v-on:click="audioCancel">Cancel</button>
+					<button type="button" v-bind:disabled="videostop" class="btn btn-primary" v-on:click="audioStop">Send</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+</div>
+</div>
 </div>
 </template>
 

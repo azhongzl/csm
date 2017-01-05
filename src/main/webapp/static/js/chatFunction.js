@@ -20,7 +20,7 @@ function connect() {
 }
 
 function sendMessage() {
-	if ($("#message").val().length > 0) {
+	if ($("#message").val().trim().length > 0) {
 		stompClient.send('/app/chatCSendMessage', {}, JSON.stringify({
 			'message' : $("#message").val()
 		}));
@@ -43,19 +43,16 @@ function showUploadFile() {
 	for (var i = 0; i < (fileData.files.length); i++) {
 		form_data.append("uploadFile", fileData.files[i]);
 	}
+  if($("#message").val().trim().length>0){
+    	form_data.append("message", $("#message").val());
+    	$("#message").val("");
+  }
 	ajaxcreateUpload(form_data, url1);
 
 }
 
-function uploadFile() {
-	$("#chatForm").hide();
-	$("#uploadFile").show();
-}
 
-function switchChat() {
-	$("#uploadFile").hide();
-	$("#chatForm").show();
-}
+
 
 function ajaxcreateUpload(savedata, url1) {
 	$.ajax({
@@ -67,7 +64,7 @@ function ajaxcreateUpload(savedata, url1) {
 		contentType : false,
 		processData : false,
 		success : function(result) {
-			myAlert("ADD NEW SUCCESS");
+//			myAlert("ADD NEW SUCCESS");
 		},
 		timeout : 3000,
 		error : handleError,
@@ -128,14 +125,20 @@ function showMessage(message) {
 	} else {
 		let attachment=message.attachments.split(",");
 		let files="";
+        if (message.message){
+        	files +="<p>"+message.message+"</p>";
+        }
 		$.each(attachment,function(i,n){
-			let temp="";
-			temp="<p><a href="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+">"+n+"</a></p>";
-			if(n.indexOf("mp4")>0){
-			files+="<video src="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+" controls  style='height:280px;width:350px'>"+temp+"</video>";	
-			}else{
-			files+=temp;
+
+			if(n.indexOf("mp4")!=-1){
+			files+="<video src="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+" controls  style='height:280px;width:350px'>"+n+"</video>";	
 			}
+            if (n.indexOf("ogg")!=-1) {
+                files += "<audio src=" + ctx + "/uploads/CsmChatMessage/" + message.id + "/" + n + " controls >" + n + "</audio>";
+            } 
+            if ((n.indexOf("mp4")===-1)&&(n.indexOf("ogg")===-1)){
+                files +="<p><a href="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+">"+n+"</a></p>";
+            }
 		});
 		if (message.fromAdmin) {
 			$("#sentence")
@@ -165,13 +168,19 @@ function video(){
     myMediaRecorder.initVideo(processStream, processBlob,processError);
     $("#videostart").attr("disabled",false);
     $("#videostop").attr("disabled",true);
-
+    $("#videocancel").attr("disabled",true);
 }
 
 function videoStart(){
     $("#videostart").attr("disabled",true);
     myMediaRecorder.start();
     $("#videostop").attr("disabled",false);
+    $("#videocancel").attr("disabled",false);
+} 
+
+function videoCancel(){
+    myMediaRecorder.cancel();
+    $("#myVideoModal").modal("hide");
 } 
 
 function videoStop(){
@@ -186,6 +195,40 @@ var processStream = function(stream) {
         video.play();
     };
 }
+
+var processStream1 = function(stream) {
+    var video = document.getElementById('myAudio');
+    video.srcObject = stream;
+    video.onloadedmetadata = function(e) {
+        video.play();
+    };
+}
+
+
+function audio(){
+        $("#myAudioModal").modal("show");
+        myMediaRecorder.initAudio(processStream1, processBlob, processError);
+        $("#audiostart").attr("disabled",false);
+        $("#audiostop").attr("disabled",true);
+        $("#audiocancel").attr("disabled",true);
+}
+
+function audioStart(){
+    $("#audiostart").attr("disabled",true);
+    myMediaRecorder.start();
+    $("#audiostop").attr("disabled",false);
+    $("#audiocancel").attr("disabled",false);
+} 
+
+function audioCancel(){
+    myMediaRecorder.cancel();
+    $("#myAudioModal").modal("hide");
+} 
+
+function audioStop(){
+    myMediaRecorder.stop();
+    $("#myAudioModal").modal("hide");
+} 
 
 var processError = function(e) {
 	alert("b");
@@ -206,15 +249,19 @@ var processBlob = function(blob, media) {
     var url = ctx+"/chat/upload";
     var fd = new FormData();
     fd.append("uploadFile", blob, "media" + media.ext);
+    if($("#message").val().trim().length>0){
+    	fd.append("message", $("#message").val());
+    	$("#message").val("");
+  }
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("load", function(e) {
-        alert("Upload successfully");
+//        alert("Upload successfully");
     }, false);
     xhr.addEventListener("error", function(e) {
-        alert("Upload failed");
+//        alert("Upload failed");
     }, false);
     xhr.addEventListener("abort", function(e) {
-        alert("Upload cancelled");
+//        alert("Upload cancelled");
     }, false);
     xhr.open("POST", url);
     xhr.send(fd);
