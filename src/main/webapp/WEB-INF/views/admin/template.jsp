@@ -2,8 +2,11 @@
 <template id="chatMainPage">
 <div>
 	<div class="row">
-		<div class="col-lg-12">
+		<div class="col-lg-10">
 			<h3>Chat</h3>
+		</div>
+		<div class="col-lg-2" v-show="customerName" style="color: red">
+			<h3><i>talk to : {{customerName}}</i></h3>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
@@ -70,7 +73,8 @@
 			style="background-color: #f7f7f7; max-width: 1000px; height: 550px; margin-top: 0px; overflow-y: auto; overflow-x: hidden; padding-left: 20px; padding-right: 20px"></div>
 	</div>
 	<div class="row clearfix">
-		<div style="max-width: 1000px; margin-top: 5px; border-style: solid; border-width: 0.2px; border-color: white;background-color:white">
+		<div
+			style="max-width: 1000px; margin-top: 5px; border-style: solid; border-width: 0.2px; border-color: white; background-color: white">
 			<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
 				v-on:change='showUploadFile()' style="display: none"> </input>
 			<div class="row">
@@ -90,21 +94,19 @@
 						<i class="fa fa-volume-up" aria-hidden="true"></i>
 					</button>
 				</div>
-				<div class="col-md-2 column " style="margin-top: 5px">
-					<p style="color: blue">Talk to : <span style="color: red">{{customerName}}</span></p>
-				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-md-12 column " >
+				<div class="col-md-12 column ">
 					<textarea class="form-control" v-model="sentence" rows="4" style="resize: none"> </textarea>
 				</div>
 
 			</div>
 
 			<div class="row">
-				<div class="col-md-12 column " style="margin-bottom: 10px" >
-					<button class="btn btn-defaut btn-block" type="button" v-on:click="send(sentence)" style="background-color: #c0c0c0">
+				<div class="col-md-12 column " style="margin-bottom: 10px">
+					<button class="btn btn-defaut btn-block" type="button" v-on:click="send(sentence)"
+						style="background-color: #c0c0c0">
 						<i class="fa fa-share-square-o " aria-hidden="true">Send</i>
 					</button>
 				</div>

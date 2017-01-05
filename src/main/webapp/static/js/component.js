@@ -5,16 +5,44 @@ var root = "root";
 const
     chat = {
         template: '#chatMainPage',
+        data:function(){
+        	return {
+        		customerName:"",
+            }
+        	},
+        created : function(){
+            store.commit('getCustomerName', {
+                id: "",
+                name: ""
+            });
+        },
+        computed : {
+        	customerName: function(){
+        		return this.$store.state.customerName
+        	}
+        },
+
     };
 
 const
     customer = {
         template: '#customer',
+        watch: {
+            '$route': function(to, from) {
+            	if (to.path=="/admin/chat"){
+                    store.commit('getCustomerName', {
+                        id: "",
+                        name: "",
+                    });
+            	}
+            }
+        },
         computed: {
             customers: function() {
                 return this.$store.state.customers;
             }
         },
+        
         created: function() {
             connect1();
             store.commit("getCurrentUserGroup");
@@ -135,9 +163,6 @@ const content = {
         showMsg(customerId);
     },
     computed: {
-        customerName: function() {
-            return this.$store.state.customerName;
-        }
     },
 
     methods: {
