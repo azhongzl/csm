@@ -2,6 +2,7 @@
     let log = console.log.bind(console);
     let recorder;
     let chunks;
+    let canceled;
     let mediaOptions = {
         video: {
             tag: 'video',
@@ -36,6 +37,12 @@
     };
 
     myMediaRecorder.stop = function() {
+        canceled = false;
+        recorder.stop();
+    };
+
+    myMediaRecorder.cancel = function() {
+        canceled = true;
         recorder.stop();
     };
 
@@ -48,10 +55,12 @@
                 chunks.push(e.data);
             };
             recorder.onstop = e => {
-                let blob = new Blob(chunks, {
-                    type: media.type
-                });
-                processBlob(blob, media);
+                if (!canceled) {
+                    let blob = new Blob(chunks, {
+                        type: media.type
+                    });
+                    processBlob(blob, media);
+                }
             };
             recorder.onerror = processError;
             log('Get user media successfully');
