@@ -104,7 +104,7 @@ function showUnhandledCustomer(customerId) {
     if (!intervalMap.has(userId)) {
         var interval = setInterval(function() {
             $("#" + userId).fadeOut(100).fadeIn(100);
-        }, 200);
+        }, 500);
         intervalMap.set(userId, interval);
     }
 }
@@ -124,8 +124,8 @@ function showMsg(customerId) {
         }, 200);
         return;
     }
-
-    $("#sentence").empty();
+    store.state.messages=[];  
+    
     var canSendMsg = false;
     if (store.state.currentUserGroup.chatOrSuper) {
         canSendMsg = true;
@@ -149,7 +149,7 @@ function showMsg(customerId) {
             customerId,
             function(message) {
                 showMessage(JSON.parse(message.body));
-                document.getElementById('sentence').scrollTop = document.getElementById('sentence').scrollHeight;
+ //               document.getElementById('sentence').scrollTop = document.getElementById('sentence').scrollHeight;
             });
         subscribeList.push(subApp);
         subscribeList.push(subTopic);
@@ -160,7 +160,7 @@ function showMessages(messageList) {
     for (var i = 0; i < messageList.length; i++) {
         showMessage(messageList[i]);
     }
-    document.getElementById('sentence').scrollTop = document.getElementById('sentence').scrollHeight;
+//    document.getElementById('sentence').scrollTop = document.getElementById('sentence').scrollHeight;
 }
 
 function showMessage(message) {
@@ -178,36 +178,21 @@ function showMessage(message) {
     var timeStr = "";
     var num = message.createDateTime.indexOf("T");
     timeStr = message.createDateTime.substring(0, num) + " " + message.createDateTime.substring(num + 1, 19);
-    if (message.attachments == undefined) {
-        if (message.fromAdmin) {
-            $("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:500px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >" + message.senderName + "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr + "</div><div class='panel-body'>" + message.message + " </div></div>");
-        } else {
-            $("#sentence").append("<div class='panel panel-info' style='clear:both;float:left;width:500px'><div class='panel-heading' style='padding: 2px 0px ' >" + message.senderName + "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr + "</div><div class='panel-body'>" + message.message + " </div></div>");
-        }
-    } else {
-        let attachment = message.attachments.split(",");
-        let files = "";
-        if (message.message){
-        	files +="<p>"+message.message+"</p>";
-        }
-        $.each(attachment, function(i, n) {
-				if(n.indexOf("mp4")!=-1){
-				files+="<video src="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+" controls  style='height:280px;width:350px'>"+n+"</video>";	
-				}
-	            if (n.indexOf("ogg")!=-1) {
-	                files += "<audio src=" + ctx + "/uploads/CsmChatMessage/" + message.id + "/" + n + " controls >" + n + "</audio>";
-	            } 
-	            if ((n.indexOf("mp4")===-1)&&(n.indexOf("ogg")===-1)){
-	                files +="<p><a href="+ctx+"/uploads/CsmChatMessage/"+message.id+"/"+n+">"+n+"</a></p>";
-	            }
-        });
-        
-        if (message.fromAdmin) {
-            $("#sentence").append("<div class='panel panel-primary' style='clear:both;float:right;width:500px'><div class='panel-heading' style='padding: 2px 0px 2px 300px' >" + message.senderName + "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr + "</div><div class='panel-body'>" + files + " </div></div>");
-        } else {
-            $("#sentence").append("<div class='panel panel-info' style='clear:both;float:left;width:500px'><div class='panel-heading' style='padding: 2px 0px ' >" + message.senderName + "&nbsp;&nbsp;&nbsp;&nbsp;" + timeStr + "</div><div class='panel-body'>" + files + " </div></div>");
-        }
+    message.createDateTime=timeStr;
+    if (message.attachments != undefined){
+    	 let attachment = message.attachments.split(",");
+    	 if(message.message){
+    	 let mess = html_encode(message.message);
+    	 message.message = mess;
+    	 }
+    	 message.attachments = attachment;
+    }else{
+    	let mess = html_encode(message.message);
+   	 	message.message = mess;
     }
+    store.state.messages.push(message);
+    	
+
 }
 
 function ajaxcreate(savedata, url1) {
@@ -218,7 +203,7 @@ function ajaxcreate(savedata, url1) {
         cache: false,
         async: false,
         success: function(result) {
-//            myAlert("ADD NEW SUCCESS");
+// myAlert("ADD NEW SUCCESS");
         },
         timeout: 3000,
         error: handleError
@@ -254,7 +239,7 @@ function ajaxPut(putdata, url1) {
         cache: false,
         async: false,
         success: function(result) {
-//            myAlert("PUT OK ");
+// myAlert("PUT OK ");
         },
         timeout: 3000,
         error: handleError,
@@ -270,7 +255,7 @@ function ajaxGet(url1) {
         cache: false,
         success: function(result) {
             if (result.data == undefined) {
-//                myAlert("No Result");
+// myAlert("No Result");
             } else {
                 checkList = result.data;
             }
@@ -326,7 +311,7 @@ function ajaxcreateUpload(savedata, url1) {
         contentType: false,
         processData: false,
         success: function(result) {
-//            myAlert("ADD NEW SUCCESS");
+// myAlert("ADD NEW SUCCESS");
         },
         timeout: 3000,
         error: handleError,
@@ -344,7 +329,7 @@ function ajaxPutUpload(putdata, url1) {
         contentType: false,
         processData: false,
         success: function(result) {
-//            myAlert("PUT OK ");
+// myAlert("PUT OK ");
         },
         timeout: 3000,
         error: handleError,
@@ -355,3 +340,17 @@ function myAlert(msg) {
     vm.message = msg;
     vm.showMsg();
 }
+
+function html_encode(str)   
+{   
+  var s = "";   
+  if (str.length == 0) return "";   
+  s = str.replace(/&/g, "&gt;");   
+  s = s.replace(/</g, "&lt;");   
+  s = s.replace(/>/g, "&gt;");   
+  s = s.replace(/ /g, "&nbsp;");   
+  s = s.replace(/\'/g, "&#39;");   
+  s = s.replace(/\"/g, "&quot;");   
+  s = s.replace(/\n/g, "<br>");   
+  return s;   
+}  

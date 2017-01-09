@@ -34,3 +34,10 @@ span.current {
 template{
     display: none;
 }
+
+.popover.bottom .arrowcolor:after{
+border-bottom-color:#B7DFF8;   
+}
+.popover.bottom .arrowcolor1:after{
+border-bottom-color:#FFFFFF;   
+}

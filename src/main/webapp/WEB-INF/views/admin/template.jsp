@@ -6,7 +6,7 @@
 			<h3>Chat</h3>
 		</div>
 		<div class="col-lg-2" v-show="customerName" style="color: red">
-			<h3><i>talk to : {{customerName}}</i></h3>
+			<h3>talk to : {{customerName}}</h3>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
@@ -70,8 +70,66 @@
 <div>
 	<div class="row clearfix">
 		<div id="sentence"
-			style="background-color: #f7f7f7; max-width: 1000px; height: 550px; margin-top: 0px; overflow-y: auto; overflow-x: hidden; padding-left: 20px; padding-right: 20px"></div>
+			style="background-color: #ECEDF1; max-width: 1000px; height: 550px; margin-top: 0px; overflow-y: auto; overflow-x: hidden; padding-left: 20px; padding-right: 20px">
+			<template v-for="message in messages">
+			<div v-if="message.fromAdmin">
+				<div class='row'>
+					<div class=' pull-right' style='margin-top: 10px'>
+						{{message.senderName}}&nbsp;&nbsp;&nbsp;&nbsp;{{message.createDateTime}}</div>
+				</div>
+				<div class='row'>
+					<div class='popover fade bottom in pull-right' role='tooltip'
+						style='position: relative; display: block; max-width: 500px; word-wrap: break-word; background-color: #B7DFF8; z-index: 0'>
+						<div class='arrow arrowcolor' style='left: 70%;'></div>
+						<div class='popover-content' v-html="message.message"></div>
+						<div v-if="message.attachments != undefined">
+							<div v-for="attachment in message.attachments">
+								<video v-bind:src="'${ctx}/uploads/CsmChatMessage/'+message.id+'/'+attachment" controls
+									style="height: 280px; width: 350px" v-if="attachment.indexOf('mp4')!=-1">{{attachment}}
+								</video>
+								<audio v-bind:src="'${ctx}/uploads/CsmChatMessage/'+message.id+'/'+attachment" controls
+									v-if="attachment.indexOf('ogg')!=-1">{{attachment}}
+								</audio>
+								<p style="padding-left: 10px; padding-right: 10px;">
+									<a v-bind:href="'${ctx}/uploads/CsmChatMessage/'+message.id+'/'+attachment"
+										v-if="(attachment.indexOf('mp4')===-1)&&(attachment.indexOf('ogg')===-1)"  style="color:red">{{attachment}}</a>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div v-if="!message.fromAdmin">
+				<div class='row'>
+					<div class=' pull-left' style='margin-top: 10px'>
+						{{message.senderName}}&nbsp;&nbsp;&nbsp;&nbsp;{{message.createDateTime}}</div>
+				</div>
+				<div class='row'>
+					<div class='popover fade bottom in pull-left' role='tooltip'
+						style='position: relative; display: block; max-width: 500px; word-wrap: break-word; background-color: #B7DFF8; z-index: 0'>
+						<div class='arrow arrowcolor' style='left: 30%;'></div>
+						<div class='popover-content' v-html="message.message"></div>
+						<div v-if="message.attachments != undefined">
+							<div v-for="attachment in message.attachments">
+								<video v-bind:src="'${ctx}/uploads/CsmChatMessage/'+message.id+'/'+attachment" controls
+									style="height: 280px; width: 350px" v-if="attachment.indexOf('mp4')!=-1">{{attachment}}
+								</video>
+								<audio v-bind:src="'${ctx}/uploads/CsmChatMessage/'+message.id+'/'+attachment" controls
+									v-if="attachment.indexOf('ogg')!=-1">{{attachment}}
+								</audio>
+								<p style="padding-left: 10px; padding-right: 10px;">
+									<a v-bind:href="'${ctx}/uploads/CsmChatMessage/'+message.id+'/'+attachment"
+										v-if="(attachment.indexOf('mp4')===-1)&&(attachment.indexOf('ogg')===-1)" style="color:red">{{attachment}}</a>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</template>
+		</div>
 	</div>
+
 	<div class="row clearfix">
 		<div
 			style="max-width: 1000px; margin-top: 5px; border-style: solid; border-width: 0.2px; border-color: white; background-color: white">

@@ -47,3 +47,9 @@ float:left;
 clear:both;
 float:right;	
 }
+.popover.bottom .arrowcolor:after{
+border-bottom-color:#B7DFF8;   
+}
+.popover.bottom .arrowcolor1:after{
+border-bottom-color:#FFFFFF;   
+}

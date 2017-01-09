@@ -139,6 +139,7 @@ const content = {
             modalTitle: "",
             videostart: true,
             videostop: true,
+            messages:[],
         };
     },
     watch: {
@@ -163,6 +164,12 @@ const content = {
         showMsg(customerId);
     },
     computed: {
+        messages: function() {
+            setTimeout(function() {
+            	 document.getElementById('sentence').scrollTop = document.getElementById('sentence').scrollHeight;
+            }, 100);
+            return this.$store.state.messages;
+        },
     },
 
     methods: {
@@ -292,6 +299,7 @@ const content = {
         		}
         	myAlert(text);
             $("#myVideoModal").modal("hide");
+            $("#myAudioModal").modal("hide");
         }
     }
 };

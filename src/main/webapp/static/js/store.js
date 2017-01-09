@@ -8,6 +8,7 @@ const store = new Vuex.Store({
         currentUserGroup: {
             j: 3
         },
+        messages:[],
         customerUserGroupList: [],
         pageSize: 10,
         curPage: 1,
