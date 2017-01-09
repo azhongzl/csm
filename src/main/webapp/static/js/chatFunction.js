@@ -107,7 +107,7 @@ function showMessage(message) {
 									+ message.senderName
 									+ "&nbsp;&nbsp;&nbsp;&nbsp;"
 									+ timeStr
-									+ "</div></div><div class='row'><div class='popover fade bottom in pull-right' role='tooltip'  style='position:relative;display:block;max-width:500px;word-wrap:break-word;background-color:#B7DFF8;z-index:0'><div class='arrow arrowcolor' style='left: 80%;'></div><div class='popover-content'>"
+									+ "</div></div><div class='row'><div class='popover fade bottom in pull-right' role='tooltip'  style='position:relative;display:block;max-width:500px;word-wrap:break-word;background-color:#B7DFF8;z-index:0'><div class='arrow arrowcolor' style='left: 70%;'></div><div class='popover-content'>"
 									+ html_encode(message.message)
 									+ " </div></div></div>");
 		} else {
@@ -117,7 +117,7 @@ function showMessage(message) {
 									+ message.senderName
 									+ "&nbsp;&nbsp;&nbsp;&nbsp;"
 									+ timeStr
-									+ "</div></div><div class='row'><div class='popover fade bottom in pull-left' role='tooltip'  style='position:relative;display:block;max-width:500px;word-wrap:break-word;background-color:#FFFFFF;z-index:0'><div class='arrow arrowcolor1' style='left: 20%;'></div><div class='popover-content'>"
+									+ "</div></div><div class='row'><div class='popover fade bottom in pull-left' role='tooltip'  style='position:relative;display:block;max-width:500px;word-wrap:break-word;background-color:#FFFFFF;z-index:0'><div class='arrow arrowcolor1' style='left: 30%;'></div><div class='popover-content'>"
 									+ html_encode(message.message)
 									+ " </div></div></div>");
 		}
@@ -165,7 +165,7 @@ function showMessage(message) {
 									+ message.senderName
 									+ "&nbsp;&nbsp;&nbsp;&nbsp;"
 									+ timeStr
-									+ "</div></div><div class='row'><div class='popover fade bottom in pull-right' role='tooltip'  style='position:relative;display:block;max-width:500px;word-wrap:break-word;background-color:#B7DFF8;z-index:0'><div class='arrow arrowcolor' style='left: 80%;'></div><div class='popover-content'>"
+									+ "</div></div><div class='row'><div class='popover fade bottom in pull-right' role='tooltip'  style='position:relative;display:block;max-width:500px;word-wrap:break-word;background-color:#B7DFF8;z-index:0'><div class='arrow arrowcolor' style='left: 70%;'></div><div class='popover-content'>"
 									+ files + " </div></div></div>");
 		} else {
 			$("#sentence")
@@ -174,7 +174,7 @@ function showMessage(message) {
 									+ message.senderName
 									+ "&nbsp;&nbsp;&nbsp;&nbsp;"
 									+ timeStr
-									+ "</div></div><div class='row'><div class='popover fade bottom in pull-left' role='tooltip'  style='position:relative;display:block;max-width:500px;word-wrap:break-word;background-color:#FFFFFF;z-index:0'><div class='arrow arrowcolor1' style='left: 20%;'></div><div class='popover-content'>"
+									+ "</div></div><div class='row'><div class='popover fade bottom in pull-left' role='tooltip'  style='position:relative;display:block;max-width:500px;word-wrap:break-word;background-color:#FFFFFF;z-index:0'><div class='arrow arrowcolor1' style='left: 30%;'></div><div class='popover-content'>"
 									+ files + " </div></div></div>");
 		}
 

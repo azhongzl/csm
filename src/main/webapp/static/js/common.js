@@ -104,7 +104,7 @@ function showUnhandledCustomer(customerId) {
     if (!intervalMap.has(userId)) {
         var interval = setInterval(function() {
             $("#" + userId).fadeOut(100).fadeIn(100);
-        }, 500);
+        }, 300);
         intervalMap.set(userId, interval);
     }
 }
