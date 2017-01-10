@@ -72,8 +72,10 @@
 
 		<property name="defaultAutoCommit" value="false" />
 		<property name="maxWait" value="60000" />
-		<property name="timeBetweenEvictionRunsMillis" value="60000" />
-		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<!-- <property name="timeBetweenEvictionRunsMillis" value="60000" /> -->
+		<!-- <property name="minEvictableIdleTimeMillis" value="300000" /> -->
+		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
+		<property name="minEvictableIdleTimeMillis" value="28000000" />
 		<property name="testWhileIdle" value="true" />
 		<property name="validationQuery" value="SELECT 1" />
 	</bean>
