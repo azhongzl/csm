@@ -106,8 +106,8 @@
 				</div>
 				<div class='row'>
 					<div class='popover fade bottom in pull-left' role='tooltip'
-						style='position: relative; display: block; max-width: 500px; word-wrap: break-word; background-color: #B7DFF8; z-index: 0'>
-						<div class='arrow arrowcolor' style='left: 30%;'></div>
+						style='position: relative; display: block; max-width: 500px; word-wrap: break-word; background-color: #FFFFFF; z-index: 0'>
+						<div class='arrow arrowcolor1' style='left: 30%;'></div>
 						<div class='popover-content' v-html="message.message"></div>
 						<div v-if="message.attachments != undefined">
 							<div v-for="attachment in message.attachments">
@@ -173,7 +173,7 @@
 
 	</div>
 
-	<div class="modal" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+	<div class="modal fade" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -194,7 +194,7 @@
 		</div>
 		<!-- /.modal -->
 	</div>
-	<div class="modal" id="myAudioModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+	<div class="modal fade" id="myAudioModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -235,7 +235,7 @@
 			</div>
 		</div>
 
-		<div class="modal" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+		<div class="modal fade" id="myPermissionModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -294,7 +294,7 @@
 			</div>
 		</div>
 
-		<div class="modal" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		<div class="modal fade" id="roleModal" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 			aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -378,7 +378,7 @@
 					class="fa fa-plus fa-fw"></i><b>ADD NEW GROUP</b></a>
 			</div>
 		</div>
-		<div class="modal" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		<div class="modal fade" id="myModal" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 			aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -469,7 +469,7 @@
 <template id="user">
 <div>
 	<h3>User</h3>
-	<div class="list-group ">
+	<div class="list-group" >
 		<div class=" list-group-item active ">
 			<div class="row">
 				<span class="col-sm-2"><b>Username</b></span> <a href="javascript:void(0)" class="pull-right"
@@ -478,7 +478,7 @@
 			</div>
 		</div>
 
-		<div class="modal" id="myModal1" style="margin-top: 200px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		<div class="modal fade" id="myModal1" style="margin-top: 200px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 			aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -661,7 +661,7 @@
 		<a href="javascript:void(0)" class="list-group-item  active text-right" v-on:click="addNew"><i
 			class="fa fa-plus fa-fw"></i><b>ADD NEW CATEGORY</b></a>
 
-		<div class="modal" id="categoryModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+		<div class="modal fade" id="categoryModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -707,7 +707,7 @@
 </template>
 <template id="profile">
 <div>
-	<div class="modal" id="profileModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+	<div class="modal fade" id="profileModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -758,7 +758,7 @@
 
 <!------------------ template------------------- -->
 <!-- myAlert -->
-<div class="modal" id="myAlertModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+<div class="modal fade" id="myAlertModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 	<div class="modal-dialog" style="width: 300px">
 		<div class="modal-content">

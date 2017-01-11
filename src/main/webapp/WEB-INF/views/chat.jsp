@@ -45,7 +45,7 @@
 			<input class="btn btn-default" id="inputFile" type="file" name='uploadFile1' multiple='multiple'
 				onchange='showUploadFile()' style="display: none"> </input>
 			<div class="row">
-				<div class="btn-group col-md-5  column ">
+				<div class="btn-group col-md-5  column">
 					<button class="btn btn-default" type="button" onclick="listHistory()" data-toggle="tooltip" title="Display history">
 						<i class="fa fa-history" aria-hidden="true"></i>
 					</button>
@@ -67,7 +67,6 @@
 				<div class="col-md-12 column ">
 					<textarea id="message" class="form-control" v-model="sentence" rows="2" style="resize: none"> </textarea>
 				</div>
-
 			</div>
 
 			<div class="row">
@@ -84,7 +83,7 @@
 		</div>
 
 	</div>
-	<div class="modal" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+	<div class="modal fade" id="myVideoModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -105,7 +104,7 @@
 		</div>
 		<!-- /.modal -->
 	</div>
-	<div class="modal" id="myAudioModal" style="margin-top: 200px" tabindex="-1" role="dialog"
+	<div class="modal fade" id="myAudioModal" style="margin-top: 200px" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -127,7 +126,9 @@
 		</div>
 		<!-- /.modal -->
 	</div>
-	<button id="trigger" class="trigger">try</button>
+	<div class="navbar-fixed-top">
+	<button id="trigger" class="trigger pull-right"  style="margin-top: 50px; ">CHAT</button>
+	</div>
 	<script type="text/javascript">
 		userId = "<shiro:principal property="id" />";
 		username = "<shiro:principal property="username" />"
