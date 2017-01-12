@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,16 +53,18 @@ public class ChatUiService extends BaseService {
 		messagePair = env.getPair(CsmChatMessage.class);
 	}
 
-	public Result listHistory(Principal principal) {
+	public Result listHistory(LocalDateTime beginDateTime, LocalDateTime endDateTime, int pageNo, int pageSize,
+			Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
 
-		final List<CsmChatMessage> messageList = messagePair.db().filterEqual("roomId", shiroUser.getId())
-				.sortAsc("createDateTime").exeFindAll();
+		final Page<CsmChatMessage> messageList = messagePair.db().filterEqual("roomId", shiroUser.getId())
+				.filterBetween("createDateTime", beginDateTime, endDateTime).sortAsc("createDateTime")
+				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).exeFindPage();
 		for (CsmChatMessage message : messageList) {
 			populateSenderName(message);
 		}
 
-		return Result.success().addData("historyList", messageList);
+		return Result.success().addData("historyPage", messageList);
 	}
 
 	public Result initMessage(Principal principal) {

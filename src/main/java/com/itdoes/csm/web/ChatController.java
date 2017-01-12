@@ -1,6 +1,7 @@
 package com.itdoes.csm.web;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -45,8 +46,11 @@ public class ChatController extends BaseController {
 
 	@RequestMapping(value = "listHistory", method = RequestMethod.GET, produces = MediaTypes.APPLICATION_JSON_UTF_8)
 	@ResponseBody
-	public Result listHistory(Principal principal) {
-		return chatService.listHistory(principal);
+	public Result listHistory(@RequestParam(value = "beginDateTime", required = false) LocalDateTime beginDateTime,
+			@RequestParam(value = "endDateTime", required = false) LocalDateTime endDateTime,
+			@RequestParam(value = PAGE_NO, defaultValue = "1") int pageNo,
+			@RequestParam(value = PAGE_SIZE, defaultValue = "-1") int pageSize, Principal principal) {
+		return chatService.listHistory(beginDateTime, endDateTime, pageNo, pageSize, principal);
 	}
 
 	@SubscribeMapping("/chatCInitMessage")

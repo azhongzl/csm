@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.Validate;
 import org.apache.shiro.authz.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -144,19 +145,21 @@ public class AdminChatUiService extends BaseService {
 				customerUserGroupList);
 	}
 
-	public Result listHistory(String customerId, Principal principal) {
+	public Result listHistory(String customerId, LocalDateTime beginDateTime, LocalDateTime endDateTime, int pageNo,
+			int pageSize, Principal principal) {
 		final ShiroUser shiroUser = getShiroUser(principal);
 		if (!canSendMessage(shiroUser.getId(), customerId)) {
 			return Result.fail(1, "You are not allowed to view this customer's chat history");
 		}
 
-		final List<CsmChatMessage> messageList = messagePair.db().filterEqual("roomId", customerId)
-				.sortAsc("createDateTime").exeFindAll();
-		for (CsmChatMessage message : messageList) {
+		final Page<CsmChatMessage> messagePage = messagePair.db().filterEqual("roomId", customerId)
+				.filterBetween("createDateTime", beginDateTime, endDateTime).sortAsc("createDateTime")
+				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).exeFindPage();
+		for (CsmChatMessage message : messagePage) {
 			populateSenderName(message);
 		}
 
-		return Result.success().addData("historyList", messageList);
+		return Result.success().addData("historyPage", messagePage);
 	}
 
 	public Result hasUnhandledCustomers(Principal principal) {

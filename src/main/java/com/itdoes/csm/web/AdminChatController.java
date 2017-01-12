@@ -1,6 +1,7 @@
 package com.itdoes.csm.web;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -67,8 +68,12 @@ public class AdminChatController extends BaseController {
 
 	@RequestMapping(value = "listHistory/{customerId}", method = RequestMethod.GET, produces = MediaTypes.APPLICATION_JSON_UTF_8)
 	@ResponseBody
-	public Result listHistory(@PathVariable("customerId") String customerId, Principal principal) {
-		return chatService.listHistory(customerId, principal);
+	public Result listHistory(@PathVariable("customerId") String customerId,
+			@RequestParam(value = "beginDateTime", required = false) LocalDateTime beginDateTime,
+			@RequestParam(value = "endDateTime", required = false) LocalDateTime endDateTime,
+			@RequestParam(value = PAGE_NO, defaultValue = "1") int pageNo,
+			@RequestParam(value = PAGE_SIZE, defaultValue = "-1") int pageSize, Principal principal) {
+		return chatService.listHistory(customerId, beginDateTime, endDateTime, pageNo, pageSize, principal);
 	}
 
 	@RequestMapping(value = "hasUnhandledCustomers", method = RequestMethod.GET, produces = MediaTypes.APPLICATION_JSON_UTF_8)
