@@ -65,7 +65,7 @@
 
 			<div class="row">
 				<div class="col-md-12 column ">
-					<textarea id="message" class="form-control" v-model="sentence" rows="2" style="resize: none"> </textarea>
+					<textarea placeholder="Please enter message here..." id="message" class="form-control"  rows="2" style="resize: none"  ></textarea>
 				</div>
 			</div>
 
@@ -126,9 +126,10 @@
 		</div>
 		<!-- /.modal -->
 	</div>
-	<div class="navbar-fixed-top">
-	<button id="trigger" class="trigger pull-right"  style="margin-top: 50px; ">CHAT</button>
-	</div>
+	
+
+	<button id="trigger" class="trigger pull-right"  style="margin-top: 30px; ">CHAT</button>
+
 	<script type="text/javascript">
 		userId = "<shiro:principal property="id" />";
 		username = "<shiro:principal property="username" />"

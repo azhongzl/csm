@@ -156,7 +156,7 @@
 
 			<div class="row">
 				<div class="col-md-12 column ">
-					<textarea class="form-control" v-model="sentence" rows="4" style="resize: none"> </textarea>
+					<textarea  placeholder="Please enter message here..." class="form-control" v-model="sentence" rows="4" style="resize: none"> </textarea>
 				</div>
 
 			</div>

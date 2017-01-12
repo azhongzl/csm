@@ -248,7 +248,6 @@ function audioStop() {
 }
 
 var processError = function(e) {
-	alert("b");
 	let
 	text = "";
 	if (e.name == "NotAllowedError") {
