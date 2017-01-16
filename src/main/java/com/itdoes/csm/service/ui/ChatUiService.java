@@ -58,7 +58,7 @@ public class ChatUiService extends BaseService {
 		final ShiroUser shiroUser = getShiroUser(principal);
 
 		final Page<CsmChatMessage> messageList = messagePair.db().filterEqual("roomId", shiroUser.getId())
-				.filterBetween("createDateTime", beginDateTime, endDateTime).sortAsc("createDateTime")
+				.filterBetween("createDateTime", beginDateTime, endDateTime).sortDesc("createDateTime")
 				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).exeFindPage();
 		for (CsmChatMessage message : messageList) {
 			populateSenderName(message);

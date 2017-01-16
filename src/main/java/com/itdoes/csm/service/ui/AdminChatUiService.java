@@ -153,7 +153,7 @@ public class AdminChatUiService extends BaseService {
 		}
 
 		final Page<CsmChatMessage> messagePage = messagePair.db().filterEqual("roomId", customerId)
-				.filterBetween("createDateTime", beginDateTime, endDateTime).sortAsc("createDateTime")
+				.filterBetween("createDateTime", beginDateTime, endDateTime).sortDesc("createDateTime")
 				.page(pageNo, pageSize, DEFAULT_MAX_PAGE_SIZE).exeFindPage();
 		for (CsmChatMessage message : messagePage) {
 			populateSenderName(message);
