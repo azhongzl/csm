@@ -159,6 +159,10 @@ const content = {
             let customerId = this.$route.query.id;
             showMsg(customerId);
             this.historyMessages=[];
+            this.totalPage=0;
+            this.curPage=1;
+            this.lastNum=5;
+            this.column=5;
         	$("#datepicker001").val("");
         	$("#datepicker002").val("");
         	$('.datepicker').datepicker({
@@ -262,7 +266,7 @@ const content = {
         },
         
         changePage : function(n){
-        	if (n==0){
+        	if ((n==0)||(n>this.totalPage)){
         		return false;
         	}
         	if (this.curPage==n){

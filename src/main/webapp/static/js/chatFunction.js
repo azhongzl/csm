@@ -99,7 +99,7 @@ var vm = new Vue({
            }, 100);
         },
         changePage : function(n){
-        	if (n==0){
+        	if ((n==0)||(n>this.totalPage)){
         		return false;
         	}
         	if (this.curPage==n){
