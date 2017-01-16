@@ -29,6 +29,10 @@ const
         template: '#customer',
         watch: {
             '$route': function(to, from) {
+if(from.query.name){
+	$("#"+from.query.name).css("background-color","white");
+}
+$("#"+this.$route.query.name).css("background-color","#B7DFF8");
             	if (to.path=="/admin/chat"){
                     store.commit('getCustomerName', {
                         id: "",
@@ -149,6 +153,7 @@ const content = {
     },
     watch: {
         '$route': function(to, from) {
+
             store.commit('getService', {
                 id: this.$route.query.id
             });
@@ -187,11 +192,15 @@ const content = {
     	    $(this).datepicker('clearDates');
     	});
         let customerId = this.$route.query.id;
+        let username = this.$route.query.name
         store.commit('getCustomerName', {
             id: customerId,
-            name: this.$route.query.name
+            name: username,
         });
         showMsg(customerId);
+        setTimeout(function() {
+        	$("#"+username).css("background-color","#B7DFF8");
+       }, 500);
     },
     computed: {
         messages: function() {

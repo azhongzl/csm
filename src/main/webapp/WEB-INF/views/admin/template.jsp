@@ -5,10 +5,6 @@
 		<div class="col-lg-10">
 			<h3>Chat</h3>
 		</div>
-		<div class="col-lg-2" v-show="customerName" style="color: red">
-			<h3>talk to : {{customerName}}</h3>
-		</div>
-		<!-- /.col-lg-12 -->
 	</div>
 	<!-- /.row -->
 	<div class="row">
@@ -18,7 +14,7 @@
 
 					<!-- /.row (nested) -->
 
-					<div class="row clearfix" style="height: 750px">
+					<div class="row clearfix" style="min-height: 720px" >
 						<div class="col-md-2 column ">
 							<router-view name="customer"></router-view>
 							<router-view name="service"></router-view>
@@ -41,9 +37,9 @@
 <template id="customer">
 <div>
 	<h4>Customer</h4>
-	<div class="list-group" style="height: 250px; overflow: auto">
+	<div class="list-group" style="height: 450px; overflow: auto">
 		<ul class="list-group">
-			<li class="list-group-item" v-for="(customer,index) in customers"><router-link
+			<li class="list-group-item" v-for="(customer,index) in customers" :id="customer.username"><router-link
 					:to="{path:'/admin/chat/content',query:{name:customer.username,id:customer.userId}}" :id="customer.userId">{{customer.username}}</router-link></li>
 		</ul>
 	</div>
