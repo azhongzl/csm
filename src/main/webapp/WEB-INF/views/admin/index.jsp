@@ -13,12 +13,14 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <title>KUZCOLIGHTING</title>
+
 <!-- Bootstrap Core CSS -->
 <link href="${ctx}/static/css/lib/bootstrap.css" rel="stylesheet">
 <!-- MetisMenu CSS -->
 <link href="${ctx}/static/css/lib/metisMenu.min.css" rel="stylesheet">
 <!-- Custom CSS -->
 <link href="${ctx}/static/css/lib/sb-admin-2.css" rel="stylesheet">
+<link href="${ctx}/static/css/lib/bootstrap-datepicker3.standalone.min.css" rel="stylesheet">
 <!-- Custom Fonts -->
 <link href="${ctx}/static/css/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 <link href="${ctx}/static/css/admin.css" rel="stylesheet">
@@ -117,9 +119,21 @@
 	<script type="text/javascript" src="${ctx}/static/js/lib/vue-router.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/common.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/store.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/lib/bootstrap-datepicker.min.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/component.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/router.js"></script>
 	<!-- Custom Theme JavaScript -->
 	<script src="${ctx}/static/js/lib/sb-admin-2.js"></script>
+<script type="text/javascript">
+$('.datepicker').datepicker({
+    startDate: '-300d',
+    todayHighlight:true,
+    clearBtn:true,
+    orientation:"bottom right",
+});
+$('.input-daterange input').each(function() {
+    $(this).datepicker('clearDates');
+});
+</script>
 </body>
 </html>

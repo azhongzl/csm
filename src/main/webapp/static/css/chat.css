@@ -53,3 +53,16 @@ border-bottom-color:#B7DFF8;
 .popover.bottom .arrowcolor1:after{
 border-bottom-color:#FFFFFF;   
 }
+ul.tab1 li a  {
+    background-color:#bebebe;
+}
+
+ul.tab1 li a:hover {
+    background-color:#c6ecff;
+}
+
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus {
+    background-color:  #ebebeb;
+}
+

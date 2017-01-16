@@ -89,12 +89,12 @@ const
                     url: url1,
                     async: false,
                     success: function(result) {
- //                       myAlert("DELETE OK ");
+ // myAlert("DELETE OK ");
                     },
                     timeout: 3000,
                     error: handleError
                 });
-                //store.commit('getService',{id:this.$route.query.id});
+                // store.commit('getService',{id:this.$route.query.id});
             },
 
             selectFunction: function(service) {
@@ -123,7 +123,7 @@ const
                 };
 
                 ajaxcreate(savedata, url1);
-                //store.commit('getService',{id:id});
+                // store.commit('getService',{id:id});
 
             },
 
@@ -140,6 +140,11 @@ const content = {
             videostart: true,
             videostop: true,
             messages:[],
+            historyMessages:[],
+            curPage:1,
+            totalPage: 0,
+            lastNum:5,
+            column:5
         };
     },
     watch: {
@@ -153,9 +158,30 @@ const content = {
             });
             let customerId = this.$route.query.id;
             showMsg(customerId);
+            this.historyMessages=[];
+        	$("#datepicker001").val("");
+        	$("#datepicker002").val("");
+        	$('.datepicker').datepicker({
+        	    startDate: '-300d',
+        	    todayHighlight:true,
+        	    clearBtn:true,
+        	    orientation:"bottom right",
+        	});
+        	$('.input-daterange input').each(function() {
+        	    $(this).datepicker('clearDates');
+        	});
         }
     },
     mounted: function() {
+    	$('.datepicker').datepicker({
+    	    startDate: '-300d',
+    	    todayHighlight:true,
+    	    clearBtn:true,
+    	    orientation:"bottom right",
+    	});
+    	$('.input-daterange input').each(function() {
+    	    $(this).datepicker('clearDates');
+    	});
         let customerId = this.$route.query.id;
         store.commit('getCustomerName', {
             id: customerId,
@@ -185,11 +211,74 @@ const content = {
         },
 
         listHistory: function() {
+        	let beginDate = $("#datepicker001").val();
+        	let endDate = $("#datepicker002").val();
+        	if((beginDate == endDate )||(beginDate == "")||(endDate == "")){
+        		myAlert("Please enter correct date ...");
+        		return false;
+        	}
+        	beginDate = beginDate+"T00:00:00";
+        	endDate = endDate+"T23:59:59.999999999"
             let customerId = this.$route.query.id;
             let url = ctx + "/admin/chat/listHistory/" + customerId;
-            let checkKey = {};
+            let checkKey = {
+            		beginDateTime:beginDate,
+            		endDateTime:endDate,
+            		page_no:this.curPage,
+            };
             let result = ajaxFind(checkKey, url);
-            showMessages(result.data.historyList);
+            if (!result.data.historyPage.content){
+            	myAlert("No result ...");
+            	return false;
+            }
+            let messageList = result.data.historyPage.content;
+               this.totalPage = result.data.historyPage.totalPages;
+            if (this.totalPage<=5){
+            	this.column=this.totalPage;
+            }else{
+            	this.column=5;
+            }
+            for (var i = 0; i < messageList.length; i++) {
+                let timeStr = "";
+                let num = messageList[i].createDateTime.indexOf("T");
+                timeStr = messageList[i].createDateTime.substring(0, num) + " " + messageList[i].createDateTime.substring(num + 1, 19);
+                messageList[i].createDateTime=timeStr;
+                if (messageList[i].attachments != undefined){
+                	 let attachment = messageList[i].attachments.split(",");
+                	 if(messageList[i].message){
+                	 let mess = html_encode(messageList[i].message);
+                	 messageList[i].message = mess;
+                	 }
+                	 messageList[i].attachments = attachment;
+                }else{
+                	let mess = html_encode(messageList[i].message);
+                	messageList[i].message = mess;
+                }
+            }
+            this.historyMessages=messageList.reverse();
+            setTimeout(function() {
+           	 document.getElementById('historySentence').scrollTop = document.getElementById('historySentence').scrollHeight;
+           }, 100);
+        },
+        
+        changePage : function(n){
+        	if (n==0){
+        		return false;
+        	}
+        	if (this.curPage==n){
+        		return false;
+        	}
+        	this.curPage=n;
+        	if (n<=3){
+        		this.lastNum=5;
+        	}else{
+        		if ((n+2)>this.totalPage){
+        			this.lastNum=this.totalPage;
+        		}else{
+        			this.lastNum=n+2;
+        		}
+        	}
+        	this.listHistory();
         },
         showUploadFile: function() {
             var fileData = $("input[name='uploadFile1']").get(0);
@@ -275,13 +364,13 @@ const content = {
             }
             var xhr = new XMLHttpRequest();
             xhr.addEventListener("load", function(e) {
-//                myAlert("Upload successfully");
+// myAlert("Upload successfully");
             }, false);
             xhr.addEventListener("error", function(e) {
-//                myAlert("Upload failed");
+// myAlert("Upload failed");
             }, false);
             xhr.addEventListener("abort", function(e) {
-//                myAlert("Upload cancelled");
+// myAlert("Upload cancelled");
             }, false);
             xhr.open("POST", url);
             xhr.send(fd);
