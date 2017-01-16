@@ -115,10 +115,6 @@
 									v-on:change='showUploadFile()' style="display: none"> </input>
 								<div class="row">
 									<div class="btn-group col-md-5  column">
-										<button class="btn btn-default" type="button" v-on:click="listHistory()" data-toggle="tooltip"
-											title="Display history">
-											<i class="fa fa-history" aria-hidden="true"></i>
-										</button>
 										<button class="btn btn-default" type="button" v-on:click="document.getElementById('inputFile').click();"
 											data-toggle="tooltip" title="Upload">
 											<i class="fa fa-paperclip" aria-hidden="true"></i>
@@ -306,7 +302,6 @@
 		username = "<shiro:principal property="username" />"
 		ctx = "${ctx}";
 		$('.datepicker').datepicker({
-			startDate : '-300d',
 			todayHighlight : true,
 			clearBtn : true,
 			orientation : "bottom right",

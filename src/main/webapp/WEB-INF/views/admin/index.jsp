@@ -126,7 +126,6 @@
 	<script src="${ctx}/static/js/lib/sb-admin-2.js"></script>
 <script type="text/javascript">
 $('.datepicker').datepicker({
-    startDate: '-300d',
     todayHighlight:true,
     clearBtn:true,
     orientation:"bottom right",
