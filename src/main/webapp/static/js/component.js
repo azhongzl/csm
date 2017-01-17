@@ -282,7 +282,7 @@ const content = {
         		return false;
         	}
         	this.curPage=n;
-        	if (n<=3){
+        	if (n<=5){
         		this.lastNum=5;
         	}else{
         		if ((n+2)>this.totalPage){

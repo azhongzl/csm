@@ -35,11 +35,11 @@
 	});
 </script>
 <body>
-	<div id="chatContainer">
+	<div id="chatContainer" >
 		<div id="slider" class="slider">
 			<div class="well" style="padding-top: 0px">
 				<div class="row clearfix" style="margin-top: 2px">
-					<ul class="nav nav-tabs tab1" style="margin-left: -1px;">
+					<ul class="nav nav-tabs tab1" style="margin-left: -1px; ">
 						<li class="active"><a href="#panel-100113" data-toggle="tab">Chat</a></li>
 						<li><a href="#panel-586596" data-toggle="tab">History</a></li>
 					</ul>
@@ -53,7 +53,7 @@
 								<template v-for="message in messages">
 								<div v-if="!message.fromAdmin">
 									<div class='row'>
-										<div class=' pull-right' style='margin-top: 10px'>
+										<div class=' pull-right' style=' margin-top: 10px' >
 											{{message.senderName}}&nbsp;&nbsp;&nbsp;&nbsp;{{message.createDateTime}}</div>
 									</div>
 									<div class='row'>
@@ -80,7 +80,7 @@
 								</div>
 								<div v-if="message.fromAdmin">
 									<div class='row'>
-										<div class=' pull-left' style='margin-top: 10px'>
+										<div class=' pull-left' style=' margin-top: 10px' >
 											{{message.senderName}}&nbsp;&nbsp;&nbsp;&nbsp;{{message.createDateTime}}</div>
 									</div>
 									<div class='row'>

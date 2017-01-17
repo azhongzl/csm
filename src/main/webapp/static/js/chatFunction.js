@@ -106,7 +106,7 @@ var vm = new Vue({
         		return false;
         	}
         	this.curPage=n;
-        	if (n<=3){
+        	if (n<=5){
         		this.lastNum=5;
         	}else{
         		if ((n+2)>this.totalPage){
@@ -303,12 +303,7 @@ function showMessage(message) {
 
 
 
-$(function() {
-	$("form").on('submit', function(e) {
-		e.preventDefault();
-	});
 
-});
 
 function handleError(xhr) {
 

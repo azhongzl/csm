@@ -3,7 +3,7 @@
 <div>
 	<div class="row">
 		<div class="col-lg-10">
-			<h3>Chat</h3>
+			<h3 >Chat</h3>
 		</div>
 	</div>
 	<!-- /.row -->
@@ -37,10 +37,10 @@
 <template id="customer">
 <div>
 	<h4>Customer</h4>
-	<div class="list-group" style="height: 450px; overflow: auto">
-		<ul class="list-group">
+	<div class="list-group" style="height: 450px; overflow: auto;">
+		<ul class="list-group" >
 			<li class="list-group-item" v-for="(customer,index) in customers" :id="customer.username"><router-link
-					:to="{path:'/admin/chat/content',query:{name:customer.username,id:customer.userId}}" :id="customer.userId">{{customer.username}}</router-link></li>
+					:to="{path:'/admin/chat/content',query:{name:customer.username,id:customer.userId}}" :id="customer.userId" style="display:block">{{customer.username}}</router-link></li>
 		</ul>
 	</div>
 </div>
@@ -50,9 +50,9 @@
 <div>
 	<h4>Customer Service</h4>
 	<div class="list-group" style="height: 250px; overflow-y: auto">
-		<ul class="list-group">
+		<ul class="list-group" >
 			<li class="list-group-item" v-for="(user,index) in service"><a href="javascript:void(0)"
-				v-on:click="removeGroup(user.customerUserGroup.id,index)">{{user.userGroup.name}}</a></li>
+				v-on:click="removeGroup(user.customerUserGroup.id,index)" style="display:block">{{user.userGroup.name}}</a></li>
 		</ul>
 		<label>Select service group</label><br> <select class="form-control" v-model="selected"
 			v-on:change="selectFunction(selected)">
@@ -65,7 +65,7 @@
 <template id="content">
 <div>
 
-	<div class="tabbable">
+	<div class="tabbable" >
 		<div class="row clearfix">
 			<ul class="nav nav-tabs tab1" style="margin-left: -1px;">
 				<li class="active"><a href="#panel-100113" data-toggle="tab">Chat</a></li>
