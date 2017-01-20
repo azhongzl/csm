@@ -132,7 +132,7 @@
 								<div class="row">
 									<div class="col-md-12 column ">
 										<textarea placeholder="Please enter message here..." id="message" class="form-control" rows="2"
-											style="resize: none" v-model="sentence"></textarea>
+											style="resize: none" v-model="sentence" maxlength="500"></textarea>
 									</div>
 								</div>
 
@@ -226,7 +226,7 @@
 								style="max-width: 650px; height: 60px; background-color: #ebebeb; margin-top: 0px;padding-top:10px; padding-left: 20px; padding-right: 20px;">
 								<div class="text-center"
 									style="background-color: #ECEDF1; max-width: 1050px; height: 40px; margin-top: 0px; padding-left: 20px; padding-right: 20px;">
-									<ul class="pagination" style="margin-top: 2px" v-if="totalPage>0">
+									<ul class="pagination" style="margin-top: 2px" v-if="totalPage>1">
 										<li v-bind:class="curPage===1?'disabled':''"><a href="javascript:void(0)" v-on:click="changePage(1)"><i
 												class="fa fa-fast-backward"></i></a></li>
 										<li v-bind:class="curPage===1?'disabled':''"><a href="javascript:void(0)"

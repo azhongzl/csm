@@ -149,7 +149,6 @@ function showMsg(customerId) {
             customerId,
             function(message) {
                 showMessage(JSON.parse(message.body));
- //               document.getElementById('sentence').scrollTop = document.getElementById('sentence').scrollHeight;
             });
         subscribeList.push(subApp);
         subscribeList.push(subTopic);
@@ -160,7 +159,6 @@ function showMessages(messageList) {
     for (var i = 0; i < messageList.length; i++) {
         showMessage(messageList[i]);
     }
-//    document.getElementById('sentence').scrollTop = document.getElementById('sentence').scrollHeight;
 }
 
 function showMessage(message) {

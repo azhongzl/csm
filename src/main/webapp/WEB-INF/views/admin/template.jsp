@@ -159,11 +159,9 @@
 						<div class="row">
 							<div class="col-md-12 column ">
 								<textarea placeholder="Please enter message here..." class="form-control" v-model="sentence" rows="4"
-									style="resize: none"> </textarea>
+									style="resize: none" maxlength="500"> </textarea>
 							</div>
-
 						</div>
-
 						<div class="row">
 							<div class="col-md-12 column " style="margin-bottom: 10px">
 								<button class="btn btn-defaut btn-block" type="button" v-on:click="send(sentence)"
@@ -254,7 +252,7 @@
 					</div>
 					<div class="text-center"
 						style="background-color: #ECEDF1; max-width: 1050px; height: 40px; margin-top: 0px; padding-left: 20px; padding-right: 20px;">
-						<ul class="pagination" style="margin-top: 2px" v-if="totalPage>0">
+						<ul class="pagination" style="margin-top: 2px" v-if="totalPage>1">
 							<li v-bind:class="curPage===1?'disabled':''"><a href="javascript:void(0)" v-on:click="changePage(1)"><i
 									class="fa fa-fast-backward"></i></a></li>
 							<li v-bind:class="curPage===1?'disabled':''"><a href="javascript:void(0)" v-on:click="changePage(curPage-1)"><i
@@ -684,7 +682,7 @@
 	<a class="list-group-item  active"><b>Categories</b></a>
 	<ul class="list-group-item">
 		<li v-for="n in categoryList" class="list-group-item"><router-link
-				:to="{path: '/faq/showFaqList', query: { id: n.id }}" v-bind:id=" n.id "> {{n.name}} </router-link></li>
+				:to="{path: '/faq/showFaqList', query: { id: n.id }}" v-bind:id=" n.id " style="display:block"> {{n.name}} </router-link></li>
 	</ul>
 </div>
 </template>
@@ -706,11 +704,11 @@
 	<div class=" form-group">
 
 		<label>QUESTION:</label>
-		<textarea name='question' class="form-control" rows="3" v-model='question'></textarea>
+		<textarea name='question' class="form-control" rows="3" v-model='question' maxlength="255"></textarea>
 	</div>
 	<div class=" form-group">
 		<label>ANSWER:</label>
-		<textarea name='answer' class="form-control" rows="5" v-model='answer'></textarea>
+		<textarea name='answer' class="form-control" rows="5" v-model='answer' maxlength="500"></textarea>
 	</div>
 	<div class=" form-group">
 		<label>Upload File:</label> <input type='file' name='uploadFile' multiple='multiple' v-on:change='showUploadFile()' />
@@ -729,11 +727,11 @@
 <div>
 	<div class=" form-group">
 		<label>QUESTION:</label>
-		<textarea name='question' class="form-control" rows="3" v-model='question'></textarea>
+		<textarea name='question' class="form-control" rows="3" v-model='question' maxlength="255"></textarea>
 	</div>
 	<div class=" form-group">
 		<label>ANSWER:</label>
-		<textarea name='answer' class="form-control" rows="5" v-model='answer'></textarea>
+		<textarea name='answer' class="form-control" rows="5" v-model='answer' maxlength="500"></textarea>
 	</div>
 	<div class=" form-group">
 		<lable v-show="attachments.length === 0?false:true">Attachments:</lable>
